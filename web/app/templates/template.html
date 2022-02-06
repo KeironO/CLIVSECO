@@ -1,0 +1,85 @@
+{% from "./macros.html" import render_field %}
+
+<html lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %} {% endblock %} : CLIVSECO</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    
+    {% block head %}
+    {% endblock %}
+
+    <link
+    href="{{ url_for('static', filename='css/global.css') }}"
+    rel="stylesheet">
+<head>
+
+<body class="d-flex flex-column h-100">
+
+    
+  <header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="#">CLIVSECO</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        {% if current_user.is_authenticated %}
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('notes.home') }}">Notes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            
+          </ul>
+          <div class="d-flex">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('auth.logout') }}">
+                  Log Out
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </nav>
+  </header>
+
+
+      <main role="main" class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning fade show text-center" role="alert">
+            <strong>Warning!</strong> {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+  
+        {%endwith%}
+    
+        {% block body %}
+        {% endblock %}
+      </main>
+
+      <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+          <span class="text-muted">CLIVSECO was developed for internal use within Cwm Taf University Health Board.</span>
+        </div>
+      </footer>
+      
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </body>
+
+</html>

@@ -1,0 +1,22 @@
+.navbar {
+    height:65px;
+    padding:0px;
+    margin-bottom: 2em;
+}
+
+.container {
+    max-width: 1280px;
+}
+
+h1 {
+    font-size:24px;
+    font-weight: normal;
+    line-height: 30px;
+    padding-bottom: 15px;
+    border-style: none none solid none;
+    border-width: 0 0 1 0;
+}
+
+.card {
+    margin-bottom: 2em;
+}

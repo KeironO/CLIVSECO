@@ -1,0 +1,25 @@
+{% extends "template.html" %}
+
+{% block title %}Notes Home{% endblock %}
+
+{% block body %}
+
+<h1>Notes</h1>
+
+<div class="row">
+    <div class="col-4">
+        <h4>{{ note_count }}</h4>
+        Notes
+    </div>
+    <div class="col-4">
+        <h4>{{ uncoded_count }}</h4>
+        Uncoded
+    </div>
+    <div class="col-4">
+        <h4>{{ note_count - uncoded_count }}</h4>
+        Verified
+    </div>
+</div>
+
+
+{% endblock %}

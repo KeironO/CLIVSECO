@@ -1,0 +1,22 @@
+{% extends "template.html" %}
+
+{% block title %}Log In{% endblock %}
+
+{% block body %}
+
+<h1>Log In</h1>
+
+<p>Fields marked with an asterisk (*) are required fields.</p>
+
+<div class="alert alert-warning" role="alert">You are attempting to access the CLIVSECO system. By entering a password you are confirming your acceptance that you are bound by the Computer Misuse Act. 1990 and any local policies/procedures as defined by your Employer. Usage and access to the CLIVSECO solution is audited and action may be taken against any individual attempting inappropriate activity.</div>
+
+<form method="POST" action="{{ url_for('auth.login') }}">
+    {{ form.csrf_token }}
+    <div class="row">
+    {{ render_field(form.email) }}
+    {{ render_field(form.password) }}
+    {{ render_field(form.submit) }}
+    </div>
+</form>
+
+{% endblock %}

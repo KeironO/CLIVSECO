@@ -1,0 +1,131 @@
+{% extends "template.html" %}
+
+{% block title %}{{ note.dal_id }}{% endblock %}
+
+{% block body %}
+
+
+<h1>DAL: {{ note.dal_id }}</h1>
+
+<div class="row">
+    <div class="col-8">
+        <div class="card">
+            <div class="card-header">
+              Clinical Finding
+            </div>
+            <div class="card-body card-text">
+              <p class="card-text">
+                  {{ note.clinical_finding }}
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              Presenting Complaint
+            </div>
+            <div class="card-body card-text">
+              <p class="card-text">
+                  {{ note.presenting_complaint }}
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+                Treatment Narrative
+            </div>
+            <div class="card-body card-text">
+              <p class="card-text">
+                  {{ note.treatment_narrative }}
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+                Allergy
+            </div>
+            <div class="card-body card-text">
+              <p class="card-text">
+                  {{ note.allergy }}
+              </p>
+            </div>
+          </div>
+
+        <div class="row">
+          <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    Discharge Diagnosis 1
+                </div>
+                <div class="card-body card-text">
+                  <p class="card-text">
+                      {{ note.discharge_diagnosis_1 }}
+                  </p>
+                </div>
+              </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    Discharge Diagnosis 2
+                </div>
+                <div class="card-body card-text">
+                  <p class="card-text">
+                      {{ note.discharge_diagnosis_2 }}
+                  </p>
+                </div>
+              </div>
+          </div>
+        </div>
+
+
+    </div>
+    <div class="col-4">
+        <h2>Clinical Coder</h2>
+
+
+        <div class="card">
+            <div class="card-header">
+                Diagnosis
+            </div>
+            <div class="card-body card-text">
+              
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+                Procedures
+            </div>
+            <div class="card-body card-text">
+              
+            </div>
+          </div>
+
+        <h2>Auto-Coder</h2>
+
+        <div class="card">
+            <div class="card-header">
+                Diagnosis
+            </div>
+            <div class="card-body card-text">
+              
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+                Procedures
+            </div>
+            <div class="card-body card-text">
+              
+            </div>
+          </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
