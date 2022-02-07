@@ -18,6 +18,7 @@ from sqlalchemy import ForeignKey
 from ..database import db
 from enum import Enum
 
+
 class CodeFrom(Enum):
     CLI = "Clinical Finding"
     PRE = "Presenting Complaint"
@@ -50,6 +51,13 @@ class Note(db.Model):
 
     checked = db.Column(db.Boolean(), default=False, nullable=False)
 
+    codes = db.relationship(
+        "NoteCode",
+        uselist=True,
+        primaryjoin="Note.id==NoteCode.note_id",
+        viewonly=True
+    )
+
 class NoteCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     code = db.Column(db.String(7), nullable=False)
@@ -60,7 +68,7 @@ class NoteCode(db.Model):
     # Only populated from auto-coder :-D
     start = db.Column(db.Integer)
     end = db.Column(db.Integer)
-    created_on = db.Column(db.DateTime, nullable=False)
+    created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
 
 
 class NoteConfirmation(db.Model):
@@ -69,6 +77,12 @@ class NoteConfirmation(db.Model):
     is_correct = db.Column(db.Boolean, default=True)
     comments = db.Column(db.String(2048), nullable=True)
     replace_with = db.Column(db.String(7), nullable=True)
-    created_on = db.Column(db.DateTime, nullable=False)
+    created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey("user_account.id"), nullable=False)
-    
+
+
+class ICD10Lookup(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    code = db.Column(db.String(7))
+    description = db.Column(db.String(256))
+    billable = db.Column(db.Boolean)

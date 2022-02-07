@@ -4,6 +4,12 @@
     margin-bottom: 2em;
 }
 
+.navbar img {
+    height:28px;
+    
+}
+
+
 .container {
     max-width: 1280px;
 }
@@ -19,4 +25,9 @@ h1 {
 
 .card {
     margin-bottom: 2em;
+}
+
+.full-width {
+    width: 100%;
+    margin-bottom: 1em;
 }

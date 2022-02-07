@@ -84,45 +84,25 @@
     </div>
     <div class="col-4">
         <h2>Clinical Coder</h2>
-
-
-        <div class="card">
-            <div class="card-header">
-                Diagnosis
+        {% for code in note.codes %}
+          {% if code.by == 'Clinical Coder' %}
+          {% if code.type == "Diagnosis" %}
+            <div class="btn btn-sm btn-danger full-width">
+              {{ code.code }}: {{ code.icd10_details.description }}
             </div>
-            <div class="card-body card-text">
-              
-            </div>
+          {% else %}
+          <div class="btn btn-sm btn-warning full-width">
+            {{ code.code }}
           </div>
-
-          <div class="card">
-            <div class="card-header">
-                Procedures
-            </div>
-            <div class="card-body card-text">
-              
-            </div>
-          </div>
-
+          {% endif %}
+          {% endif %}
+        {% endfor %}
         <h2>Auto-Coder</h2>
+        
+        <h2>Key</h2>
 
-        <div class="card">
-            <div class="card-header">
-                Diagnosis
-            </div>
-            <div class="card-body card-text">
-              
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-                Procedures
-            </div>
-            <div class="card-body card-text">
-              
-            </div>
-          </div>
+        <div class="btn btn-sm btn-danger">Diagnosis (ICD-10)</div>
+        <div class="btn btn-sm btn-warning">Procedure (OPCS-4)</div>
 
     </div>
 </div>

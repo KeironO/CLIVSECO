@@ -14,15 +14,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from flask import render_template
+from flask import render_template, url_for
 from flask_login import login_required
 
 from . import notes
 
 from sqlalchemy import func
 
-
 from .models import Note
+
+import requests
 
 @notes.route("/", methods=["GET"])
 @login_required
@@ -35,7 +36,10 @@ def home():
 @notes.route("/code")
 @login_required
 def code():
-    # Get a random note
-    note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
+    response = requests.get(url_for("api.get_random_note", _external=True))
 
-    return render_template("notes/view.html", note=note)
+    if response.status_code == 200:
+        note = response.json()
+        return render_template("notes/view.html", note=note)
+    else:
+        return response.content

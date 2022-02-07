@@ -16,11 +16,8 @@
 from __future__ import absolute_import
 
 from .database import db, UserAccount
-
+from .extensions import register_extensions
 from flask import Flask, g
-from flask_migrate import Migrate
-from flask_login import LoginManager
-from flask_marshmallow import Marshmallow
 
 from .commands import cmd_setup as cmd_setup_blueprint
 
@@ -28,9 +25,6 @@ from .auth import auth as auth_blueprint
 from .api import api as api_blueprint
 from .notes import notes as notes_blueprint
 
-login_manager = LoginManager()
-migrate = Migrate()
-ma = Marshmallow()
 
 def register_blueprints(app: Flask):
     app.register_blueprint(cmd_setup_blueprint)
@@ -38,17 +32,7 @@ def register_blueprints(app: Flask):
     app.register_blueprint(auth_blueprint, url_prefix="/auth")
     app.register_blueprint(notes_blueprint, url_prefix="/notes")
 
-def register_extensions(app: Flask):
-    db.init_app(app)
-    migrate.init_app(app, db)
-    ma.init_app(app)
 
-    login_manager.init_app(app)
-    login_manager.login_view = "auth.login"
-
-    @login_manager.user_loader
-    def load_user(user_id: int) -> UserAccount:
-        return UserAccount.query.get(user_id)
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)

@@ -13,32 +13,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import icd10
 
-from . import cmd_setup
+from flask import Flask
 
-from ..database import db, UserAccount, ICD10Lookup
+from flask_migrate import Migrate
+from flask_login import LoginManager
+from flask_marshmallow import Marshmallow
 
-@cmd_setup.cli.command("create-testuser")
-def create_testuser():
-    ua = UserAccount(
-        email="me@domain.com",
-        password="password"
-    )
-
-    db.session.add(ua)
-    db.session.commit()
+from .database import db, UserAccount
 
 
-@cmd_setup.cli.command("create-icd10-lookup")
-def create_icd10_lookup():
-    for code, values in icd10.codes.items():
-        icd10_lookup = ICD10Lookup(
-            code = code,
-            description=values[1],
-            billable=values[0]
-        )
+login_manager = LoginManager()
+migrate = Migrate()
+ma = Marshmallow()
 
-        db.session.add(icd10_lookup)
-        db.session.commit()
-        
+def register_extensions(app: Flask):
+    db.init_app(app)
+    migrate.init_app(app, db)
+    ma.init_app(app)
+
+    login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
+
+    @login_manager.user_loader
+    def load_user(user_id: int) -> UserAccount:
+        return UserAccount.query.get(user_id)
