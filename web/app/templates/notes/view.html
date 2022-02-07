@@ -8,7 +8,7 @@
 <h1>DAL: {{ note.dal_id }}</h1>
 
 <div class="row">
-    <div class="col-8">
+    <div class="col-9">
         <div class="card">
             <div class="card-header">
               Clinical Finding
@@ -21,7 +21,7 @@
           </div>
 
           <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-dark text-white">
               Presenting Complaint
             </div>
             <div class="card-body card-text">
@@ -32,7 +32,7 @@
           </div>
 
           <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-success text-white">
                 Treatment Narrative
             </div>
             <div class="card-body card-text">
@@ -43,10 +43,10 @@
           </div>
 
           <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-danger text-white">
                 Allergy
             </div>
-            <div class="card-body card-text">
+            <div class="card-body card-text ">
               <p class="card-text">
                   {{ note.allergy }}
               </p>
@@ -56,7 +56,7 @@
         <div class="row">
           <div class="col-6">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header bg-primary text-white">
                     Discharge Diagnosis 1
                 </div>
                 <div class="card-body card-text">
@@ -68,7 +68,7 @@
           </div>
           <div class="col-6">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header bg-primary text-white">
                     Discharge Diagnosis 2
                 </div>
                 <div class="card-body card-text">
@@ -82,7 +82,12 @@
 
 
     </div>
-    <div class="col-4">
+    <div class="col-3">
+      <h2>Key</h2>
+
+      <div class="btn btn-sm btn-danger full-width">Diagnosis (ICD-10)</div>
+      <div class="btn btn-sm btn-warning full-width">Procedure (OPCS-4)</div>
+      
         <h2>Clinical Coder</h2>
         {% for code in note.codes %}
           {% if code.by == 'Clinical Coder' %}
@@ -99,10 +104,57 @@
         {% endfor %}
         <h2>Auto-Coder</h2>
         
-        <h2>Key</h2>
+        <div class="card">
+          <div class="card-header">
+            Clinical Finding
+          </div>
+          <div class="card-body card-text">
+            <p class="card-text">
+            </p>
+          </div>
+        </div>
 
-        <div class="btn btn-sm btn-danger">Diagnosis (ICD-10)</div>
-        <div class="btn btn-sm btn-warning">Procedure (OPCS-4)</div>
+        <div class="card">
+          <div class="card-header bg-dark text-white">
+            Presenting Complaint
+          </div>
+          <div class="card-body card-text">
+            <p class="card-text">
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header bg-success text-white">
+              Treatment Narrative
+          </div>
+          <div class="card-body card-text">
+            <p class="card-text">
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header bg-danger text-white">
+              Allergy
+          </div>
+          <div class="card-body card-text ">
+            <p class="card-text">
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+              Diagnosis
+          </div>
+          <div class="card-body card-text ">
+            <p class="card-text">
+            </p>
+          </div>
+        </div>
+
+
 
     </div>
 </div>
