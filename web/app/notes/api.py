@@ -48,6 +48,9 @@ def get_icd(code):
     code = ICD10Lookup.query.filter(ICD10Lookup.code == code).first()
     return ICD10CodeSchema().dump(code), 200, {"ContentType": "application/json"}
 
+def get_opcs4(code):
+    code = OPCS4CodeLookup.query.filter(OPCS4CodeLookup.code == code).first()
+    return OPCS4CodeLookupSchema().dump(code), 200, {"ContentType": "application/json"}
 
 def validation_error_response(err):
     try:
@@ -67,6 +70,9 @@ def validation_error_response(err):
         {"ContentType": "application/json"},
     )
 
+@api.route("/code/OPCS4/<code>", methods=["GET"])
+def get_opcs4_code(code: str):
+    return get_opcs4(code)
 
 @api.route("/code/ICD10/<code>", methods=["GET"])
 def get_icd_code(code: str):

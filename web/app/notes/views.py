@@ -33,11 +33,6 @@ from marshmallow import fields, ValidationError
 import requests
 
 
-def geticd10(code):
-    response = requests.get(url_for("api.get_icd_code", code, _external=True))
-    return response.json()
-
-
 class OPCS4ChapterLookupSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = OPCS4ChapterLookup
@@ -117,8 +112,10 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     end = masql.auto_field()
 
     icd10_details = fields.Method("get_icd10_code")
-
+    opcs4_details = fields.Method("get_opcs4_code")
+    
     created_on = masql.auto_field()
+
 
     def get_icd10_code(self, obj):
         code = obj.code
@@ -129,6 +126,12 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
             url_for("api.get_icd_code", code=code, _external=True)
         ).json()
 
+    def get_opcs4_code(self, obj):
+        code = obj.code
+
+        return requests.get(
+            url_for("api.get_opcs4_code", code=code, _external=True)
+        ).json()
 
 class NewNoteCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:

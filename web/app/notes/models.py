@@ -54,7 +54,10 @@ class Note(db.Model):
     checked = db.Column(db.Boolean(), default=False, nullable=False)
 
     codes = db.relationship(
-        "NoteCode", uselist=True, primaryjoin="Note.id==NoteCode.note_id", viewonly=True
+        "NoteCode",
+        uselist=True,
+        primaryjoin="Note.id==NoteCode.note_id",
+        viewonly=True
     )
 
 

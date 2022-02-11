@@ -85,6 +85,7 @@
     <div class="col-3">
       <h2>Key</h2>
 
+
       <div class="btn btn-sm btn-danger full-width">Diagnosis (ICD-10)</div>
       <div class="btn btn-sm btn-warning full-width">Procedure (OPCS-4)</div>
       
@@ -97,7 +98,7 @@
             </div>
           {% else %}
           <div class="btn btn-sm btn-warning full-width">
-            {{ code.code }}
+            {{ code.code }}: {{ code.opcs4_details.description }}
           </div>
           {% endif %}
           {% endif %}
@@ -109,8 +110,15 @@
             Clinical Finding
           </div>
           <div class="card-body card-text">
-            <p class="card-text">
-            </p>
+            {% for code in note.codes %}
+            {% if code.by == 'AutoCoder' %}
+            {% if code.type == "Diagnosis" and code.cfrom =="Clinical Finding" %}
+              <div class="btn btn-sm btn-danger full-width">
+                {{ code.code }}: {{ code.icd10_details.description }}
+              </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
           </div>
         </div>
 
@@ -119,8 +127,15 @@
             Presenting Complaint
           </div>
           <div class="card-body card-text">
-            <p class="card-text">
-            </p>
+            {% for code in note.codes %}
+            {% if code.by == 'AutoCoder' %}
+            {% if code.type == "Diagnosis" and code.cfrom =="Presenting Complaint" %}
+              <div class="btn btn-sm btn-danger full-width">
+                {{ code.code }}: {{ code.icd10_details.description }}
+              </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
           </div>
         </div>
 
@@ -129,8 +144,15 @@
               Treatment Narrative
           </div>
           <div class="card-body card-text">
-            <p class="card-text">
-            </p>
+            {% for code in note.codes %}
+            {% if code.by == 'AutoCoder' %}
+            {% if code.type == "Diagnosis" and code.cfrom =="Treatment Narrative" %}
+              <div class="btn btn-sm btn-danger full-width">
+                {{ code.code }}: {{ code.icd10_details.description }}
+              </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
           </div>
         </div>
 
@@ -139,8 +161,15 @@
               Allergy
           </div>
           <div class="card-body card-text ">
-            <p class="card-text">
-            </p>
+            {% for code in note.codes %}
+            {% if code.by == 'AutoCoder' %}
+            {% if code.type == "Diagnosis" and code.cfrom =="Allergy" %}
+              <div class="btn btn-sm btn-danger full-width">
+                {{ code.code }}: {{ code.icd10_details.description }}
+              </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
           </div>
         </div>
 
@@ -150,6 +179,15 @@
           </div>
           <div class="card-body card-text ">
             <p class="card-text">
+              {% for code in note.codes %}
+              {% if code.by == 'AutoCoder' %}
+              {% if code.type == "Diagnosis" and code.cfrom =="Diagnoses" %}
+                <div class="btn btn-sm btn-danger full-width">
+                  {{ code.code }}: {{ code.icd10_details.description }}
+                </div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
             </p>
           </div>
         </div>
