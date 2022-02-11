@@ -23,12 +23,15 @@ from flask import render_template, flash, redirect, url_for
 from .forms import LoginForm
 from .models import UserAccount
 
+
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = UserAccount.query.filter(func.lower(UserAccount.email) == func.lower(form.email.data)).first()
+        user = UserAccount.query.filter(
+            func.lower(UserAccount.email) == func.lower(form.email.data)
+        ).first()
 
         if user is not None and user.verify_password(form.password.data):
             login_user(user)
@@ -36,6 +39,7 @@ def login():
         else:
             flash("Incorrect email or password.")
     return render_template("auth/login.html", form=form)
+
 
 @auth.route("/logout")
 @login_required

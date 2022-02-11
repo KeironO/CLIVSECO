@@ -19,12 +19,10 @@ from . import cmd_setup
 
 from ..database import db, UserAccount, ICD10Lookup
 
+
 @cmd_setup.cli.command("create-testuser")
 def create_testuser():
-    ua = UserAccount(
-        email="me@domain.com",
-        password="password"
-    )
+    ua = UserAccount(email="me@domain.com", password="password")
 
     db.session.add(ua)
     db.session.commit()
@@ -33,12 +31,7 @@ def create_testuser():
 @cmd_setup.cli.command("create-icd10-lookup")
 def create_icd10_lookup():
     for code, values in icd10.codes.items():
-        icd10_lookup = ICD10Lookup(
-            code = code,
-            description=values[1],
-            billable=values[0]
-        )
+        icd10_lookup = ICD10Lookup(code=code, description=values[1], billable=values[0])
 
         db.session.add(icd10_lookup)
         db.session.commit()
-        

@@ -27,6 +27,7 @@ login_manager = LoginManager()
 migrate = Migrate()
 ma = Marshmallow()
 
+
 def register_extensions(app: Flask):
     db.init_app(app)
     migrate.init_app(app, db)

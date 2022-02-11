@@ -17,8 +17,9 @@ from flask_login import UserMixin
 from ..database import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 class UserAccount(db.Model, UserMixin):
-    
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     email = db.Column(db.String(320), nullable=False, unique=True)
@@ -27,7 +28,7 @@ class UserAccount(db.Model, UserMixin):
     @property
     def password(self) -> str:
         return "hunter2"
-    
+
     @password.setter
     def password(self, password: str):
         self.password_hash = generate_password_hash(password)

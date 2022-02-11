@@ -16,7 +16,14 @@
 from enum import Enum
 from flask import url_for
 import marshmallow_sqlalchemy as masql
-from ..database import Note, NoteCode
+
+from ..database import (
+    Note,
+    NoteCode,
+    OPCS4ChapterLookup,
+    OPCS4SubChapterLookup,
+    OPCS4CodeLookup,
+)
 from ..database import CodeFrom, CodeType, CodedBy
 from ..database import ICD10Lookup
 from ..extensions import ma
@@ -25,12 +32,68 @@ from marshmallow import fields, ValidationError
 
 import requests
 
+
 def geticd10(code):
     response = requests.get(url_for("api.get_icd_code", code, _external=True))
     return response.json()
 
+
+class OPCS4ChapterLookupSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = OPCS4ChapterLookup
+
+    id = masql.auto_field()
+    chapter = masql.auto_field()
+    heading = masql.auto_field()
+
+
+class NewOPCS4ChapterLookupSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = OPCS4ChapterLookup
+
+    chapter = masql.auto_field()
+    heading = masql.auto_field()
+
+
+class OPCS4SubChapterLookupSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = OPCS4SubChapterLookup
+
+    id = masql.auto_field()
+    subchapter = masql.auto_field()
+    heading = masql.auto_field()
+    chapter = ma.Nested(OPCS4ChapterLookupSchema, many=False)
+
+
+class NewOPCS4SubChapterLookupSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = OPCS4SubChapterLookup
+
+    subchapter = masql.auto_field()
+    heading = masql.auto_field()
+    chapter_id = masql.auto_field()
+
+
+class OPCS4CodeLookupSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = OPCS4CodeLookup
+
+    id = masql.auto_field()
+    description = masql.auto_field()
+    subchapter = ma.Nested(OPCS4SubChapterLookupSchema, many=False)
+
+
+class NewOPCS4CodeLookupSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = OPCS4CodeLookup
+
+    code = masql.auto_field()
+    description = masql.auto_field()
+    subchapter_id = masql.auto_field()
+
+
 class ICD10CodeSchema(masql.SQLAlchemyAutoSchema):
-    class Meta():
+    class Meta:
         model = ICD10Lookup
 
     code = masql.auto_field()
@@ -39,11 +102,11 @@ class ICD10CodeSchema(masql.SQLAlchemyAutoSchema):
 
 
 class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
-    class Meta():
+    class Meta:
         model = NoteCode
 
     id = masql.auto_field()
-    
+
     by = EnumField(CodedBy, by_value=True)
     cfrom = EnumField(CodeFrom, by_value=True)
     type = EnumField(CodeType, by_value=True)
@@ -62,11 +125,13 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
 
         if code.endswith("X"):
             code = code[:-1]
-        return requests.get(url_for("api.get_icd_code", code=code, _external=True)).json()
+        return requests.get(
+            url_for("api.get_icd_code", code=code, _external=True)
+        ).json()
 
 
 class NewNoteCodeSchema(masql.SQLAlchemyAutoSchema):
-    class Meta():
+    class Meta:
         model = NoteCode
 
     by = EnumField(CodedBy)
@@ -79,18 +144,15 @@ class NewNoteCodeSchema(masql.SQLAlchemyAutoSchema):
     end = masql.auto_field(required=False)
 
 
-
-    
-
 class NoteSchema(masql.SQLAlchemyAutoSchema):
-    class Meta():
+    class Meta:
         model = Note
 
-    codes  = ma.Nested(NoteCodeSchema, many=True)
+    codes = ma.Nested(NoteCodeSchema, many=True)
 
 
 class NewNoteSchema(masql.SQLAlchemySchema):
-    class Meta():
+    class Meta:
         model = Note
 
     dal_id = masql.auto_field()

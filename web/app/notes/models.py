@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from pickle import TRUE
 from sqlalchemy import ForeignKey
 from ..database import db
 from enum import Enum
@@ -26,13 +25,16 @@ class CodeFrom(Enum):
     DIA = "Diagnoses"
     ALL = "Allergy"
 
+
 class CodeType(Enum):
     PROC = "Procedure"
-    DIAG = "Diagnosis"    
+    DIAG = "Diagnosis"
+
 
 class CodedBy(Enum):
     CODER = "Clinical Coder"
     AUTO = "AutoCoder"
+
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -52,11 +54,9 @@ class Note(db.Model):
     checked = db.Column(db.Boolean(), default=False, nullable=False)
 
     codes = db.relationship(
-        "NoteCode",
-        uselist=True,
-        primaryjoin="Note.id==NoteCode.note_id",
-        viewonly=True
+        "NoteCode", uselist=True, primaryjoin="Note.id==NoteCode.note_id", viewonly=True
     )
+
 
 class NoteCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -86,3 +86,41 @@ class ICD10Lookup(db.Model):
     code = db.Column(db.String(7))
     description = db.Column(db.String(256))
     billable = db.Column(db.Boolean)
+
+
+class OPCS4ChapterLookup(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    chapter = db.Column(db.String(8), unique=True)
+    heading = db.Column(db.String(256))
+
+
+class OPCS4SubChapterLookup(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    subchapter = db.Column(db.String(8), unique=True)
+    heading = db.Column(db.String(256))
+    chapter_id = db.Column(
+        db.Integer, ForeignKey(OPCS4ChapterLookup.id), nullable=False
+    )
+
+    chapter = db.relationship(
+        "OPCS4ChapterLookup",
+        uselist=False,
+        primaryjoin="OPCS4ChapterLookup.id==OPCS4SubChapterLookup.chapter_id",
+        viewonly=True,
+    )
+
+
+class OPCS4CodeLookup(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    code = db.Column(db.String(8))
+    description = db.Column(db.String(256))
+    subchapter_id = db.Column(
+        db.Integer, ForeignKey(OPCS4SubChapterLookup.id), nullable=False
+    )
+
+    subchapter = db.relationship(
+        "OPCS4SubChapterLookup",
+        uselist=False,
+        primaryjoin="OPCS4SubChapterLookup.id==OPCS4CodeLookup.subchapter_id",
+        viewonly=True,
+    )

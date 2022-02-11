@@ -25,12 +25,15 @@ from .models import Note
 
 import requests
 
+
 @notes.route("/", methods=["GET"])
 @login_required
 def home():
     note_count = Note.query.count()
     uncoded_count = Note.query.filter(Note.checked == False).count()
-    return render_template("notes/index.html", note_count=note_count, uncoded_count=uncoded_count)
+    return render_template(
+        "notes/index.html", note_count=note_count, uncoded_count=uncoded_count
+    )
 
 
 @notes.route("/code")

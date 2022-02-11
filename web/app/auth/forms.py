@@ -14,12 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from flask_wtf import FlaskForm
-from wtforms import (
-    PasswordField,
-    StringField,
-    SubmitField,
-    ValidationError
-)
+from wtforms import PasswordField, StringField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 

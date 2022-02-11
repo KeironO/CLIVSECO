@@ -19,13 +19,35 @@ from sqlalchemy import func
 
 from ..api import api, db
 
-from ..database import Note, NoteCode, NoteConfirmation, ICD10Lookup
+from ..database import (
+    Note,
+    NoteCode,
+    NoteConfirmation,
+    ICD10Lookup,
+    OPCS4ChapterLookup,
+    OPCS4SubChapterLookup,
+    OPCS4CodeLookup,
+)
 
-from .views import NoteSchema, NewNoteSchema, NewNoteCodeSchema, NoteCodeSchema, ICD10CodeSchema
+from .views import (
+    NoteSchema,
+    NewNoteSchema,
+    NewNoteCodeSchema,
+    NoteCodeSchema,
+    ICD10CodeSchema,
+    NewOPCS4ChapterLookupSchema,
+    OPCS4ChapterLookupSchema,
+    NewOPCS4SubChapterLookupSchema,
+    OPCS4SubChapterLookupSchema,
+    NewOPCS4CodeLookupSchema,
+    OPCS4CodeLookupSchema,
+)
+
 
 def get_icd(code):
     code = ICD10Lookup.query.filter(ICD10Lookup.code == code).first()
     return ICD10CodeSchema().dump(code), 200, {"ContentType": "application/json"}
+
 
 def validation_error_response(err):
     try:
@@ -72,9 +94,8 @@ def add_note():
         return (
             {"success": False, "message": "No input data provided"},
             400,
-            {"ContentType": "application/json"}
+            {"ContentType": "application/json"},
         )
-    
 
     try:
         note_result = NewNoteSchema().load(values)
@@ -95,15 +116,16 @@ def add_note():
             {"ContentType": "application/json"},
         )
 
-@api.route("/notes/add_code", methods=["POST"])
-def add_code():
+
+@api.route("/icd/add", methods=["POST"])
+def add_icd():
     values = request.get_json()
 
     if not values:
         return (
             {"success": False, "message": "No input data provided"},
             400,
-            {"ContentType": "application/json"}
+            {"ContentType": "application/json"},
         )
 
     try:
@@ -125,4 +147,95 @@ def add_code():
             {"ContentType": "application/json"},
         )
 
-    
+
+@api.route("/opcs4/add/subchapter", methods=["POST"])
+def opcs_subchapter():
+    values = request.get_json()
+
+    if not values:
+        return (
+            {"success": False, "message": "No input data provided"},
+            400,
+            {"ContentType": "application/json"},
+        )
+
+    try:
+        new_subchapter_result = NewOPCS4SubChapterLookupSchema().load(values)
+    except ValidationError as err:
+        return validation_error_response(err)
+
+    new_subchapter = OPCS4SubChapterLookup(**new_subchapter_result)
+
+    try:
+        db.session.add(new_subchapter)
+        db.session.commit()
+        db.session.flush()
+        return OPCS4SubChapterLookupSchema().dump(new_subchapter)
+    except Exception as err:
+        return (
+            {"success": False, "message": str(err)},
+            417,
+            {"ContentType": "application/json"},
+        )
+
+
+@api.route("/opcs4/add/chapter", methods=["POST"])
+def add_opcs_chapter():
+    values = request.get_json()
+
+    if not values:
+        return (
+            {"success": False, "message": "No input data provided"},
+            400,
+            {"ContentType": "application/json"},
+        )
+
+    try:
+        new_chapter_result = NewOPCS4ChapterLookupSchema().load(values)
+    except ValidationError as err:
+        return validation_error_response(err)
+
+    new_chapter = OPCS4ChapterLookup(**new_chapter_result)
+
+    try:
+        db.session.add(new_chapter)
+        db.session.commit()
+        db.session.flush()
+        return OPCS4ChapterLookupSchema().dump(new_chapter)
+    except Exception as err:
+        return (
+            {"success": False, "message": str(err)},
+            417,
+            {"ContentType": "application/json"},
+        )
+
+
+@api.route("/opcs4/add/code", methods=["POST"])
+def add_opcs_code():
+    values = request.get_json()
+
+    if not values:
+        return (
+            {"success": False, "message": "No input data provided"},
+            400,
+            {"ContentType": "application/json"},
+        )
+
+    try:
+        new_code_result = NewOPCS4CodeLookupSchema().load(values)
+    except ValidationError as err:
+        return validation_error_response(err)
+
+    new_code = OPCS4CodeLookup(**new_code_result)
+
+    try:
+        db.session.add(new_code)
+        db.session.commit()
+        db.session.flush()
+        return OPCS4CodeLookupSchema().dump(new_code)
+    except Exception as err:
+        return (
+            {"success": False, "message": str(err)},
+            417,
+            {"ContentType": "application/json"},
+        )

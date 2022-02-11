@@ -33,7 +33,6 @@ def register_blueprints(app: Flask):
     app.register_blueprint(notes_blueprint, url_prefix="/notes")
 
 
-
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_pyfile("config.py")
@@ -42,6 +41,7 @@ def create_app():
     register_blueprints(app)
 
     return app
+
 
 def setup_database(app):
     with app.app_context():
