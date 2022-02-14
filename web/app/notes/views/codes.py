@@ -33,11 +33,9 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = NoteCode
 
-    id = masql.auto_field()
     code = masql.auto_field()
-    
     type = EnumField(EnumCodeType)
-    created_on = masql.auto_field()
+    note_id = masql.auto_field()
 
 class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:

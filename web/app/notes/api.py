@@ -27,7 +27,8 @@ from ..api.responses import (
 
 from ..database import (
     Note,
-    NoteCode
+    NoteCode,
+    AutoCode
 )
 
 from .views import (
@@ -59,13 +60,13 @@ def new_note():
         db.session.add(new_note)
         db.session.commit()
         db.session.flush()
-        return NoteSchema().dump(new_note)
+        return success_with_content_response(NoteSchema().dump(new_note))
     except Exception as err:
         return transaction_error_response(err)
 
 @api.route("/notes/add/autocode", methods=["POST"])
 def add_autocode():
-    values = requests.get_json()
+    values = request.get_json()
 
     if not values:
         return no_values_response()
@@ -74,6 +75,30 @@ def add_autocode():
         autocode_result = AutoCodeSchema(exclude=("id",)).load(values)
     except ValidationError as err:
         return validation_error_response(err)
+    
+    new_note_code = NoteCode(**autocode_result["note_code"])
+    
+    try:
+        db.session.add(new_note_code)
+        db.session.commit()
+        db.session.flush()
+    except Exception:
+        return transaction_error_response(err)
+
+    
+    del autocode_result["note_code"]
+
+    new_auto_code = AutoCode(**autocode_result)
+    new_auto_code.note_code_id=new_note_code.id
+
+    try:
+        db.session.add(new_auto_code)
+        db.session.commit()
+        db.session.flush()
+        return success_with_content_response(AutoCodeSchema().dump(new_auto_code))
+    except Exception as err:
+        return transaction_error_response(err)
+
 
 '''
 @api.route("notes/code/add/icd/", methods=["POST"])
