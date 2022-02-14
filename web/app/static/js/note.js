@@ -92,6 +92,10 @@ function set_auto_coder(auto_codes) {
         }, function() {
             unhighlight_text(div_map.get(code["section"]))
         });
+
+        $("#gi-"+ note_code["id"]).click(function() {
+            window.open(code['_links']['feedback'], '_blank'); 
+        });
     }
 }
 

@@ -22,6 +22,7 @@ from . import notes
 from sqlalchemy import func
 
 from .models import Note
+from .forms import FeedbackForm
 
 import requests
 
@@ -53,3 +54,10 @@ def code():
 def code_endpoint():
     response = requests.get(url_for("api.get_random_note", _external=True))
     return response.content
+
+
+@notes.route("/code/feedback/<id>")
+@login_required
+def code_feedback(id: int):
+    form = FeedbackForm()
+    return render_template("notes/feedback.html", form=form)

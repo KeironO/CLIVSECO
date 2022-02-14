@@ -34,6 +34,7 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = NoteCode
 
+    id = masql.auto_field()
     code = masql.auto_field()
     type = EnumField(EnumCodeType)
     note_id = masql.auto_field()
@@ -62,6 +63,12 @@ class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
     section = EnumField(EnumCodedSection)
 
     note_code = ma.Nested(NoteCodeSchema, many=False)
+
+    _links = ma.Hyperlinks({
+        "feedback": ma.URLFor(
+            "notes.code_feedback", id="<id>", _external=True
+        )}
+    )
 
 
 class ClinicalCoderSchema(masql.SQLAlchemyAutoSchema):

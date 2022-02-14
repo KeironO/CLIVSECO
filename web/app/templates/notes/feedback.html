@@ -1,0 +1,20 @@
+{% extends "template.html" %}
+
+{% block title %}Auto-coder Feedback{% endblock %}
+
+{% block body %}
+
+<h1>
+    Note Feedback
+</h1>
+
+{{ form.csrf_token }}
+{{ render_field(form.is_correct) }}
+{{ render_field(form.replace) }}
+{{ render_field(form.replace_with) }}
+{{ render_field(form.comments) }}
+{{ render_field(form.submit) }}
+
+
+
+{% endblock %}
