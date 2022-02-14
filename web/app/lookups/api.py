@@ -96,11 +96,7 @@ def add_opcs_chapter():
         db.session.flush()
         return OPCS4ChapterLookupSchema().dump(new_chapter)
     except Exception as err:
-        return (
-            {"success": False, "message": str(err)},
-            417,
-            {"ContentType": "application/json"},
-        )
+        return transaction_error_response(err)
 
 
 @api.route("/opcs4/add/code", methods=["POST"])
