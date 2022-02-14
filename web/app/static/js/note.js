@@ -40,6 +40,17 @@ function set_auto_coder(auto_codes) {
         let code = auto_codes[i];
         let note_code = code["note_code"];
         
+        if (note_code["type"] == "DIAG") {
+            var bg = "bg-danger text-white"
+        }
+
+        else {
+            var bg = "bg-warning"
+        }
+
+        $("#auto-coder-list-group").append(
+            "<li class='list-group-item " + bg + "'>" + note_code["code"] + "</li>"
+        );
     }
 }
 

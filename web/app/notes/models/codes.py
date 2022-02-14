@@ -13,10 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from flask import url_for
 from sqlalchemy import ForeignKey
 from ...database import db
 from enum import Enum
-
+from marshmallow import fields
+import requests
 
 class EnumCodedSection(Enum):
     CLI = "Clinical Finding"
@@ -37,6 +39,18 @@ class NoteCode(db.Model):
     note_id = db.Column(db.Integer, ForeignKey("note.id"), nullable=False)
     type = db.Column(db.Enum(EnumCodeType), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
+    
+    code_information = fields.Method("retrieve_information")
+
+    def retrieve_information(self, obj):
+        code = obj.code
+        
+        if obj.type == "PROC":
+            return requests.get(url_for("api.get_opcs_code", code=code, _external=True)).json()["contents"]
+        else:
+            if code.endswith("X"):
+                code = code[:-1]
+            return requests.get(url_for("api.get_icd_code", code=code, _external=True)).json()["contents"]
 
 
 class AutoCode(db.Model):
