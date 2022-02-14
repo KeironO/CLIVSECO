@@ -98,28 +98,3 @@ def add_autocode():
         return success_with_content_response(AutoCodeSchema().dump(new_auto_code))
     except Exception as err:
         return transaction_error_response(err)
-
-
-'''
-@api.route("notes/code/add/icd/", methods=["POST"])
-def add_icd():
-    values = request.get_json()
-
-    if not values:
-        return no_values_response()
-
-    try:
-        new_code_result = NewNoteCodeSchema().load(values)
-    except ValidationError as err:
-        return validation_error_response(err)
-
-    new_code = NoteCode(**new_code_result)
-
-    try:
-        db.session.add(new_code)
-        db.session.commit()
-        db.session.flush()
-        return NoteCodeSchema().dump(new_code)
-    except Exception as err:
-        return transaction_error_response(err)
-'''
