@@ -63,8 +63,6 @@ db.sqlite3
 db.sqlite3-journal
 *.db
 
-# Flask stuff:
-instance/
 .webassets-cache
 
 # Scrapy stuff:
@@ -133,5 +131,4 @@ dmypy.json
 .env
 
 # Keiron's stuff
-! web/instance/config.py
 web/migrations/versions/*.py
