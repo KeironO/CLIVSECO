@@ -1,4 +1,4 @@
-function get_sample() {
+function get_note() {
     var api_url = encodeURI(window.location + '/endpoint');
 
     var json = (function () {
@@ -18,12 +18,11 @@ function get_sample() {
         });
         return json;
     })();
-
     return json;
-
 }
 
 
 $(document).ready(function () {
-    console.log("JavaScript Injected Correctly :-D");
+    var note = get_note()["content"];
+    console.log(note);
 });
