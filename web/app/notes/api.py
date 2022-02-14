@@ -32,6 +32,7 @@ from ..database import (
 
 from .views import (
     NoteSchema,
+    AutoCodeSchema
 )
 
 
@@ -64,7 +65,15 @@ def new_note():
 
 @api.route("/notes/add/autocode", methods=["POST"])
 def add_autocode():
-    pass
+    values = requests.get_json()
+
+    if not values:
+        return no_values_response()
+
+    try:
+        autocode_result = AutoCodeSchema(exclude=("id",)).load(values)
+    except ValidationError as err:
+        return validation_error_response(err)
 
 '''
 @api.route("notes/code/add/icd/", methods=["POST"])

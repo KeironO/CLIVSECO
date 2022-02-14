@@ -31,5 +31,3 @@ class Note(db.Model):
     allergy = db.Column(db.String(2048))
 
     checked = db.Column(db.Boolean(), default=False, nullable=False)
-
-
