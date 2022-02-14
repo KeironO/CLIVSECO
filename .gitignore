@@ -133,6 +133,5 @@ dmypy.json
 .env
 
 # Keiron's stuff
-/web/migrations/versions/*
-
 ! web/instance/config.py
+web/migrations/versions/*.py
