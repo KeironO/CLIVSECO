@@ -26,16 +26,10 @@ class Note(db.Model):
 
     treatment_narrative = db.Column(db.String(8096))
 
-    discharge_diagnosis_1 = db.Column(db.String(1024))
-    discharge_diagnosis_2 = db.Column(db.String(1024))
+    discharge_diagnoses = db.Column(db.String(1024))
 
     allergy = db.Column(db.String(2048))
 
     checked = db.Column(db.Boolean(), default=False, nullable=False)
 
-    codes = db.relationship(
-        "NoteCode",
-        uselist=True,
-        primaryjoin="Note.id==NoteCode.note_id",
-        viewonly=True
-    )
+    # TODO: Code Relationships (Auto and Clinical Coder :-D)

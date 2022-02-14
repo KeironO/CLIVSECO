@@ -17,7 +17,7 @@ from sqlalchemy import ForeignKey
 from ...database import db
 from enum import Enum
 
-class CodeFrom(Enum):
+class CodedSection(Enum):
     CLI = "Clinical Finding"
     PRE = "Presenting Complaint"
     TRE = "Treatment Narrative"
@@ -40,7 +40,7 @@ class AutoCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     start = db.Column(db.Integer)
     end = db.Column(db.Integer)
-    code_from = db.Column(db.Enum(CodeFrom))
+    section = db.Column(db.Enum(CodedSection))
     note_code_id = db.Column(db.Integer, ForeignKey(NoteCode.id), nullable=False)
 
 class ClinicalCoderCode(db.Model):
