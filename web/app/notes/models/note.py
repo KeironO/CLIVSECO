@@ -32,3 +32,21 @@ class Note(db.Model):
     allergy = db.Column(db.String(2048))
 
     checked = db.Column(db.Boolean(), default=False, nullable=False)
+
+    auto_codes = db.relationship(
+        "AutoCode",
+        uselist=True,
+        secondary="note_code",
+        primaryjoin="Note.id==NoteCode.note_id",
+        secondaryjoin="NoteCode.id==AutoCode.note_code_id",
+        viewonly=True
+    )
+
+    clinical_coder_codes = db.relationship(
+        "ClinicalCoderCode",
+        uselist=True,
+        secondary="note_code",
+        primaryjoin="Note.id==NoteCode.note_id",
+        secondaryjoin="NoteCode.id==ClinicalCoderCode.note_code_id",
+        viewonly=True
+    )

@@ -17,8 +17,16 @@ from flask import url_for
 import marshmallow_sqlalchemy as masql
 
 from ...database import Note
+from ...extensions import ma
+
+
+from .codes import AutoCodeSchema, ClinicalCoderSchema
 
 
 class NoteSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = Note
+
+
+    auto_codes = ma.Nested(AutoCodeSchema, many=True)
+    clinicalcoder_codes = ma.Nested(ClinicalCoderSchema, many=True)
