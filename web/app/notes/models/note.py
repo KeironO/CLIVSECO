@@ -32,5 +32,4 @@ class Note(db.Model):
 
     checked = db.Column(db.Boolean(), default=False, nullable=False)
 
-    # TODO: Code Relationships (Auto and Clinical Coder :-D)
-    
+

@@ -46,7 +46,7 @@ class AutoCode(db.Model):
     note_code = db.relationship(
         "NoteCode",
         uselist=False,
-        primaryjoin="AutoCode.id == NoteCode.id"
+        primaryjoin="AutoCode.note_code_id == NoteCode.id"
     )
 
 class ClinicalCoderCode(db.Model):
@@ -57,5 +57,5 @@ class ClinicalCoderCode(db.Model):
     note_code = db.relationship(
         "NoteCode",
         uselist=False,
-        primaryjoin="ClinicalCoderCode.id == NoteCode.id"
+        primaryjoin="ClinicalCoderCode.note_code_id == NoteCode.id"
     )
