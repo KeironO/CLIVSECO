@@ -19,6 +19,7 @@ from sqlalchemy import func
 
 from ..api import api, db
 from ..api.responses import (
+    no_values_response,
     validation_error_response,
     success_with_content_response
 )
@@ -39,27 +40,15 @@ from .views import (
 
 @api.route("/notes/get", methods=["GET"])
 def get_random_note():
-    try:
-        note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
-        return success_with_content_response(NoteSchema().dump(note))
-    except Exception as err:
-        return (
-            {"success": False, "message": str(err)},
-            417,
-            {"ContentType": "application/json"},
-        )
-
+    note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
+    return success_with_content_response(NoteSchema().dump(note))
 
 @api.route("/notes/add", methods=["POST"])
 def add_note():
     values = request.get_json()
 
     if not values:
-        return (
-            {"success": False, "message": "No input data provided"},
-            400,
-            {"ContentType": "application/json"},
-        )
+        return no_values_response()
 
     try:
         note_result = NewNoteSchema().load(values)
