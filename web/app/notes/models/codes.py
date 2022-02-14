@@ -17,7 +17,7 @@ from sqlalchemy import ForeignKey
 from ...database import db
 from enum import Enum
 
-class CodedSection(Enum):
+class EnumCodedSection(Enum):
     CLI = "Clinical Finding"
     PRE = "Presenting Complaint"
     TRE = "Treatment Narrative"
@@ -25,7 +25,7 @@ class CodedSection(Enum):
     ALL = "Allergy"
 
 
-class CodeType(Enum):
+class EnumCodeType(Enum):
     PROC = "Procedure"
     DIAG = "Diagnosis"
 
@@ -33,17 +33,29 @@ class NoteCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     code = db.Column(db.String(7), nullable=False)
     note_id = db.Column(db.Integer, ForeignKey("note.id"), nullable=False)
-    type = db.Column(db.Enum(CodeType), nullable=False)
+    type = db.Column(db.Enum(EnumCodeType), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
 
 class AutoCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     start = db.Column(db.Integer)
     end = db.Column(db.Integer)
-    section = db.Column(db.Enum(CodedSection))
+    section = db.Column(db.Enum(EnumCodedSection))
     note_code_id = db.Column(db.Integer, ForeignKey(NoteCode.id), nullable=False)
+
+    note_code = db.relationship(
+        "NoteCode",
+        uselist=False,
+        primaryjoin="AutoCode.id == NoteCode.id"
+    )
 
 class ClinicalCoderCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     coded_by = db.Column(db.String(15))
     note_code_id = db.Column(db.Integer, ForeignKey(NoteCode.id), nullable=False)
+    
+    note_code = db.relationship(
+        "NoteCode",
+        uselist=False,
+        primaryjoin="ClinicalCoderCode.id == NoteCode.id"
+    )

@@ -62,6 +62,9 @@ def new_note():
     except Exception as err:
         return transaction_error_response(err)
 
+@api.route("/notes/add/autocode", methods=["POST"])
+def add_autocode():
+    pass
 
 '''
 @api.route("notes/code/add/icd/", methods=["POST"])

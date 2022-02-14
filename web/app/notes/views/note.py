@@ -17,13 +17,8 @@ from flask import url_for
 import marshmallow_sqlalchemy as masql
 
 from ...database import (
-    Note,
-    CodedSection,
-    CodeType
+    Note
 )
-from ...extensions import ma
-from marshmallow_enum import EnumField
-from marshmallow import fields
 
 class NoteSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
