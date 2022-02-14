@@ -25,9 +25,9 @@ from ..api.responses import (
     transaction_error_response,
 )
 
-from ..database import Note, NoteCode, AutoCode
+from ..database import Note, NoteCode, AutoCode, ClinicalCoderCode
 
-from .views import NoteSchema, AutoCodeSchema
+from .views import NoteSchema, AutoCodeSchema, ClinicalCoderSchema
 
 
 @api.route("/notes/get", methods=["GET"])
@@ -58,6 +58,39 @@ def new_note():
     except Exception as err:
         return transaction_error_response(err)
 
+@api.route("/notes/add/clinicalcode", methods=["POST"])
+def add_clinicalcode():
+    values = request.get_json()
+
+    if not values:
+        return no_values_response()
+
+    try:
+        clinical_code_result = ClinicalCoderSchema(exclude=("id",)).load(values)
+    except ValidationError as err:
+        return validation_error_response(err)
+
+    new_note_code = NoteCode(**clinical_code_result["note_code"])
+
+    try:
+        db.session.add(new_note_code)
+        db.session.commit()
+        db.session.flush()
+    except Exception as err:
+        return transaction_error_response(err)
+
+    del clinical_code_result["note_code"]
+
+    new_clinical_code = ClinicalCoderCode(**clinical_code_result)
+    new_clinical_code.note_code_id = new_note_code.id
+
+    try:
+        db.session.add(new_clinical_code)
+        db.session.commit()
+        db.session.flush()
+        return success_with_content_response(ClinicalCoderSchema().dump(new_clinical_code))
+    except Exception as err:
+        return transaction_error_response(err)
 
 @api.route("/notes/add/autocode", methods=["POST"])
 def add_autocode():
@@ -77,7 +110,7 @@ def add_autocode():
         db.session.add(new_note_code)
         db.session.commit()
         db.session.flush()
-    except Exception:
+    except Exception as err:
         return transaction_error_response(err)
 
     del autocode_result["note_code"]
