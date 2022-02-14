@@ -22,14 +22,12 @@ function get_note() {
 }
 
 function set_heading(dal_id) {
-    console.log(dal_id);
     document.title = dal_id + " : CLIVSECO";
     $("#note-heading").html(dal_id);
 }
 
 
 function set_content(note) {
-    console.log(note["discharge_diagnoses"]);
     $("#presenting-complaint-text").append(note["presenting_complaint"]);
     $("#clinical-finding-text").append(note["clinical_finding"]);
     $("#treatment-narrative-text").append(note["treatment_narrative"]);
@@ -37,9 +35,18 @@ function set_content(note) {
     $("#discharge-diagnoses-text").append(note["discharge_diagnoses"]);
 }
 
+function set_auto_coder(auto_codes) {
+    for (i in auto_codes) {
+        let code = auto_codes[i];
+        let note_code = code["note_code"];
+        
+    }
+}
+
 $(document).ready(function () {
     var note = get_note()["content"];
 
     set_heading(note["dal_id"]);
     set_content(note);
+    set_auto_coder(note["auto_codes"]);
 });
