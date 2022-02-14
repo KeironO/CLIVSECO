@@ -18,7 +18,10 @@ from marshmallow import ValidationError
 from sqlalchemy import func
 
 from ..api import api, db
-from ..api.responses import validation_error_response
+from ..api.responses import (
+    validation_error_response,
+    success_with_content_response
+)
 
 from ..database import (
     Note,
@@ -38,7 +41,7 @@ from .views import (
 def get_random_note():
     try:
         note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
-        return NoteSchema().dump(note), 200, {"ContentType": "application/json"}
+        return success_with_content_response(NoteSchema().dump(note))
     except Exception as err:
         return (
             {"success": False, "message": str(err)},

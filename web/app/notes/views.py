@@ -28,10 +28,9 @@ from ..database import CodeFrom, CodeType, CodedBy
 from ..database import ICD10Lookup
 from ..extensions import ma
 from marshmallow_enum import EnumField
-from marshmallow import fields, ValidationError
+from marshmallow import fields
 
 import requests
-
 
 class OPCS4ChapterLookupSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
