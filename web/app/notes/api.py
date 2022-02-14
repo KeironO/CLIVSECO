@@ -44,7 +44,7 @@ def new_note():
         return no_values_response()
 
     try:
-        note_result = NoteSchema(exclude=("id",)).load(values)
+        note_result = NoteSchema(exclude=("id", "auto_codes", "clinical_coder_codes")).load(values)
     except ValidationError as err:
         return validation_error_response(err)
 
