@@ -55,10 +55,8 @@ function set_content(note) {
 
 function highlight_text(div, start, end) {
     var contents = $("#" + div ).html();
-
     contents = contents.insert(end+1, "</span>")
     contents = contents.insert(start, "<span class='highlight'>")
-
     $("#" + div ).html(contents);
 }
 
@@ -67,6 +65,11 @@ function unhighlight_text(div) {
 }
 
 function set_auto_coder(auto_codes) {
+
+    if (auto_codes.length > 0) {
+        $("#auto-coder-none").remove();
+    }
+
     for (i in auto_codes) {
         let code = auto_codes[i];
         let note_code = code["note_code"];
