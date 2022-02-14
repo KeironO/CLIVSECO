@@ -1,3 +1,18 @@
+String.prototype.insert = function(index, string) {
+    if (index > 0) {
+      return this.substring(0, index) + string + this.substr(index);
+    }
+  
+    return string + this;
+};
+
+const div_map = new Map();
+
+div_map.set('DIA', 'discharge-diagnoses-text')
+div_map.set('TRE', 'treatment-narrative-text')
+div_map.set('CLI', 'clinical-finding-text')
+div_map.set('PRE', 'presenting-complaint-text')
+
 function get_note() {
     var api_url = encodeURI(window.location + '/endpoint');
 
@@ -27,12 +42,28 @@ function set_heading(dal_id) {
 }
 
 
+
 function set_content(note) {
     $("#presenting-complaint-text").append(note["presenting_complaint"]);
     $("#clinical-finding-text").append(note["clinical_finding"]);
     $("#treatment-narrative-text").append(note["treatment_narrative"]);
     $("#allergy-text").append(note["allergy"]);
     $("#discharge-diagnoses-text").append(note["discharge_diagnoses"]);
+}
+
+
+
+function highlight_text(div, start, end) {
+    var contents = $("#" + div ).html();
+
+    contents = contents.insert(end+1, "</span>")
+    contents = contents.insert(start, "<span class='highlight'>")
+
+    $("#" + div ).html(contents);
+}
+
+function unhighlight_text(div) {
+    $('#' + div ).find('span').contents().unwrap();
 }
 
 function set_auto_coder(auto_codes) {
@@ -48,9 +79,16 @@ function set_auto_coder(auto_codes) {
             var bg = "bg-warning"
         }
 
+
         $("#auto-coder-list-group").append(
-            "<li class='list-group-item " + bg + "'>" + note_code["code"] + "</li>"
+            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'>" + note_code["code"] + "</li>"
         );
+
+        $("#gi-"+ note_code["id"]).hover(function() {
+            highlight_text(div_map.get(code["section"]), code["start"], code["end"]);
+        }, function() {
+            unhighlight_text(div_map.get(code["section"]))
+        });
     }
 }
 
