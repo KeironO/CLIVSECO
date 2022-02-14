@@ -95,9 +95,34 @@ function set_auto_coder(auto_codes) {
     }
 }
 
+function set_clinical_coder(clinical_codes) {
+    if (clinical_codes.length > 0) {
+        $("#clinical-coder-none").remove();
+    }
+
+    for (i in clinical_codes) {
+        let code = clinical_codes[i];
+        let note_code = code["note_code"]
+
+        if (note_code["type"] == "DIAG") {
+            var bg = "bg-danger text-white"
+        }
+
+        else {
+            var bg = "bg-warning"
+        }
+
+        $("#clinical-coder-list-group").append(
+            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'>" + note_code["code"] + "</li>"
+        );
+
+    }
+}
+
 $(document).ready(function () {
     var note = get_note()["content"];
     set_heading(note["dal_id"]);
     set_content(note);
     set_auto_coder(note["auto_codes"]);
+    set_clinical_coder(note["clinical_coder_codes"]);
 });
