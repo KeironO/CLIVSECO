@@ -108,11 +108,7 @@ def add_opcs_code():
     values = request.get_json()
 
     if not values:
-        return (
-            {"success": False, "message": "No input data provided"},
-            400,
-            {"ContentType": "application/json"},
-        )
+        return no_values_response()
 
     try:
         new_code_result = NewOPCS4CodeLookupSchema().load(values)
@@ -127,8 +123,4 @@ def add_opcs_code():
         db.session.flush()
         return OPCS4CodeLookupSchema().dump(new_code)
     except Exception as err:
-        return (
-            {"success": False, "message": str(err)},
-            417,
-            {"ContentType": "application/json"},
-        )
+        return transaction_error_response(err)
