@@ -18,6 +18,7 @@ from marshmallow import ValidationError
 from sqlalchemy import func
 
 from ..api import api, db
+from ..api.responses import validation_error_response
 
 from ..database import (
     Note,
@@ -51,24 +52,6 @@ def get_icd(code):
 def get_opcs4(code):
     code = OPCS4CodeLookup.query.filter(OPCS4CodeLookup.code == code).first()
     return OPCS4CodeLookupSchema().dump(code), 200, {"ContentType": "application/json"}
-
-def validation_error_response(err):
-    try:
-        message = err.messages
-
-    except AttributeError:
-        if isinstance(err, str):
-            message = err
-        elif "messages" in err.keys():
-            message = err["messages"]
-        elif "message" in err.keys():
-            message = err["message"]
-
-    return (
-        {"success": False, "message": message, "type": "Validation Error"},
-        417,
-        {"ContentType": "application/json"},
-    )
 
 @api.route("/code/OPCS4/<code>", methods=["GET"])
 def get_opcs4_code(code: str):

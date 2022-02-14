@@ -12,3 +12,22 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+def validation_error_response(err):
+    try:
+        message = err.messages
+
+    except AttributeError:
+        if isinstance(err, str):
+            message = err
+        elif "messages" in err.keys():
+            message = err["messages"]
+        elif "message" in err.keys():
+            message = err["message"]
+
+    return (
+        {"success": False, "message": message, "type": "Validation Error"},
+        417,
+        {"ContentType": "application/json"},
+    )
