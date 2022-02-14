@@ -22,25 +22,19 @@ from ..api.responses import (
     no_values_response,
     validation_error_response,
     success_with_content_response,
-    transaction_error_response
+    transaction_error_response,
 )
 
-from ..database import (
-    Note,
-    NoteCode,
-    AutoCode
-)
+from ..database import Note, NoteCode, AutoCode
 
-from .views import (
-    NoteSchema,
-    AutoCodeSchema
-)
+from .views import NoteSchema, AutoCodeSchema
 
 
 @api.route("/notes/get", methods=["GET"])
 def get_random_note():
     note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
     return success_with_content_response(NoteSchema().dump(note))
+
 
 @api.route("/notes/new", methods=["POST"])
 def new_note():
@@ -50,7 +44,7 @@ def new_note():
         return no_values_response()
 
     try:
-        note_result = NoteSchema(exclude=('id',)).load(values)
+        note_result = NoteSchema(exclude=("id",)).load(values)
     except ValidationError as err:
         return validation_error_response(err)
 
@@ -64,6 +58,7 @@ def new_note():
     except Exception as err:
         return transaction_error_response(err)
 
+
 @api.route("/notes/add/autocode", methods=["POST"])
 def add_autocode():
     values = request.get_json()
@@ -75,9 +70,9 @@ def add_autocode():
         autocode_result = AutoCodeSchema(exclude=("id",)).load(values)
     except ValidationError as err:
         return validation_error_response(err)
-    
+
     new_note_code = NoteCode(**autocode_result["note_code"])
-    
+
     try:
         db.session.add(new_note_code)
         db.session.commit()
@@ -85,11 +80,10 @@ def add_autocode():
     except Exception:
         return transaction_error_response(err)
 
-    
     del autocode_result["note_code"]
 
     new_auto_code = AutoCode(**autocode_result)
-    new_auto_code.note_code_id=new_note_code.id
+    new_auto_code.note_code_id = new_note_code.id
 
     try:
         db.session.add(new_auto_code)

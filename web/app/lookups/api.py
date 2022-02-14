@@ -22,7 +22,7 @@ from ..api.responses import (
     validation_error_response,
     no_values_response,
     transaction_error_response,
-    success_with_content_response
+    success_with_content_response,
 )
 
 from ..database import (
@@ -42,6 +42,7 @@ from .views import (
     OPCS4CodeLookupSchema,
 )
 
+
 @api.route("/code/OPCS4/<code>", methods=["GET"])
 def get_opcs_code(code: str):
     code = OPCS4CodeLookup.query.filter(OPCS4CodeLookup.code == code).first()
@@ -52,6 +53,7 @@ def get_opcs_code(code: str):
 def get_icd_code(code: str):
     code = ICD10Lookup.query.filter(ICD10Lookup.code == code).first()
     return success_with_content_response(ICD10CodeSchema().dump(code))
+
 
 @api.route("/opcs4/add/subchapter", methods=["POST"])
 def opcs_subchapter():
@@ -71,7 +73,9 @@ def opcs_subchapter():
         db.session.add(new_subchapter)
         db.session.commit()
         db.session.flush()
-        return success_with_content_response(OPCS4SubChapterLookupSchema().dump(new_subchapter))
+        return success_with_content_response(
+            OPCS4SubChapterLookupSchema().dump(new_subchapter)
+        )
     except Exception as err:
         return transaction_error_response(err)
 

@@ -16,9 +16,8 @@
 from flask import url_for
 import marshmallow_sqlalchemy as masql
 
-from ...database import (
-    Note
-)
+from ...database import Note
+
 
 class NoteSchema(masql.SQLAlchemyAutoSchema):
     class Meta:

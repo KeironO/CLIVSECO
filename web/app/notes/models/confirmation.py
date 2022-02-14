@@ -25,4 +25,3 @@ class NoteConfirmation(db.Model):
     replace_with = db.Column(db.String(7), nullable=True)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey("user_account.id"), nullable=False)
-

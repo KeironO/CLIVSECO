@@ -47,6 +47,7 @@ def code():
     else:
         return response.content
 
+
 @notes.route("/code/endpoint")
 @login_required
 def code_endpoint():

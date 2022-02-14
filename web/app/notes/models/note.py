@@ -16,6 +16,7 @@
 from sqlalchemy import ForeignKey
 from ...database import db
 
+
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 

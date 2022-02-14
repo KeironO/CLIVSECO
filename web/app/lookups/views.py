@@ -22,9 +22,8 @@ from ..database import (
     OPCS4ChapterLookup,
     OPCS4SubChapterLookup,
     OPCS4CodeLookup,
-    ICD10Lookup
+    ICD10Lookup,
 )
-
 
 
 class OPCS4ChapterLookupSchema(masql.SQLAlchemyAutoSchema):
@@ -88,5 +87,3 @@ class ICD10CodeSchema(masql.SQLAlchemyAutoSchema):
     code = masql.auto_field()
     description = masql.auto_field()
     billable = masql.auto_field()
-
-

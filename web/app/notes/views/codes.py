@@ -22,12 +22,13 @@ from ...database import (
     AutoCode,
     ClinicalCoderCode,
     EnumCodedSection,
-    EnumCodeType
+    EnumCodeType,
 )
 
 from ...extensions import ma
 from marshmallow_enum import EnumField
 from marshmallow import fields
+
 
 class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
@@ -37,10 +38,11 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     type = EnumField(EnumCodeType)
     note_id = masql.auto_field()
 
+
 class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = AutoCode
-    
+
     id = masql.auto_field()
     start = masql.auto_field()
     end = masql.auto_field()
@@ -52,9 +54,7 @@ class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
 class ClinicalCoderSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = ClinicalCoderCode
-    
+
     id = masql.auto_field()
     coded_by = masql.auto_field()
     note_code = ma.Nested(NoteCodeSchema, many=False)
-
-

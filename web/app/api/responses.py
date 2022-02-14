@@ -40,6 +40,7 @@ def no_values_response():
         {"ContentType": "application/json"},
     )
 
+
 def transaction_error_response(err):
     try:
         return (
@@ -54,12 +55,14 @@ def transaction_error_response(err):
             {"ContentType": "application/json"},
         )
 
+
 def success_with_content_response(content):
     return (
         {"success": True, "content": content},
         200,
         {"ContentType": "application/json"},
     )
+
 
 def success_without_content_response():
     return {"success": True}, 200, {"ContentType": "application/json"}
