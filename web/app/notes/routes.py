@@ -43,6 +43,12 @@ def code():
 
     if response.status_code == 200:
         note = response.json()
-        return render_template("notes/view.html", note=note)
+        return render_template("notes/view.html", note=note["content"])
     else:
         return response.content
+
+@notes.route("/code/endpoint")
+@login_required
+def code_endpoint():
+    response = requests.get(url_for("api.get_random_note", _external=True))
+    return response.content

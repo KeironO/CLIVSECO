@@ -32,11 +32,7 @@ from ..database import (
 
 from .views import (
     NoteSchema,
-    NewNoteSchema,
-    NewNoteCodeSchema,
-    NoteCodeSchema,
 )
-
 
 
 @api.route("/notes/get", methods=["GET"])
@@ -44,15 +40,15 @@ def get_random_note():
     note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
     return success_with_content_response(NoteSchema().dump(note))
 
-@api.route("/notes/add", methods=["POST"])
-def add_note():
+@api.route("/notes/new", methods=["POST"])
+def new_note():
     values = request.get_json()
 
     if not values:
         return no_values_response()
 
     try:
-        note_result = NewNoteSchema().load(values)
+        note_result = NoteSchema(exclude=('id',)).load(values)
     except ValidationError as err:
         return validation_error_response(err)
 
@@ -67,6 +63,7 @@ def add_note():
         return transaction_error_response(err)
 
 
+'''
 @api.route("notes/code/add/icd/", methods=["POST"])
 def add_icd():
     values = request.get_json()
@@ -88,3 +85,4 @@ def add_icd():
         return NoteCodeSchema().dump(new_code)
     except Exception as err:
         return transaction_error_response(err)
+'''
