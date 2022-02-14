@@ -1,44 +1,37 @@
 {% extends "template.html" %}
 
-{% block title %}{% endblock %}
-
 {% block body %}
 
 
-<h1></h1>
+<h1 id="note-heading"></h1>
 
 <div class="row">
     <div class="col-9">
+      
+      <div class="card">
+        <div class="card-header bg-dark text-white">
+          Presenting Complaint
+        </div>
+        <div class="card-body card-text" id="presenting-complaint-text">
+          
+        </div>
+      </div>
         <div class="card">
             <div class="card-header">
               Clinical Finding
             </div>
-            <div class="card-body card-text">
-              <p class="card-text">
-                  
-              </p>
+            <div class="card-body card-text" id="clinical-finding-text">
+
             </div>
           </div>
 
-          <div class="card">
-            <div class="card-header bg-dark text-white">
-              Presenting Complaint
-            </div>
-            <div class="card-body card-text">
-              <p class="card-text">
-                  
-              </p>
-            </div>
-          </div>
 
           <div class="card">
             <div class="card-header bg-success text-white">
                 Treatment Narrative
             </div>
-            <div class="card-body card-text">
-              <p class="card-text">
-                  
-              </p>
+            <div class="card-body card-text" id="treatment-narrative-text">
+
             </div>
           </div>
 
@@ -46,10 +39,7 @@
             <div class="card-header bg-danger text-white">
                 Allergy
             </div>
-            <div class="card-body card-text ">
-              <p class="card-text">
-                  
-              </p>
+            <div class="card-body card-text" id="allergy-text">
             </div>
           </div>
 
@@ -58,10 +48,8 @@
                 <div class="card-header bg-primary text-white">
                     Discharge Diagnoses
                 </div>
-                <div class="card-body card-text">
-                  <p class="card-text">
-                      
-                  </p>
+                <div class="card-body card-text" id="discharge-diagnoses-text">
+
                 </div>
             </div>
 
@@ -76,6 +64,7 @@
       <div class="btn btn-sm btn-warning full-width">Procedure (OPCS-4)</div>
       
         <h2>Clinical Coder</h2>
+
         <h2>Auto-Coder</h2>
         
     </div>
