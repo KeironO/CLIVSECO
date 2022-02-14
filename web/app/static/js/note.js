@@ -44,11 +44,11 @@ function set_heading(dal_id) {
 
 
 function set_content(note) {
-    $("#presenting-complaint-text").append(note["presenting_complaint"]);
-    $("#clinical-finding-text").append(note["clinical_finding"]);
-    $("#treatment-narrative-text").append(note["treatment_narrative"]);
-    $("#allergy-text").append(note["allergy"]);
-    $("#discharge-diagnoses-text").append(note["discharge_diagnoses"]);
+    $("#presenting-complaint-text").text(note["presenting_complaint"]);
+    $("#clinical-finding-text").text(note["clinical_finding"]);
+    $("#treatment-narrative-text").text(note["treatment_narrative"]);
+    $("#allergy-text").text(note["allergy"]);
+    $("#discharge-diagnoses-text").text(note["discharge_diagnoses"]);
 }
 
 
@@ -97,7 +97,6 @@ function set_auto_coder(auto_codes) {
 
 $(document).ready(function () {
     var note = get_note()["content"];
-
     set_heading(note["dal_id"]);
     set_content(note);
     set_auto_coder(note["auto_codes"]);
