@@ -48,7 +48,7 @@ class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
     end = masql.auto_field()
     section = EnumField(EnumCodedSection)
 
-    note_code = ma.Nested(NoteCodeSchema, many=Fasle)
+    note_code = ma.Nested(NoteCodeSchema, many=False)
 
 
 class ClinicalCoderSchema(masql.SQLAlchemyAutoSchema):
