@@ -18,7 +18,12 @@ from flask import request
 from marshmallow import ValidationError
 
 from ..api import api, db
-from ..api.responses import validation_error_response
+from ..api.responses import (
+    validation_error_response,
+    no_values_response,
+    transaction_error_response,
+    success_with_content_response
+)
 
 from ..database import (
     ICD10Lookup,
@@ -37,34 +42,23 @@ from .views import (
     OPCS4CodeLookupSchema,
 )
 
-def get_icd(code):
-    code = ICD10Lookup.query.filter(ICD10Lookup.code == code).first()
-    return ICD10CodeSchema().dump(code), 200, {"ContentType": "application/json"}
-
-def get_opcs4(code):
-    code = OPCS4CodeLookup.query.filter(OPCS4CodeLookup.code == code).first()
-    return OPCS4CodeLookupSchema().dump(code), 200, {"ContentType": "application/json"}
-
 @api.route("/code/OPCS4/<code>", methods=["GET"])
-def get_opcs4_code(code: str):
-    return get_opcs4(code)
+def get_opcs_code(code: str):
+    code = OPCS4CodeLookup.query.filter(OPCS4CodeLookup.code == code).first()
+    return success_with_content_response(OPCS4CodeLookupSchema().dump(code))
+
 
 @api.route("/code/ICD10/<code>", methods=["GET"])
 def get_icd_code(code: str):
-    return get_icd(code)
-
-
+    code = ICD10Lookup.query.filter(ICD10Lookup.code == code).first()
+    return success_with_content_response(ICD10CodeSchema().dump(code))
 
 @api.route("/opcs4/add/subchapter", methods=["POST"])
 def opcs_subchapter():
     values = request.get_json()
 
     if not values:
-        return (
-            {"success": False, "message": "No input data provided"},
-            400,
-            {"ContentType": "application/json"},
-        )
+        return no_values_response()
 
     try:
         new_subchapter_result = NewOPCS4SubChapterLookupSchema().load(values)
@@ -77,13 +71,9 @@ def opcs_subchapter():
         db.session.add(new_subchapter)
         db.session.commit()
         db.session.flush()
-        return OPCS4SubChapterLookupSchema().dump(new_subchapter)
+        return success_with_content_response(OPCS4SubChapterLookupSchema().dump(new_subchapter))
     except Exception as err:
-        return (
-            {"success": False, "message": str(err)},
-            417,
-            {"ContentType": "application/json"},
-        )
+        return transaction_error_response(err)
 
 
 @api.route("/opcs4/add/chapter", methods=["POST"])
@@ -91,11 +81,7 @@ def add_opcs_chapter():
     values = request.get_json()
 
     if not values:
-        return (
-            {"success": False, "message": "No input data provided"},
-            400,
-            {"ContentType": "application/json"},
-        )
+        return no_values_response()
 
     try:
         new_chapter_result = NewOPCS4ChapterLookupSchema().load(values)

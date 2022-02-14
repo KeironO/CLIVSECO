@@ -21,7 +21,8 @@ from ..api import api, db
 from ..api.responses import (
     no_values_response,
     validation_error_response,
-    success_with_content_response
+    success_with_content_response,
+    transaction_error_response
 )
 
 from ..database import (
@@ -63,11 +64,7 @@ def add_note():
         db.session.flush()
         return NoteSchema().dump(new_note)
     except Exception as err:
-        return (
-            {"success": False, "message": str(err.orig.diag.message_primary)},
-            417,
-            {"ContentType": "application/json"},
-        )
+        return transaction_error_response(err)
 
 
 @api.route("notes/code/add/icd/", methods=["POST"])
@@ -75,11 +72,7 @@ def add_icd():
     values = request.get_json()
 
     if not values:
-        return (
-            {"success": False, "message": "No input data provided"},
-            400,
-            {"ContentType": "application/json"},
-        )
+        return no_values_response()
 
     try:
         new_code_result = NewNoteCodeSchema().load(values)
@@ -94,8 +87,4 @@ def add_icd():
         db.session.flush()
         return NoteCodeSchema().dump(new_code)
     except Exception as err:
-        return (
-            {"success": False, "message": str(err)},
-            417,
-            {"ContentType": "application/json"},
-        )
+        return transaction_error_response(err)
