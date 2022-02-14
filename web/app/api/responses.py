@@ -31,3 +31,35 @@ def validation_error_response(err):
         417,
         {"ContentType": "application/json"},
     )
+
+
+def no_values_response():
+    return (
+        {"success": False, "message": "No input data provided"},
+        400,
+        {"ContentType": "application/json"},
+    )
+
+def transaction_error_response(err):
+    try:
+        return (
+            {"success": False, "message": str(err.orig.diag.message_primary)},
+            417,
+            {"ContentType": "application/json"},
+        )
+    except Exception:
+        return (
+            {"success": False, "message": str(err), "type": "Transaction Error"},
+            417,
+            {"ContentType": "application/json"},
+        )
+
+def success_with_content_response(content):
+    return (
+        {"success": True, "content": content},
+        200,
+        {"ContentType": "application/json"},
+    )
+
+def success_without_content_response():
+    return {"success": True}, 200, {"ContentType": "application/json"}
