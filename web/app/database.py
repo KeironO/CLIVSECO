@@ -21,6 +21,7 @@ from sqlalchemy.orm import configure_mappers
 db = SQLAlchemy()
 
 from .auth.models import *
+from .lookups.models import *
 from .notes.models import *
 
 configure_mappers()

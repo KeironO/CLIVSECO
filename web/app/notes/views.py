@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from enum import Enum
 from flask import url_for
 import marshmallow_sqlalchemy as masql
 
@@ -24,7 +23,7 @@ from ..database import (
     OPCS4SubChapterLookup,
     OPCS4CodeLookup,
 )
-from ..database import CodeFrom, CodeType, CodedBy
+from ..database import CodeFrom, CodeType
 from ..database import ICD10Lookup
 from ..extensions import ma
 from marshmallow_enum import EnumField
@@ -101,7 +100,6 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
 
     id = masql.auto_field()
 
-    by = EnumField(CodedBy, by_value=True)
     cfrom = EnumField(CodeFrom, by_value=True)
     type = EnumField(CodeType, by_value=True)
 
