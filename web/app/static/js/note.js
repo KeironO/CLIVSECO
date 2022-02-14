@@ -117,7 +117,7 @@ function set_clinical_coder(clinical_codes) {
         }
 
         $("#clinical-coder-list-group").append(
-            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'>" + note_code["code"] + "</li>"
+            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'>" + note_code["code"] + ": " + note_code["code_information"]["description"] + "</li>"
         );
 
     }
