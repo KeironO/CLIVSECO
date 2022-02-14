@@ -58,6 +58,7 @@ def new_note():
     except Exception as err:
         return transaction_error_response(err)
 
+
 @api.route("/notes/add/clinicalcode", methods=["POST"])
 def add_clinicalcode():
     values = request.get_json()
@@ -88,9 +89,12 @@ def add_clinicalcode():
         db.session.add(new_clinical_code)
         db.session.commit()
         db.session.flush()
-        return success_with_content_response(ClinicalCoderSchema().dump(new_clinical_code))
+        return success_with_content_response(
+            ClinicalCoderSchema().dump(new_clinical_code)
+        )
     except Exception as err:
         return transaction_error_response(err)
+
 
 @api.route("/notes/add/autocode", methods=["POST"])
 def add_autocode():
