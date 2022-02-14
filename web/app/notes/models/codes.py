@@ -40,17 +40,6 @@ class NoteCode(db.Model):
     type = db.Column(db.Enum(EnumCodeType), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     
-    code_information = fields.Method("retrieve_information")
-
-    def retrieve_information(self, obj):
-        code = obj.code
-        
-        if obj.type == "PROC":
-            return requests.get(url_for("api.get_opcs_code", code=code, _external=True)).json()["contents"]
-        else:
-            if code.endswith("X"):
-                code = code[:-1]
-            return requests.get(url_for("api.get_icd_code", code=code, _external=True)).json()["contents"]
 
 
 class AutoCode(db.Model):

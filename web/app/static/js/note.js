@@ -84,7 +84,7 @@ function set_auto_coder(auto_codes) {
 
 
         $("#auto-coder-list-group").append(
-            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'>" + note_code["code"] + "</li>"
+            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'>" + note_code["code"] + ": " + note_code["code_information"]["description"] + "</li>"
         );
 
         $("#gi-"+ note_code["id"]).hover(function() {
