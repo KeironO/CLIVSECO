@@ -18,7 +18,7 @@ import icd10
 from . import cmd_setup
 
 from ..database import db, UserAccount, ICD10Lookup
-
+from tqdm import tqdm
 
 @cmd_setup.cli.command("create-testuser")
 def create_testuser():
@@ -30,8 +30,12 @@ def create_testuser():
 
 @cmd_setup.cli.command("create-icd10-lookup")
 def create_icd10_lookup():
-    for code, values in icd10.codes.items():
-        icd10_lookup = ICD10Lookup(code=code, description=values[1], billable=values[0])
+    bulk_list = []
+    print("Loading ICD10 codes into a bulk list..")
+    for code, values in tqdm(icd10.codes.items()):
+        bulk_list.append(ICD10Lookup(code=code, description=values[1], billable=values[0]))
 
-        db.session.add(icd10_lookup)
-        db.session.commit()
+    print("Bulk commiting to db")
+    db.session.bulk_save_objects(bulk_list)
+    db.session.commit()
+    print("Done!")
