@@ -15,23 +15,22 @@
 
 from sqlalchemy import ForeignKey
 from ...database import db
-
+from enum import Enum
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-
+    
     dal_id = db.Column(db.String(128))
 
     clinical_finding = db.Column(db.String(2048))
     presenting_complaint = db.Column(db.String(2048))
-
     treatment_narrative = db.Column(db.String(8096))
-
     discharge_diagnoses = db.Column(db.String(1024))
-
     allergy = db.Column(db.String(2048))
-
     checked = db.Column(db.Boolean(), default=False, nullable=False)
+
+    admission_date = db.Column(db.Date, nullable=True)
+    discharge_date = db.Column(db.Date, nullable=True)
 
     auto_codes = db.relationship(
         "AutoCode",
