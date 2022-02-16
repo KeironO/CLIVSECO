@@ -114,18 +114,23 @@ function set_clinical_coder(clinical_codes) {
 
         if (note_code["type"] == "DIAG") {
             var bg = "bg-danger text-white"
+            var edal_code = "d"+zeroPad(code["code_number"],2)
+
         }
 
         else {
             var bg = "bg-warning"
+            var edal_code = "p"+zeroPad(code["code_number"],2)
+
         }
 
-        console.log(code);
 
+        var lgi = `<li class='list-group-item d-flex justify-content-between align-items-center ${bg}'>`
+        lgi += `${note_code["code"]}: ${note_code["code_information"]["description"]}<span class="badge badge-primary badge-pill">${edal_code}</span>
+        `
+        lgi += `</li>`
 
-        $("#clinical-coder-list-group").append(
-            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'> d" + zeroPad(code["code_number"],2) + " " + note_code["code"] + ": " + note_code["code_information"]["description"] + "</li>"
-        );
+        $("#clinical-coder-list-group").append(lgi);
 
     }
 }
