@@ -77,5 +77,6 @@ class ClinicalCoderSchema(masql.SQLAlchemyAutoSchema):
 
     id = masql.auto_field()
     coded_by = masql.auto_field()
+    code_number = masql.auto_field()
 
     note_code = ma.Nested(NoteCodeSchema, many=False)

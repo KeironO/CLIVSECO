@@ -6,6 +6,9 @@ String.prototype.insert = function(index, string) {
     return string + this;
 };
 
+const zeroPad = (num, places) => String(num).padStart(places, '0')
+
+
 const div_map = new Map();
 
 div_map.set('DIA', 'discharge-diagnoses-text')
@@ -83,6 +86,7 @@ function set_auto_coder(auto_codes) {
         }
 
 
+
         $("#auto-coder-list-group").append(
             "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'>" + note_code["code"] + ": " + note_code["code_information"]["description"] + "</li>"
         );
@@ -116,8 +120,11 @@ function set_clinical_coder(clinical_codes) {
             var bg = "bg-warning"
         }
 
+        console.log(code);
+
+
         $("#clinical-coder-list-group").append(
-            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'>" + note_code["code"] + ": " + note_code["code_information"]["description"] + "</li>"
+            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'> d" + zeroPad(code["code_number"],2) + " " + note_code["code"] + ": " + note_code["code_information"]["description"] + "</li>"
         );
 
     }
