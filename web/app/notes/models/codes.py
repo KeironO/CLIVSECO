@@ -18,7 +18,6 @@ from sqlalchemy import ForeignKey
 from ...database import db
 from enum import Enum
 from marshmallow import fields
-import requests
 
 class EnumCodedSection(Enum):
     CLI = "Clinical Finding"
@@ -58,6 +57,9 @@ class ClinicalCoderCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     coded_by = db.Column(db.String(15))
     note_code_id = db.Column(db.Integer, ForeignKey(NoteCode.id), nullable=False)
+
+    # d01, d02, d03
+    code_number = db.Column(db.Integer, nullable=False)
 
     note_code = db.relationship(
         "NoteCode",
