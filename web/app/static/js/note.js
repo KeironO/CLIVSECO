@@ -42,7 +42,14 @@ function get_note() {
 function set_heading(dal_id) {
     document.title = dal_id + " : CLIVSECO";
     $("#note-heading").html(dal_id);
+
 }
+
+function set_dates(note) {
+    $("#discharge-date").html(note["discharge_date"]);
+    $("#admission-date").html(note["admission_date"]);
+}
+
 
 
 
@@ -137,6 +144,7 @@ function set_clinical_coder(clinical_codes) {
 $(document).ready(function () {
     var note = get_note()["content"];
     set_heading(note["dal_id"]);
+    set_dates(note);
     set_content(note);
     set_auto_coder(note["auto_codes"]);
     set_clinical_coder(note["clinical_coder_codes"]);
