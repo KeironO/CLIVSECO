@@ -10,11 +10,18 @@ const zeroPad = (num, places) => String(num).padStart(places, '0')
 
 
 const div_map = new Map();
+div_map.set('DIA', 'discharge-diagnoses-text');
+div_map.set('TRE', 'treatment-narrative-text');
+div_map.set('ALL', 'allergy-text');
+div_map.set('CLI', 'clinical-finding-text');
+div_map.set('PRE', 'presenting-complaint-text');
 
-div_map.set('DIA', 'discharge-diagnoses-text')
-div_map.set('TRE', 'treatment-narrative-text')
-div_map.set('CLI', 'clinical-finding-text')
-div_map.set('PRE', 'presenting-complaint-text')
+const filter_map = new Map();
+filter_map.set('DIA', 'discharge-diagnosis-checkbox');
+filter_map.set('TRE', 'treatment-narrative-checkbox');
+filter_map.set('CLI', 'clinical-finding-checkbox');
+filter_map.set('ALL', 'allergy-checkbox');
+filter_map.set('PRE', 'presenting-complaint-checkbox');
 
 function get_note() {
     var api_url = encodeURI(window.location + '/endpoint');
@@ -76,6 +83,8 @@ function unhighlight_text(div) {
 
 function set_auto_coder(auto_codes) {
 
+    // TODO: Need to remove duplicates in the view and have them displayed as different entities.
+
     if (auto_codes.length > 0) {
         $("#auto-coder-none").remove();
     }
@@ -105,6 +114,17 @@ function set_auto_coder(auto_codes) {
 
         $("#gi-"+ note_code["id"]).click(function() {
             window.open(code['_links']['feedback'], '_blank'); 
+        });
+
+        $("#"+filter_map.get(code["section"])).click(function() {
+            var checked = this.checked
+            if (checked) {
+                $("#gi-"+ note_code["id"]).fadeIn(500);
+            }
+            
+            else {
+                $("#gi-"+ note_code["id"]).fadeOut(500);
+            }
         });
     }
 }
