@@ -5,10 +5,8 @@ CLInical coder Verification of SEmi automated auto COder
 ## Installation and First Time Run
 
 ```
-pip install -r requirements.txt
-```
-
-```
+conda create --name clivseco --file pkgs.txt 
+conda activate clivseco
 python web/run.py
 ```
 
