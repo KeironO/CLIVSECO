@@ -4,17 +4,28 @@
 
 {% block body %}
 
-<h1>
-    Note Feedback
-</h1>
+<h1>Auto-Coder Feedback</h1>
+
+<div class="card">
+    <div id="code-header" class="card-header"></div>
+    <div class="card-body">
+        Context:
+    </div>
+</div>
 
 {{ form.csrf_token }}
 {{ render_field(form.is_correct) }}
-{{ render_field(form.replace) }}
-{{ render_field(form.replace_with) }}
+<div id="wrong-div" style="display: block;">
+{{ render_field(form.remove_or_replace) }}
+<div id="remove-div" style="display:none;">{{ render_field(form.replace_with) }}</div>
+</div>
 {{ render_field(form.comments) }}
 {{ render_field(form.submit) }}
 
 
+{% endblock %}
 
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/feedback.js') }}"></script>
 {% endblock %}

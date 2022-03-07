@@ -15,12 +15,12 @@
 
 
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, StringField, SubmitField, ValidationError, TextAreaField
+from wtforms import BooleanField, StringField, SubmitField, ValidationError, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 class FeedbackForm(FlaskForm):
     is_correct = BooleanField("Annotation Correct?")
-    replace = BooleanField("Replace?")
+    remove_or_replace = SelectField("Remove or Replace?", choices=((1, "Remove"), (2, "Replace")))
     replace_with = StringField("Replace With")
-    comments = TextAreaField("Comments")
+    comments = TextAreaField("Additional Comments")
     submit = SubmitField("Submit Feedback")

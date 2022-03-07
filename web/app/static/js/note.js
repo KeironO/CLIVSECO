@@ -93,6 +93,8 @@ function set_auto_coder(auto_codes) {
         let code = auto_codes[i];
         let note_code = code["note_code"];
         
+        console.log(code);
+
         if (note_code["type"] == "DIAG") {
             var bg = "bg-danger text-white"
         }
@@ -101,9 +103,15 @@ function set_auto_coder(auto_codes) {
             var bg = "bg-warning"
         }
 
+        var lgi = "<li class='list-group-item d-flex justify-content-between align-items-center "+ bg + "' id='gi-"+ note_code["id"] + "'>"
+        lgi += note_code["code"] + ": " + note_code["code_information"]["description"]
+        if (code["comorbidity"] == true) {
+            lgi += '<span class="badge badge-primary badge-pill">COMORB</span>'
+        }
+        lgi += "</li>"
 
         $("#auto-coder-list-group").append(
-            "<li class='list-group-item " + bg + "' id='gi-"+ note_code["id"] + "'>" + note_code["code"] + ": " + note_code["code_information"]["description"] + "</li>"
+            lgi
         );
 
         $("#gi-"+ note_code["id"]).hover(function() {

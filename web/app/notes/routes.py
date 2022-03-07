@@ -53,11 +53,21 @@ def code():
 @login_required
 def code_endpoint():
     response = requests.get(url_for("api.get_random_note", _external=True))
-    return response.content
+    return response.json()
 
 
 @notes.route("/code/feedback/<id>")
 @login_required
 def code_feedback(id: int):
     form = FeedbackForm()
+
+    if form.validate_on_submit():
+        pass
+    
     return render_template("notes/feedback.html", form=form)
+
+
+@notes.route("/code/feedback/<id>/endpoint")
+@login_required
+def code_feedback_endpoint(id: int):
+    return requests.get(url_for("api.get_autocode", id=id, _external=True)).json()

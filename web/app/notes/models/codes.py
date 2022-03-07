@@ -47,7 +47,7 @@ class AutoCode(db.Model):
     end = db.Column(db.Integer)
     section = db.Column(db.Enum(EnumCodedSection))
     note_code_id = db.Column(db.Integer, ForeignKey(NoteCode.id), nullable=False)
-
+    comorbidity = db.Column(db.Boolean, default=False, nullable=False)
     note_code = db.relationship(
         "NoteCode", uselist=False, primaryjoin="AutoCode.note_code_id == NoteCode.id"
     )

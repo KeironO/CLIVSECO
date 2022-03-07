@@ -10,6 +10,9 @@
           {{ field.label }}
         </label>
       </div>
+      {% elif field.type in ["SelectField"] %}
+      <label for="" class="form-label">{{ field.label }}:</label>
+      {{ field(class='form-select', **kwargs)|safe }}
     {% elif field.type == "SubmitField" %}
         <hr class="my-4">
         {{ field(class='form-control btn-primary btn-lg', **kwargs)|safe }}
