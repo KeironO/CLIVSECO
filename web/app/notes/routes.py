@@ -64,17 +64,15 @@ def code_feedback(id: int):
     if form.validate_on_submit():
 
         
-        form_data = {
+        response = requests.post(
+            url_for("api.add_autocode_feedback", _external=True),
+            json = {
             "note_code_id": id,
             "comments": form.comments.data,
             "replace_with": form.replace_with.data,
             "is_correct": form.is_correct.data,
             "user_id": current_user.id
             }
-
-        response = requests.post(
-            url_for("api.add_autocode_feedback", _external=True),
-            json = form_data
         )
 
         if response.status_code == 200:
