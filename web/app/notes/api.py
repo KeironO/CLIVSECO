@@ -26,7 +26,6 @@ from ..api.responses import (
     transaction_error_response,
 )
 
-from flask_login import current_user, login_required
 
 from ..database import Note, NoteCode, AutoCode, ClinicalCoderCode, NoteConfirmation
 
@@ -77,12 +76,11 @@ def add_autocode_feedback():
         return no_values_response()
 
     try:
-        autocode_feedback_result = NoteConfirmationSchema(exclude=("id", "user_id", "created_on",)).load(values)
+        autocode_feedback_result = NoteConfirmationSchema(exclude=("id", "created_on",)).load(values)
     except ValidationError as err:
         return validation_error_response(err)
     
     new_code_confirmation = NoteConfirmation(**autocode_feedback_result)
-    new_code_confirmation.user_id = current_user.id
 
     try:
         db.session.add(new_code_confirmation)
