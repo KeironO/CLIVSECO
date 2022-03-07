@@ -13,6 +13,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .note import *
-from .codes import *
-from .confirmation import *
+
+from flask import url_for
+import marshmallow_sqlalchemy as masql
+
+from ...database import (
+    NoteConfirmation
+)
+
+from ...extensions import ma
+from marshmallow_enum import EnumField
+from marshmallow import fields
+import requests
+
+class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = NoteConfirmation
+
+    id = masql.auto_field()
+    is_correct = masql.auto_field()
+    comments = masql.auto_field()
+    replace_with = masql.auto_field()
+    created_on = masql.auto_field()
+    note_code_id = masql.auto_field()
+    user_id = masql.auto_field()

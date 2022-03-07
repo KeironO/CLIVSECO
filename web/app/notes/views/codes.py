@@ -53,6 +53,7 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
 
 
 
+
 class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = AutoCode

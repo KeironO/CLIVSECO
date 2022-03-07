@@ -17,6 +17,7 @@ from flask import request
 from marshmallow import ValidationError
 from sqlalchemy import func
 
+
 from ..api import api, db
 from ..api.responses import (
     no_values_response,
@@ -25,9 +26,11 @@ from ..api.responses import (
     transaction_error_response,
 )
 
-from ..database import Note, NoteCode, AutoCode, ClinicalCoderCode
+from flask_login import current_user, login_required
 
-from .views import NoteSchema, AutoCodeSchema, ClinicalCoderSchema
+from ..database import Note, NoteCode, AutoCode, ClinicalCoderCode, NoteConfirmation
+
+from .views import NoteSchema, AutoCodeSchema, ClinicalCoderSchema, NoteConfirmationSchema
 
 
 @api.route("/notes/get", methods=["GET"])
@@ -65,6 +68,33 @@ def get_autocode(id):
     return success_with_content_response(
         AutoCodeSchema().dump(autocode)
     )
+
+@api.route("/notes/feedback/autocode/", methods=["POST"])
+def add_autocode_feedback():
+    values = request.get_json()
+
+    if not values:
+        return no_values_response()
+
+    try:
+        autocode_feedback_result = NoteConfirmationSchema(exclude=("id", "user_id", "created_on",)).load(values)
+    except ValidationError as err:
+        return validation_error_response(err)
+    
+    new_code_confirmation = NoteConfirmation(**autocode_feedback_result)
+    new_code_confirmation.user_id = current_user.id
+
+    try:
+        db.session.add(new_code_confirmation)
+        db.session.commit()
+        db.session.flush()
+        return success_with_content_response(
+            NoteConfirmationSchema().dump(new_code_confirmation)
+        )
+    except Exception as err:
+        return transaction_error_response(err)
+
+
 
 @api.route("/notes/add/clinicalcode", methods=["POST"])
 def add_clinicalcode():

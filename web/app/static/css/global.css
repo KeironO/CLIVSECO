@@ -27,6 +27,11 @@ h1 {
     margin-bottom: 2em;
 }
 
+.card h2 {
+    text-align: center;
+    font-size:1em;
+}
+
 .full-width {
     width: 100%;
     margin-bottom: 1em;

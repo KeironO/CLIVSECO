@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from flask import render_template, url_for
+from flask import render_template, url_for, flash
 from flask_login import login_required
 
 from . import notes
@@ -56,15 +56,33 @@ def code_endpoint():
     return response.json()
 
 
-@notes.route("/code/feedback/<id>")
+@notes.route("/code/feedback/<id>", methods=["GET", "POST"])
 @login_required
 def code_feedback(id: int):
     form = FeedbackForm()
 
     if form.validate_on_submit():
-        pass
+        remove = False
+        if form.remove_or_replace.data == 1:
+            remove = True
+        
+        form_data = {
+            "note_code_id": id,
+            "comments": form.comments.data,
+            "replace_with": form.replace_with.data,
+            "is_correct": form.is_correct.data,
+            "remove": remove
+        }
+
+        response = requests.post(
+            url_for("api.add_autocode_feedback", _external=True),
+            json = form_data
+        )
+
+        return response.content
+
     
-    return render_template("notes/feedback.html", form=form)
+    return render_template("notes/feedback.html", form=form, id=id)
 
 
 @notes.route("/code/feedback/<id>/endpoint")
