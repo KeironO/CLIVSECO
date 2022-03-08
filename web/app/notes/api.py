@@ -33,9 +33,9 @@ from .views import NoteSchema, AutoCodeSchema, ClinicalCoderSchema, NoteConfirma
 
 
 @api.route("/notes/random", methods=["GET"])
-def get_random_note():
+def get_random_dal_id():
     note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
-    return success_with_content_response(NoteSchema().dump(note))
+    return success_with_content_response({"dal_id": note.dal_id})
 
 @api.route("/notes/get/<dal_id>", methods=["GET"])
 def get_note(dal_id: str):

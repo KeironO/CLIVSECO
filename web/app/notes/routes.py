@@ -39,17 +39,17 @@ def home():
 
 @notes.route("/code/")
 @login_required
-def code():
-    response = requests.get(url_for("api.get_random_note", _external=True))
+def get_random_code():
+    response = requests.get(url_for("api.get_random_dal_id", _external=True))
 
     if response.status_code == 200:
         note = response.json()
-        return render_template("notes/view.html", note=note["content"])
+        return redirect(url_for("notes.code", dal_id=note["content"]["dal_id"]))
     else:
         return response.content
 
 @notes.route("/code/<dal_id>")
-def code_by_id(dal_id: str):
+def code(dal_id: str):
     response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
 
     if response.status_code == 200:
@@ -75,7 +75,7 @@ def find_note():
         response = requests.get(url_for("api.get_note", dal_id=form.dal.data, _external=True))
 
         if response.status_code == 200 and response.json()["success"]:
-            return redirect(url_for("notes.code_by_id", dal_id=form.dal.data))
+            return redirect(url_for("notes.code", dal_id=form.dal.data))
         else:
             flash("%s not found, are you sure it's a valid DAL ID?" % (form.dal.data))
 
