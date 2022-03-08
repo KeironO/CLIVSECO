@@ -3,39 +3,49 @@
 {% block title %}Auto-coder Feedback{% endblock %}
 
 {% block body %}
-<div class="card">
-    <div class="card-header bg-warning"><h2>Auto-Coder Feedback Form</h2></div>
-    <div class="card-body">
-        <p>You can provide feedback about the codes using the below form.</p>
-
+<div class="row">
+    <div class="col-9">
         <div class="card">
-            <div id="code-header" class="card-header"></div>
+            <div class="card-header bg-warning"><h2>Auto-Coder Feedback Form</h2></div>
             <div class="card-body">
-                Context:
+        
+                <div class="card">
+                    <div id="code-header" class="card-header"></div>
+                    <div class="card-body">
+                        Context:
+                    </div>
+                </div>
+                
+        
+            <form method="POST" action="{{ url_for('notes.code_feedback', id=id) }}">
+        
+            {{ form.csrf_token }}
+            
+        
+            {{ render_field(form.is_correct) }}
+            <div id="wrong-div" style="display: block;">
+            {{ render_field(form.remove_or_replace) }}
+            <div id="remove-div" style="display:none;">{{ render_field(form.replace_with) }}</div>
+            </div>
+            {{ render_field(form.comments) }}
+            </div>
+            <div class="card-footer">
+                {{ render_field(form.submit) }}
+            </form>
             </div>
         </div>
-        
-
-    <form method="POST" action="{{ url_for('notes.code_feedback', id=id) }}">
-
-    {{ form.csrf_token }}
-    
-
-    {{ render_field(form.is_correct) }}
-    <div id="wrong-div" style="display: block;">
-    {{ render_field(form.remove_or_replace) }}
-    <div id="remove-div" style="display:none;">{{ render_field(form.replace_with) }}</div>
     </div>
-    {{ render_field(form.comments) }}
-    </div>
-    <div class="card-footer">
-        {{ render_field(form.submit) }}
-    </form>
+    <div class="col-3">
+        <div class="card">
+            <div class="card-header">
+                Feedback History
+            </div>
+        </div>
+
     </div>
 </div>
 
 
-<h1>Feedback History</h1>
 
 
 

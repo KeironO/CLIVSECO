@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_required, current_user
 
 from . import notes
@@ -104,8 +104,8 @@ def code_feedback(id: int):
 
         if response.status_code == 200:
             flash("Thank you for providing feedback 😊")
-            return redirect(url_for("notes.home"))
-        return response.content
+        else:
+            return response.content
 
     
     return render_template("notes/feedback/feedback.html", form=form, id=id)
