@@ -32,11 +32,18 @@ from ..database import Note, NoteCode, AutoCode, ClinicalCoderCode, NoteConfirma
 from .views import NoteSchema, AutoCodeSchema, ClinicalCoderSchema, NoteConfirmationSchema
 
 
-@api.route("/notes/get", methods=["GET"])
+@api.route("/notes/random", methods=["GET"])
 def get_random_note():
     note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
     return success_with_content_response(NoteSchema().dump(note))
 
+@api.route("/notes/get/<dal_id>", methods=["GET"])
+def get_note(dal_id: str):
+    note = Note.query.filter(Note.dal_id == dal_id).first()
+    if note != None:
+        return success_with_content_response(NoteSchema().dump(note))
+    else:
+        return {"success": False, "content" : {}}
 
 @api.route("/notes/new", methods=["POST"])
 def new_note():

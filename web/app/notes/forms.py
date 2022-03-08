@@ -19,7 +19,7 @@ from wtforms import BooleanField, StringField, SubmitField, ValidationError, Tex
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 class FindForm(FlaskForm):
-    dal = StringField("DAL ID")
+    dal = StringField("DAL ID", validators=[DataRequired()])
     submit = SubmitField("Search")
 
 class FeedbackForm(FlaskForm):

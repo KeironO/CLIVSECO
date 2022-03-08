@@ -62,9 +62,24 @@ def find_note():
     form = FindForm()
 
     if form.validate_on_submit():
-        pass
+        response = requests.get(url_for("api.get_note", dal_id=form.dal.data, _external=True))
+
+        if response.status_code == 200 and response.json()["success"]:
+            return redirect(url_for("notes.code_by_id", dal_id=form.dal.data))
+        else:
+            flash("%s not found, are you sure it's a valid DAL ID?" % (form.dal.data))
 
     return render_template("notes/find.html", form=form)
+
+@notes.route("/code/<dal_id>")
+def code_by_id(dal_id: str):
+    response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
+
+    if response.status_code == 200:
+        note = response.json()
+        return render_template("notes/view.html", note=note["content"])
+    else:
+        return response.content
 
 @notes.route("/code/feedback/<id>", methods=["GET", "POST"])
 @login_required
