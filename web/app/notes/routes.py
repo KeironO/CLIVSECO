@@ -22,7 +22,7 @@ from . import notes
 from sqlalchemy import func
 
 from .models import Note
-from .forms import FeedbackForm
+from .forms import FeedbackForm, FindForm
 
 import requests
 
@@ -55,6 +55,16 @@ def code_endpoint():
     response = requests.get(url_for("api.get_random_note", _external=True))
     return response.json()
 
+
+@notes.route("/find/", methods=["GET", "POST"])
+@login_required
+def find_note():
+    form = FindForm()
+
+    if form.validate_on_submit():
+        pass
+
+    return render_template("notes/find.html", form=form)
 
 @notes.route("/code/feedback/<id>", methods=["GET", "POST"])
 @login_required
@@ -92,7 +102,6 @@ def code_feedback_index():
 @login_required
 def code_feedback_index_endpoint():
     return requests.get(url_for("api.get_autocode_feedback_all", _external=True)).json()
-
 
 @notes.route("/code/feedback/<id>/endpoint")
 @login_required

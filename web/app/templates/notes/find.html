@@ -4,5 +4,11 @@
 
 
 {% block body %}
-<h1>Find DAL</h1>
+<form method="POST" action="{{ url_for('notes.find_note') }}">
+
+{{ form.csrf_token }}
+{{ render_field(form.dal) }}
+{{ render_field(form.submit) }}
+
+</form>
 {% endblock %}

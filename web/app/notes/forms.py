@@ -18,6 +18,10 @@ from flask_wtf import FlaskForm
 from wtforms import BooleanField, StringField, SubmitField, ValidationError, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
+class FindForm(FlaskForm):
+    dal = StringField("DAL ID")
+    submit = SubmitField("Search")
+
 class FeedbackForm(FlaskForm):
     is_correct = BooleanField("Annotation Correct?")
     remove_or_replace = SelectField("Remove or Replace?", choices=((1, "Remove"), (2, "Replace")))
