@@ -68,6 +68,13 @@ def get_autocode(id):
         AutoCodeSchema().dump(autocode)
     )
 
+@api.route("/notes/feedback/autocode/get", methods=["GET"])
+def get_autocode_feedback_all():
+    confirmation = NoteConfirmation.query.all()
+    return success_with_content_response(
+        NoteConfirmationSchema(many=True).dump(confirmation)
+    )
+
 @api.route("/notes/feedback/autocode/", methods=["POST"])
 def add_autocode_feedback():
     values = request.get_json()

@@ -88,6 +88,11 @@ def code_feedback(id: int):
 def code_feedback_index():
     return render_template("notes/feedback/index.html")
 
+@notes.route("/feedback/endpoint")
+@login_required
+def code_feedback_index_endpoint():
+    return requests.get(url_for("api.get_autocode_feedback_all", _external=True)).json()
+
 
 @notes.route("/code/feedback/<id>/endpoint")
 @login_required
