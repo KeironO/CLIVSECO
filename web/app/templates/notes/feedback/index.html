@@ -1,45 +1,44 @@
 {% extends "template.html" %}
 
-{% block title %}Auto-coder Feedback{% endblock %}
+{% block title %}Auto-coder Feedback Index{% endblock %}
+
+{% block head %}
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+{% endblock %}
+
 
 {% block body %}
-<div class="card">
-    <div class="card-header bg-warning"><h2>Auto-Coder Feedback Form</h2></div>
-    <div class="card-body">
-        <p>You can provide feedback about the codes using the below form.</p>
+<h1>Feedback Index</h1>
 
-        <div class="card">
-            <div id="code-header" class="card-header"></div>
-            <div class="card-body">
-                Context:
-            </div>
-        </div>
+<table id="myTable" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>DAL Unique ID</th>
+            <th>Position</th>
+            <th>Comorbidity</th>
+            <th>Code</th>
+            <th>Is Correct</th>
+            <th>Replace</th>
+
+            <th>Reviewed By</th>
+        </tr>
+    </thead>
+    <tbody>
         
-
-    <form method="POST" action="{{ url_for('notes.code_feedback', id=id) }}">
-
-    {{ form.csrf_token }}
-    
-
-    {{ render_field(form.is_correct) }}
-    <div id="wrong-div" style="display: block;">
-    {{ render_field(form.remove_or_replace) }}
-    <div id="remove-div" style="display:none;">{{ render_field(form.replace_with) }}</div>
-    </div>
-    {{ render_field(form.comments) }}
-    </div>
-    <div class="card-footer">
-        {{ render_field(form.submit) }}
-    </form>
-    </div>
-</div>
-
-
-
+    </tbody>
+</table>
 
 {% endblock %}
 
 
 {% block javascript %}
-<script src="{{ url_for('static', filename='js/feedback.js') }}"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+$(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
+
 {% endblock %}

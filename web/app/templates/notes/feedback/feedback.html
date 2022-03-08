@@ -1,0 +1,45 @@
+{% extends "template.html" %}
+
+{% block title %}Auto-coder Feedback{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div class="card-header bg-warning"><h2>Auto-Coder Feedback Form</h2></div>
+    <div class="card-body">
+        <p>You can provide feedback about the codes using the below form.</p>
+
+        <div class="card">
+            <div id="code-header" class="card-header"></div>
+            <div class="card-body">
+                Context:
+            </div>
+        </div>
+        
+
+    <form method="POST" action="{{ url_for('notes.code_feedback', id=id) }}">
+
+    {{ form.csrf_token }}
+    
+
+    {{ render_field(form.is_correct) }}
+    <div id="wrong-div" style="display: block;">
+    {{ render_field(form.remove_or_replace) }}
+    <div id="remove-div" style="display:none;">{{ render_field(form.replace_with) }}</div>
+    </div>
+    {{ render_field(form.comments) }}
+    </div>
+    <div class="card-footer">
+        {{ render_field(form.submit) }}
+    </form>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/feedback.js') }}"></script>
+{% endblock %}
