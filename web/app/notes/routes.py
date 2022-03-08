@@ -81,7 +81,12 @@ def code_feedback(id: int):
         return response.content
 
     
-    return render_template("notes/feedback.html", form=form, id=id)
+    return render_template("notes/feedback/feedback.html", form=form, id=id)
+
+@notes.route("/feedback")
+@login_required
+def code_feedback_index():
+    return render_template("notes/feedback/index.html")
 
 
 @notes.route("/code/feedback/<id>/endpoint")
