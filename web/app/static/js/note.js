@@ -24,7 +24,10 @@ filter_map.set('ALL', 'allergy-checkbox');
 filter_map.set('PRE', 'presenting-complaint-checkbox');
 
 function get_note() {
-    var api_url = encodeURI(window.location + '/endpoint');
+
+    var api_url = encodeURI(window.location.origin + '/notes/get/'  + $("#note-heading").html() );
+
+    console.log (api_url) ;
 
     var json = (function () {
         var json = null;
@@ -48,7 +51,6 @@ function get_note() {
 
 function set_heading(dal_id) {
     document.title = dal_id + " : CLIVSECO";
-    $("#note-heading").html(dal_id);
 
 }
 

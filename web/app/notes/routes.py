@@ -37,7 +37,7 @@ def home():
     )
 
 
-@notes.route("/code")
+@notes.route("/code/")
 @login_required
 def code():
     response = requests.get(url_for("api.get_random_note", _external=True))
@@ -48,11 +48,21 @@ def code():
     else:
         return response.content
 
+@notes.route("/code/<dal_id>")
+def code_by_id(dal_id: str):
+    response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
 
-@notes.route("/code/endpoint")
+    if response.status_code == 200:
+        note = response.json()
+        return render_template("notes/view.html", note=note["content"])
+    else:
+        return response.content
+
+
+@notes.route("/get/<dal_id>")
 @login_required
-def code_endpoint():
-    response = requests.get(url_for("api.get_random_note", _external=True))
+def code_endpoint(dal_id: str):
+    response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
     return response.json()
 
 
@@ -71,15 +81,7 @@ def find_note():
 
     return render_template("notes/find.html", form=form)
 
-@notes.route("/code/<dal_id>")
-def code_by_id(dal_id: str):
-    response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
 
-    if response.status_code == 200:
-        note = response.json()
-        return render_template("notes/view.html", note=note["content"])
-    else:
-        return response.content
 
 @notes.route("/code/feedback/<id>", methods=["GET", "POST"])
 @login_required
