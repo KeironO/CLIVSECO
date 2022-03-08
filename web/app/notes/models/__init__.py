@@ -15,5 +15,5 @@
 
 
 from .codes import *
-from .confirmation import *
 from .note import *
+from .confirmation import *

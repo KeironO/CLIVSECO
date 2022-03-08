@@ -10,12 +10,10 @@
 {% block body %}
 <h1>Feedback Index</h1>
 
-<table id="myTable" class="table table-striped" style="width:100%">
+<table id="feedback-table" class="table table-striped" style="width:100%">
     <thead>
         <tr>
             <th>DAL Unique ID</th>
-            <th>Position</th>
-            <th>Comorbidity</th>
             <th>Code</th>
             <th>Is Correct</th>
             <th>Replace</th>
@@ -35,10 +33,7 @@
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 
-<script>
-$(document).ready( function () {
-    $('#myTable').DataTable();
-} );
-</script>
+<script src="{{ url_for('static', filename='js/feedback_index.js') }}"></script>
+
 
 {% endblock %}
