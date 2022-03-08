@@ -30,6 +30,9 @@ $(document).ready(function () {
             data: 'id'
         },
         { mData: function (data, type, row ) {
+            return data["note_code"]["id"]
+        }},
+        { mData: function (data, type, row ) {
             return data["note_code"]["code"] + ": " + data["note_code"]["code_information"]["description"]
         }},
         { mData: function (data, type, row) {
@@ -47,6 +50,9 @@ $(document).ready(function () {
             else {
                 return "❌"
             }
+        }},
+        { mData: function (data, type, row) {
+           return data["user"]["email"] 
         }} ]
     });
 

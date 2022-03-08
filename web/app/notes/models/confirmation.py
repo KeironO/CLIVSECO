@@ -18,7 +18,6 @@ from ...database import db
 
 from .codes import NoteCode
 
-
 class NoteConfirmation(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     note_code_id = db.Column(db.Integer, ForeignKey("note_code.id"), nullable=False)
@@ -29,3 +28,4 @@ class NoteConfirmation(db.Model):
     user_id = db.Column(db.Integer, ForeignKey("user_account.id"), nullable=False)
 
     note_code = db.relationship(NoteCode)
+    user = db.relationship("UserAccount")
