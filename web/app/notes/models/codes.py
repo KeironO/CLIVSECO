@@ -39,6 +39,10 @@ class NoteCode(db.Model):
     type = db.Column(db.Enum(EnumCodeType), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     
+    note_confirmation = db.relationship(
+        "NoteConfirmation", uselist=True, primaryjoin="NoteConfirmation.note_code_id == NoteCode.id"
+    )
+
 
 
 class AutoCode(db.Model):
@@ -51,6 +55,8 @@ class AutoCode(db.Model):
     note_code = db.relationship(
         "NoteCode", uselist=False, primaryjoin="AutoCode.note_code_id == NoteCode.id"
     )
+
+
 
 
 class ClinicalCoderCode(db.Model):
