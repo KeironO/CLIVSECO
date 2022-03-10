@@ -1,6 +1,6 @@
 # CLIVSECO
 
-CLInical coder Verification of SEmi automated auto COder
+CLInical coder Verification of SEmi automated auto COder.
 
 ## Installation and First Time Run
 

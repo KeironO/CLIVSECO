@@ -66,11 +66,26 @@ function fill_context(code) {
 }
 
 function fill_history(confirmations) {
+    if (confirmations.length > 0) {
+        $("#auto-coder-confirmation-none").remove();
+    }
+
     for (i in confirmations) {
         let confirmation = confirmations[i];
+
+        let email = confirmation["user"]["email"]
+        if (confirmation["is_correct"]) {
+            var is_correct = '✔️'
+        }
+        else {
+            var is_correct = '❌'
+        }
+
         var lgi = `<li class='list-group-item d-flex justify-content-between align-items-center'>`
-        lgi += `${confirmation["is_correct"]}`
+        lgi += `Feedback Email: ${email} <span class="badge badge-primary badge-pill">${is_correct}</span>`
         lgi += `</li>`
+
+        $("#auto-coder-confirmation-list-group").append(lgi);
     }
 }
 
