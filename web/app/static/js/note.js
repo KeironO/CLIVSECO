@@ -128,9 +128,6 @@ function set_auto_coder(auto_codes) {
             lgi
         );
 
-        if (clinically_coded_codes.has(note_code["code"] )) {
-            console.log()
-        }
 
         $("#gi-"+ note_code["id"]).hover(function() {
             highlight_text(div_map.get(code["section"]), code["start"], code["end"]);

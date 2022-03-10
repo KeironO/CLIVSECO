@@ -65,6 +65,15 @@ function fill_context(code) {
     $("#context").html(context);
 }
 
+function fill_history(confirmations) {
+    for (i in confirmations) {
+        let confirmation = confirmations[i];
+        var lgi = `<li class='list-group-item d-flex justify-content-between align-items-center'>`
+        lgi += `${confirmation["is_correct"]}`
+        lgi += `</li>`
+    }
+}
+
 $(document).ready(function () {
     var code = get_code()["content"];
 
@@ -95,4 +104,5 @@ $(document).ready(function () {
     })
 
     fill_code_information(code);
+    fill_history(code["confirmations"]);
 });

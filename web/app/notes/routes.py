@@ -108,7 +108,7 @@ def code_feedback(id: int):
             return response.content
 
     
-    return render_template("notes/feedback/feedback.html", form=form, id=id)
+    return render_template("notes/feedback/view.html", form=form, id=id)
 
 @notes.route("/feedback")
 @login_required
