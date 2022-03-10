@@ -39,6 +39,7 @@ function show_hide_replace_element(value) {
 $(document).ready(function () {
     var code = get_code()["content"];
 
+
     $("#remove_or_replace").change(function() {
         show_hide_replace_element($(this).val());
     });
