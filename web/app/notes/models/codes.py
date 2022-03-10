@@ -39,6 +39,10 @@ class NoteCode(db.Model):
     type = db.Column(db.Enum(EnumCodeType), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     
+    note = db.relationship(
+        "Note", primaryjoin="Note.id == NoteCode.note_id", uselist=False
+    )
+
     note_confirmation = db.relationship(
         "NoteConfirmation", uselist=True, primaryjoin="NoteConfirmation.note_code_id == NoteCode.id"
     )

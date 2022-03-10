@@ -20,6 +20,7 @@ import marshmallow_sqlalchemy as masql
 from ...database import (
     NoteCode,
     AutoCode,
+    Note,
     ClinicalCoderCode,
     EnumCodedSection,
     EnumCodeType,
@@ -30,6 +31,15 @@ from marshmallow_enum import EnumField
 from marshmallow import fields
 import requests
 
+
+class BasicNoteSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Note
+
+    id = masql.auto_field()
+
+
+
 class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = NoteCode
@@ -38,6 +48,8 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     code = masql.auto_field()
     type = EnumField(EnumCodeType)
     note_id = masql.auto_field()
+
+    note = ma.Nested(BasicNoteSchema)
 
     code_information = fields.Method("retrieve_information")
 
