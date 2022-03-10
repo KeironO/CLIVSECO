@@ -1,3 +1,10 @@
+const type_map = new Map();
+type_map.set('DIAG', 'discharge_diagnoses');
+type_map.set('TRE', 'treatment_narrative');
+type_map.set('ALL', 'allergy');
+type_map.set('CLI', 'clinical_finding');
+type_map.set('PRE', 'presenting_complaint');
+
 function get_code() {
     var api_url = encodeURI(window.location + '/endpoint');
 
@@ -36,8 +43,33 @@ function show_hide_replace_element(value) {
     }
 }
 
+String.prototype.insert = function(index, string) {
+    if (index > 0) {
+      return this.substring(0, index) + string + this.substr(index);
+    }
+  
+    return string + this;
+};
+
+
+function fill_context(code) {
+    const type = code["note_code"]["type"];
+    const text = type_map.get(type);
+
+    var context = code["note_code"]["note"][text]
+    
+    const start = code["start"];
+    const end = code["end"];
+
+    context = context.insert(end+1, "</span>")
+    context = context.insert(start, "<span class='highlight'>")
+    $("#context").html(context);
+}
+
 $(document).ready(function () {
     var code = get_code()["content"];
+
+    fill_context(code);
 
 
     $("#remove_or_replace").change(function() {
