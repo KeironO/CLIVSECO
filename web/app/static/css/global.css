@@ -54,6 +54,7 @@ h1 {
 
 .bootstrap-tagsinput  .badge {
     background-color: #0d6efd;
+    margin-left: 1em !important;
 }
 
 .bootstrap-tagsinput {

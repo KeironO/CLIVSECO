@@ -5,6 +5,10 @@ type_map.set('ALL', 'allergy');
 type_map.set('CLI', 'clinical_finding');
 type_map.set('PRE', 'presenting_complaint');
 
+const trans_map = new Map();
+trans_map.set('DIAG', 'Discharge Diagnoses')
+
+
 function get_code() {
     var api_url = encodeURI(window.location + '/endpoint');
 
@@ -43,18 +47,13 @@ function show_hide_replace_element(value) {
     }
 }
 
-String.prototype.insert = function(index, string) {
-    if (index > 0) {
-      return this.substring(0, index) + string + this.substr(index);
-    }
-  
-    return string + this;
-};
-
 
 function fill_context(code) {
     const type = code["note_code"]["type"];
     const text = type_map.get(type);
+
+    console.log(code)
+    console.log(text);
 
     var context = code["note_code"]["note"][text]
     

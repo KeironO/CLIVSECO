@@ -37,6 +37,9 @@ from ..views import AutoCodeSchema, ClinicalCoderSchema
 @api.route("/notes/get/autocode/<id>", methods=["GET"])
 def get_autocode(id):
     autocode = AutoCode.query.filter_by(id=id).first()
+
+    print(autocode.confirmations)
+
     return success_with_content_response(
         AutoCodeSchema().dump(autocode)
     )

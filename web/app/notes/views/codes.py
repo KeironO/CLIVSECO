@@ -24,7 +24,10 @@ from ...database import (
     ClinicalCoderCode,
     EnumCodedSection,
     EnumCodeType,
+    NoteConfirmation
 )
+
+from ...auth.views import UserAccountSchema
 
 from ...extensions import ma
 from marshmallow_enum import EnumField
@@ -39,7 +42,6 @@ class BasicNoteSchema(masql.SQLAlchemyAutoSchema):
     id = masql.auto_field()
 
 
-
 class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = NoteCode
@@ -48,8 +50,8 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     code = masql.auto_field()
     type = EnumField(EnumCodeType)
     note_id = masql.auto_field()
-
-    note = ma.Nested(BasicNoteSchema)
+    
+    note = ma.Nested(BasicNoteSchema, many=False)
 
     code_information = fields.Method("retrieve_information")
 
@@ -65,6 +67,12 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
 
 
 
+class BasicNoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = NoteConfirmation
+
+    user = ma.Nested(UserAccountSchema, many=False)
+
 
 class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
@@ -75,6 +83,7 @@ class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
     end = masql.auto_field()
     section = EnumField(EnumCodedSection)
 
+    confirmations = ma.Nested(BasicNoteConfirmationSchema, many=True)
     note_code = ma.Nested(NoteCodeSchema, many=False)
 
     _links = ma.Hyperlinks({

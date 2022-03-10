@@ -38,13 +38,9 @@ class NoteCode(db.Model):
     note_id = db.Column(db.Integer, ForeignKey("note.id"), nullable=False)
     type = db.Column(db.Enum(EnumCodeType), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
-    
-    note = db.relationship(
-        "Note", primaryjoin="Note.id == NoteCode.note_id", uselist=False
-    )
 
-    note_confirmation = db.relationship(
-        "NoteConfirmation", uselist=True, primaryjoin="NoteConfirmation.note_code_id == NoteCode.id"
+    note = db.relationship(
+        "Note", primaryjoin="Note.id == NoteCode.note_id"
     )
 
 
@@ -58,6 +54,14 @@ class AutoCode(db.Model):
     comorbidity = db.Column(db.Boolean, default=False, nullable=False)
     note_code = db.relationship(
         "NoteCode", uselist=False, primaryjoin="AutoCode.note_code_id == NoteCode.id"
+    )
+
+    confirmations = db.relationship(
+        "NoteConfirmation",
+        uselist=True,
+        secondary="note_code",
+        primaryjoin="NoteCode.id == NoteConfirmation.note_code_id",
+        secondaryjoin="AutoCode.note_code_id == NoteCode.id"
     )
 
 
