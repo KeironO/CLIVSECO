@@ -1,21 +1,26 @@
 {% macro render_field(field) %}
-<div class="col-12">
+<div class="col-12" style="margin-bottom:1em;">
     {% if field.type in ["StringField", "PasswordField", "TextAreaField"] %}
-        <label for="" class="form-label">{{ field.label }}:</label>
+        <label for=" {{field.id}}" class="form-label">{{ field.label }}:</label>
+
         {{ field(class='form-control', **kwargs)|safe }}
-    {% elif field.type in ["BooleanField"] %}
+        <small class="form-text text-muted">{{ field.description }}</small>
+
+        {% elif field.type in ["BooleanField"] %}
     <div class="form-check">
         {{ field(class='form-check-input', **kwargs)|safe }}
         <label class="form-check-label" for="{{ field.id }}">
           {{ field.label }}
         </label>
+
       </div>
       {% elif field.type in ["SelectField"] %}
-      <label for="" class="form-label">{{ field.label }}:</label>
+      <label for="{{ field.id }}" class="form-label">{{ field.label }}:</label>
       {{ field(class='form-select', **kwargs)|safe }}
     {% elif field.type == "SubmitField" %}
         <hr class="my-4">
         {{ field(class='form-control btn-primary btn-lg', **kwargs)|safe }}
     {% endif %}
+
 </div>
 {% endmacro %}

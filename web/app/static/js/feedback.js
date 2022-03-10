@@ -52,5 +52,15 @@ $(document).ready(function () {
         }
     });
 
+    $("#requires_additional_code").change(function() {
+        if ($(this).prop("checked")) {
+            $("#additional-code-div").fadeIn(500);
+        }
+
+        else {
+            $("#additional-code-div").fadeOut(500);
+        }
+    })
+
     fill_code_information(code);
 });

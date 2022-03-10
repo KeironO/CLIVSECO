@@ -23,10 +23,20 @@
             
         
             {{ render_field(form.is_correct) }}
+
+
+
+
             <div id="wrong-div" style="display: block;">
             {{ render_field(form.remove_or_replace) }}
             <div id="remove-div" style="display:none;">{{ render_field(form.replace_with) }}</div>
             </div>
+
+            {{ render_field(form.requires_additional_code) }}
+            <div id="additional-code-div" style="display:none;">
+            {{ render_field(form.additional_codes) }}
+            </div>
+
             {{ render_field(form.comments) }}
             </div>
             <div class="card-footer">
