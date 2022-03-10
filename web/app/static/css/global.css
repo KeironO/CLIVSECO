@@ -43,3 +43,7 @@ h1 {
     border:1px solid #ffecb5;
     color: #664d03;
 }
+
+.codehighlight {
+    background-color: #198754 !important;
+}

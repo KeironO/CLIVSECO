@@ -18,8 +18,8 @@ from marshmallow import ValidationError
 from sqlalchemy import func
 
 
-from ..api import api, db
-from ..api.responses import (
+from ...api import api, db
+from ...api.responses import (
     no_values_response,
     validation_error_response,
     success_with_content_response,
@@ -27,9 +27,9 @@ from ..api.responses import (
 )
 
 
-from ..database import NoteConfirmation
+from ...database import NoteConfirmation
 
-from .views import NoteConfirmationSchema
+from ..views import NoteConfirmationSchema
 
 
 @api.route("/notes/feedback/autocode/get", methods=["GET"])

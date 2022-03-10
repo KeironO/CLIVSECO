@@ -19,8 +19,8 @@ from marshmallow import ValidationError
 from sqlalchemy import func
 
 
-from ..api import api, db
-from ..api.responses import (
+from ...api import api, db
+from ...api.responses import (
     no_values_response,
     validation_error_response,
     success_with_content_response,
@@ -28,11 +28,9 @@ from ..api.responses import (
 )
 
 
-from ..database import Note
+from ...database import Note
 
-from .views import NoteSchema
-
-
+from ..views import NoteSchema
 
 
 @api.route("/notes/random", methods=["GET"])

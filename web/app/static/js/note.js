@@ -23,6 +23,8 @@ filter_map.set('CLI', 'clinical-finding-checkbox');
 filter_map.set('ALL', 'allergy-checkbox');
 filter_map.set('PRE', 'presenting-complaint-checkbox');
 
+const clinically_coded_codes = new Map();
+
 function get_note() {
 
     var api_url = encodeURI(window.location.origin + '/notes/get/'  + $("#note-heading").html() );
@@ -79,6 +81,15 @@ function highlight_text(div, start, end) {
     $("#" + div ).html(contents);
 }
 
+function highlight_code(div) {
+    $(`#${div}`).addClass( "codehighlight" );
+}
+
+function unhighlight_code(div) {
+    $(`#${div}`).removeClass( "codehighlight" );
+
+}
+
 function unhighlight_text(div) {
     $('#' + div ).find('span').contents().unwrap();
 }
@@ -90,6 +101,7 @@ function set_auto_coder(auto_codes) {
     if (auto_codes.length > 0) {
         $("#auto-coder-none").remove();
     }
+
 
     for (i in auto_codes) {
         let code = auto_codes[i];
@@ -116,10 +128,16 @@ function set_auto_coder(auto_codes) {
             lgi
         );
 
+        if (clinically_coded_codes.has(note_code["code"] )) {
+            console.log()
+        }
+
         $("#gi-"+ note_code["id"]).hover(function() {
             highlight_text(div_map.get(code["section"]), code["start"], code["end"]);
+            highlight_code(clinically_coded_codes.get(note_code["code"]));
         }, function() {
             unhighlight_text(div_map.get(code["section"]))
+            unhighlight_code(clinically_coded_codes.get(note_code["code"]))
         });
 
         $("#gi-"+ note_code["id"]).click(function() {
@@ -145,7 +163,9 @@ function set_clinical_coder(clinical_codes) {
     }
 
     for (i in clinical_codes) {
+        
         let code = clinical_codes[i];
+        let ccid = code["id"];
         let note_code = code["note_code"]
 
         if (note_code["type"] == "DIAG") {
@@ -161,10 +181,12 @@ function set_clinical_coder(clinical_codes) {
         }
 
 
-        var lgi = `<li class='list-group-item d-flex justify-content-between align-items-center ${bg}'>`
+        var lgi = `<li id="cc${ccid}" class='list-group-item d-flex justify-content-between align-items-center ${bg}'>`
         lgi += `${note_code["code"]}: ${note_code["code_information"]["description"]}<span class="badge badge-primary badge-pill">${edal_code}</span>
         `
         lgi += `</li>`
+
+        clinically_coded_codes.set(note_code["code"], `cc${ccid}`);
 
         $("#clinical-coder-list-group").append(lgi);
 
@@ -176,6 +198,6 @@ $(document).ready(function () {
     set_heading(note["dal_id"]);
     set_dates(note);
     set_content(note);
-    set_auto_coder(note["auto_codes"]);
     set_clinical_coder(note["clinical_coder_codes"]);
+    set_auto_coder(note["auto_codes"]);
 });

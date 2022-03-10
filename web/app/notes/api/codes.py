@@ -19,8 +19,8 @@ from marshmallow import ValidationError
 from sqlalchemy import func
 
 
-from ..api import api, db
-from ..api.responses import (
+from ...api import api, db
+from ...api.responses import (
     no_values_response,
     validation_error_response,
     success_with_content_response,
@@ -28,9 +28,9 @@ from ..api.responses import (
 )
 
 
-from ..database import AutoCode, NoteCode, ClinicalCoderCode
+from ...database import AutoCode, NoteCode, ClinicalCoderCode
 
-from .views import AutoCodeSchema, ClinicalCoderSchema
+from ..views import AutoCodeSchema, ClinicalCoderSchema
 
 
 
