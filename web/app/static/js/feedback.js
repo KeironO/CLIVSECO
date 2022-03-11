@@ -1,5 +1,5 @@
 const type_map = new Map();
-type_map.set('DIAG', 'discharge_diagnoses');
+type_map.set('DIA', 'discharge_diagnoses');
 type_map.set('TRE', 'treatment_narrative');
 type_map.set('ALL', 'allergy');
 type_map.set('CLI', 'clinical_finding');
@@ -49,11 +49,8 @@ function show_hide_replace_element(value) {
 
 
 function fill_context(code) {
-    const type = code["note_code"]["type"];
+    const type = code["section"];
     const text = type_map.get(type);
-
-    console.log(code)
-    console.log(text);
 
     var context = code["note_code"]["note"][text]
     
