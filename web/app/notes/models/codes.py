@@ -53,7 +53,7 @@ class AutoCode(db.Model):
     note_code_id = db.Column(db.Integer, ForeignKey(NoteCode.id), nullable=False)
     comorbidity = db.Column(db.Boolean, default=False, nullable=False)
     note_code = db.relationship(
-        "NoteCode", uselist=False, primaryjoin="AutoCode.note_code_id == NoteCode.id"
+        "NoteCode", uselist=False, primaryjoin="AutoCode.note_code_id == NoteCode.id", overlaps="confirmations"
     )
 
     confirmations = db.relationship(
