@@ -38,8 +38,10 @@ class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
     comments = masql.auto_field()
     replace_with = masql.auto_field()
     created_on = masql.auto_field()
+    additional_codes = masql.auto_field()
     note_code_id = masql.auto_field()
     user_id = masql.auto_field()
 
     note_code = ma.Nested(NoteCodeSchema)
     user = ma.Nested(UserAccountSchema)
+

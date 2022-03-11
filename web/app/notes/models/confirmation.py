@@ -24,7 +24,8 @@ class NoteConfirmation(db.Model):
     note_code_id = db.Column(db.Integer, ForeignKey("note_code.id"), nullable=False)
     is_correct = db.Column(db.Boolean, default=True)
     comments = db.Column(db.String(2048), nullable=True)
-    replace_with = db.Column(db.String(7), nullable=True)
+    replace_with = db.Column(db.String(256), nullable=True)
+    additional_codes = db.Column(db.String(256), nullable=True)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey("user_account.id"), nullable=False)
 

@@ -14,27 +14,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from flask import render_template, url_for, flash, redirect, request
-from flask_login import login_required, current_user
+from flask import render_template, url_for, flash, redirect
+from flask_login import login_required
 
-from . import notes
+from .. import notes
 
 from sqlalchemy import func
 
-from .models import Note
-from .forms import FeedbackForm, FindForm
+from ..forms import FindForm
 
 import requests
-
-
-@notes.route("/", methods=["GET"])
-@login_required
-def home():
-    note_count = Note.query.count()
-    uncoded_count = Note.query.filter(Note.checked == False).count()
-    return render_template(
-        "notes/index.html", note_count=note_count, uncoded_count=uncoded_count
-    )
 
 
 @notes.route("/code/")
@@ -83,47 +72,3 @@ def find_note():
             flash("%s not found, are you sure it's a valid DAL ID?" % (form.dal.data))
 
     return render_template("notes/find.html", form=form)
-
-
-@notes.route("/code/feedback/<id>", methods=["GET", "POST"])
-@login_required
-def code_feedback(id: int):
-    form = FeedbackForm()
-
-    if form.validate_on_submit():
-
-        response = requests.post(
-            url_for("api.add_autocode_feedback", _external=True),
-            json={
-                "note_code_id": id,
-                "comments": form.comments.data,
-                "replace_with": form.replace_with.data,
-                "is_correct": form.is_correct.data,
-                "user_id": current_user.id,
-            },
-        )
-
-        if response.status_code == 200:
-            flash("Thank you for providing feedback 😊")
-        else:
-            return response.content
-
-    return render_template("notes/feedback/view.html", form=form, id=id)
-
-
-@notes.route("/feedback")
-@login_required
-def code_feedback_index():
-    return render_template("notes/feedback/index.html")
-
-
-@notes.route("/feedback/endpoint")
-@login_required
-def code_feedback_index_endpoint():
-    return requests.get(url_for("api.get_autocode_feedback_all", _external=True)).json()
-
-
-@notes.route("/code/feedback/<id>/endpoint")
-@login_required
-def code_feedback_endpoint(id: int):
-    return requests.get(url_for("api.get_autocode", id=id, _external=True)).json()

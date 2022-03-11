@@ -40,6 +40,8 @@ class NoteCode(db.Model):
     type = db.Column(db.Enum(EnumCodeType), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
 
+    confirmations = db.relationship("NoteConfirmation", primaryjoin="NoteConfirmation.note_code_id == NoteCode.id")
+
     note = db.relationship("Note", primaryjoin="Note.id == NoteCode.note_id")
 
 
@@ -54,15 +56,6 @@ class AutoCode(db.Model):
         "NoteCode",
         uselist=False,
         primaryjoin="AutoCode.note_code_id == NoteCode.id",
-        overlaps="confirmations",
-    )
-
-    confirmations = db.relationship(
-        "NoteConfirmation",
-        uselist=True,
-        secondary="note_code",
-        primaryjoin="NoteCode.id == NoteConfirmation.note_code_id",
-        secondaryjoin="AutoCode.note_code_id == NoteCode.id",
     )
 
 

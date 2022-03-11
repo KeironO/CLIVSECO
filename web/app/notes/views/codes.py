@@ -52,6 +52,8 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     note_id = masql.auto_field()
 
     note = ma.Nested(BasicNoteSchema, many=False)
+    
+    confirmations = masql.auto_field()
 
     code_information = fields.Method("retrieve_information")
 
