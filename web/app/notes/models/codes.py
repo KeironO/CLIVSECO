@@ -19,6 +19,7 @@ from ...database import db
 from enum import Enum
 from marshmallow import fields
 
+
 class EnumCodedSection(Enum):
     CLI = "Clinical Finding"
     PRE = "Presenting Complaint"
@@ -39,10 +40,7 @@ class NoteCode(db.Model):
     type = db.Column(db.Enum(EnumCodeType), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
 
-    note = db.relationship(
-        "Note", primaryjoin="Note.id == NoteCode.note_id"
-    )
-
+    note = db.relationship("Note", primaryjoin="Note.id == NoteCode.note_id")
 
 
 class AutoCode(db.Model):
@@ -53,7 +51,10 @@ class AutoCode(db.Model):
     note_code_id = db.Column(db.Integer, ForeignKey(NoteCode.id), nullable=False)
     comorbidity = db.Column(db.Boolean, default=False, nullable=False)
     note_code = db.relationship(
-        "NoteCode", uselist=False, primaryjoin="AutoCode.note_code_id == NoteCode.id", overlaps="confirmations"
+        "NoteCode",
+        uselist=False,
+        primaryjoin="AutoCode.note_code_id == NoteCode.id",
+        overlaps="confirmations",
     )
 
     confirmations = db.relationship(
@@ -61,10 +62,8 @@ class AutoCode(db.Model):
         uselist=True,
         secondary="note_code",
         primaryjoin="NoteCode.id == NoteConfirmation.note_code_id",
-        secondaryjoin="AutoCode.note_code_id == NoteCode.id"
+        secondaryjoin="AutoCode.note_code_id == NoteCode.id",
     )
-
-
 
 
 class ClinicalCoderCode(db.Model):

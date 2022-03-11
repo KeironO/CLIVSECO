@@ -48,10 +48,12 @@ def add_autocode_feedback():
         return no_values_response()
 
     try:
-        autocode_feedback_result = NoteConfirmationSchema(exclude=("id", "created_on",)).load(values)
+        autocode_feedback_result = NoteConfirmationSchema(
+            exclude=("id", "created_on",)
+        ).load(values)
     except ValidationError as err:
         return validation_error_response(err)
-    
+
     new_code_confirmation = NoteConfirmation(**autocode_feedback_result)
 
     try:

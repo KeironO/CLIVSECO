@@ -33,16 +33,11 @@ from ...database import AutoCode, NoteCode, ClinicalCoderCode
 from ..views import AutoCodeSchema, ClinicalCoderSchema
 
 
-
 @api.route("/notes/get/autocode/<id>", methods=["GET"])
 def get_autocode(id):
     autocode = AutoCode.query.filter_by(id=id).first()
 
-    return success_with_content_response(
-        AutoCodeSchema().dump(autocode)
-    )
-
-
+    return success_with_content_response(AutoCodeSchema().dump(autocode))
 
 
 @api.route("/notes/add/autocode", methods=["POST"])

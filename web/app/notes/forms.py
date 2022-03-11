@@ -18,15 +18,27 @@ from flask_wtf import FlaskForm
 from wtforms import BooleanField, StringField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired
 
+
 class FindForm(FlaskForm):
     dal = StringField("DAL ID", validators=[DataRequired()])
     submit = SubmitField("Search")
 
+
 class FeedbackForm(FlaskForm):
     is_correct = BooleanField("Annotation Correct")
     requires_additional_code = BooleanField("Requires Additional Code(s)")
-    additional_codes = StringField("Additional Code(s)", description="This can be either an OPCS4, ICD-10 code or a standard. Please separate codes using commas.", render_kw={'data-role':'tagsinput'})
-    remove_or_replace = SelectField("Remove or Replace?", choices=((1, "Remove"), (2, "Replace")))
-    replace_with = StringField("Replace With",  description="This can be either an OPCS4 or ICD-10 code. Please separate codes using commas.", render_kw={'data-role':'tagsinput'})
+    additional_codes = StringField(
+        "Additional Code(s)",
+        description="This can be either an OPCS4, ICD-10 code or a standard. Please separate codes using commas.",
+        render_kw={"data-role": "tagsinput"},
+    )
+    remove_or_replace = SelectField(
+        "Remove or Replace?", choices=((1, "Remove"), (2, "Replace"))
+    )
+    replace_with = StringField(
+        "Replace With",
+        description="This can be either an OPCS4 or ICD-10 code. Please separate codes using commas.",
+        render_kw={"data-role": "tagsinput"},
+    )
     comments = TextAreaField("Additional Comments")
     submit = SubmitField("Submit Feedback")

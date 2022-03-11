@@ -38,13 +38,15 @@ def get_random_dal_id():
     note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
     return success_with_content_response({"dal_id": note.dal_id})
 
+
 @api.route("/notes/get/<dal_id>", methods=["GET"])
 def get_note(dal_id: str):
     note = Note.query.filter(Note.dal_id == dal_id).first()
     if note != None:
         return success_with_content_response(NoteSchema().dump(note))
     else:
-        return {"success": False, "content" : {}}
+        return {"success": False, "content": {}}
+
 
 @api.route("/notes/new", methods=["POST"])
 def new_note():
@@ -54,7 +56,9 @@ def new_note():
         return no_values_response()
 
     try:
-        note_result = NoteSchema(exclude=("id", "auto_codes", "clinical_coder_codes")).load(values)
+        note_result = NoteSchema(
+            exclude=("id", "auto_codes", "clinical_coder_codes")
+        ).load(values)
     except ValidationError as err:
         return validation_error_response(err)
 

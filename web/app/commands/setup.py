@@ -20,21 +20,24 @@ from . import cmd_setup
 from ..database import db, UserAccount, ICD10Lookup
 from tqdm import tqdm
 
-from secrets import choice;
-from string import printable;
+from secrets import choice
+from string import printable
 from getpass import getpass
 
 
 @cmd_setup.cli.command("create-testuser")
 def create_testuser():
     email = "me@domain.com"
-    password = ''.join([choice(printable.strip()) for _ in range(8)])
+    password = "".join([choice(printable.strip()) for _ in range(8)])
     ua = UserAccount(email=email, password=password)
 
     db.session.add(ua)
     db.session.commit()
 
-    print("Log in using the following details:\nEmail:%s\password:%s" % (email, password))
+    print(
+        "Log in using the following details:\nEmail:%s\password:%s" % (email, password)
+    )
+
 
 @cmd_setup.cli.command("create-user")
 def create_user():
@@ -51,7 +54,9 @@ def create_icd10_lookup():
     bulk_list = []
     print("Loading ICD10 codes into a bulk list..")
     for code, values in tqdm(icd10.codes.items()):
-        bulk_list.append(ICD10Lookup(code=code, description=values[1], billable=values[0]))
+        bulk_list.append(
+            ICD10Lookup(code=code, description=values[1], billable=values[0])
+        )
 
     print("Bulk commiting to db")
     db.session.bulk_save_objects(bulk_list)

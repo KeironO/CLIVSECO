@@ -17,9 +17,7 @@
 from flask import url_for
 import marshmallow_sqlalchemy as masql
 
-from ...database import (
-    NoteConfirmation
-)
+from ...database import NoteConfirmation
 
 from . import NoteCodeSchema
 
@@ -29,6 +27,7 @@ from ...extensions import ma
 from marshmallow_enum import EnumField
 from marshmallow import fields
 import requests
+
 
 class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
@@ -41,6 +40,6 @@ class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
     created_on = masql.auto_field()
     note_code_id = masql.auto_field()
     user_id = masql.auto_field()
-    
+
     note_code = ma.Nested(NoteCodeSchema)
     user = ma.Nested(UserAccountSchema)

@@ -20,7 +20,7 @@ from enum import Enum
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    
+
     dal_id = db.Column(db.String(128))
 
     clinical_finding = db.Column(db.String(2048))
@@ -39,7 +39,7 @@ class Note(db.Model):
         secondary="note_code",
         primaryjoin="Note.id==NoteCode.note_id",
         secondaryjoin="NoteCode.id==AutoCode.note_code_id",
-        viewonly=True
+        viewonly=True,
     )
 
     clinical_coder_codes = db.relationship(
@@ -48,5 +48,5 @@ class Note(db.Model):
         secondary="note_code",
         primaryjoin="Note.id==NoteCode.note_id",
         secondaryjoin="NoteCode.id==ClinicalCoderCode.note_code_id",
-        viewonly=True
+        viewonly=True,
     )

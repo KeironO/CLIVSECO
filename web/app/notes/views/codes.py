@@ -24,7 +24,7 @@ from ...database import (
     ClinicalCoderCode,
     EnumCodedSection,
     EnumCodeType,
-    NoteConfirmation
+    NoteConfirmation,
 )
 
 from ...auth.views import UserAccountSchema
@@ -50,21 +50,24 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     code = masql.auto_field()
     type = EnumField(EnumCodeType)
     note_id = masql.auto_field()
-    
+
     note = ma.Nested(BasicNoteSchema, many=False)
 
     code_information = fields.Method("retrieve_information")
 
     def retrieve_information(self, obj):
-        code = obj.code        
+        code = obj.code
         if obj.type == "PROC":
-            return requests.get(url_for("api.get_opcs_code", code=code, _external=True)).json()["content"]
+            return requests.get(
+                url_for("api.get_opcs_code", code=code, _external=True)
+            ).json()["content"]
         else:
             # Remove Stop Code :-D
             if code.endswith("X"):
                 code = code[:-1]
-            return requests.get(url_for("api.get_icd_code", code=code, _external=True)).json()["content"]
-
+            return requests.get(
+                url_for("api.get_icd_code", code=code, _external=True)
+            ).json()["content"]
 
 
 class BasicNoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
@@ -86,10 +89,8 @@ class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
     confirmations = ma.Nested(BasicNoteConfirmationSchema, many=True)
     note_code = ma.Nested(NoteCodeSchema, many=False)
 
-    _links = ma.Hyperlinks({
-        "feedback": ma.URLFor(
-            "notes.code_feedback", id="<id>", _external=True
-        )}
+    _links = ma.Hyperlinks(
+        {"feedback": ma.URLFor("notes.code_feedback", id="<id>", _external=True)}
     )
 
 

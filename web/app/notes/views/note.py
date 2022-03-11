@@ -27,6 +27,5 @@ class NoteSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = Note
 
-
     auto_codes = ma.Nested(AutoCodeSchema, many=True)
     clinical_coder_codes = ma.Nested(ClinicalCoderSchema, many=True)

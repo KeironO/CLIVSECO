@@ -18,6 +18,7 @@ from ...database import db
 
 from .codes import NoteCode
 
+
 class NoteConfirmation(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     note_code_id = db.Column(db.Integer, ForeignKey("note_code.id"), nullable=False)

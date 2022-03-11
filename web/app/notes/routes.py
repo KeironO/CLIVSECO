@@ -48,6 +48,7 @@ def get_random_code():
     else:
         return response.content
 
+
 @notes.route("/code/<dal_id>")
 def code(dal_id: str):
     response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
@@ -72,7 +73,9 @@ def find_note():
     form = FindForm()
 
     if form.validate_on_submit():
-        response = requests.get(url_for("api.get_note", dal_id=form.dal.data, _external=True))
+        response = requests.get(
+            url_for("api.get_note", dal_id=form.dal.data, _external=True)
+        )
 
         if response.status_code == 200 and response.json()["success"]:
             return redirect(url_for("notes.code", dal_id=form.dal.data))
@@ -82,7 +85,6 @@ def find_note():
     return render_template("notes/find.html", form=form)
 
 
-
 @notes.route("/code/feedback/<id>", methods=["GET", "POST"])
 @login_required
 def code_feedback(id: int):
@@ -90,16 +92,15 @@ def code_feedback(id: int):
 
     if form.validate_on_submit():
 
-        
         response = requests.post(
             url_for("api.add_autocode_feedback", _external=True),
-            json = {
-            "note_code_id": id,
-            "comments": form.comments.data,
-            "replace_with": form.replace_with.data,
-            "is_correct": form.is_correct.data,
-            "user_id": current_user.id
-            }
+            json={
+                "note_code_id": id,
+                "comments": form.comments.data,
+                "replace_with": form.replace_with.data,
+                "is_correct": form.is_correct.data,
+                "user_id": current_user.id,
+            },
         )
 
         if response.status_code == 200:
@@ -107,18 +108,20 @@ def code_feedback(id: int):
         else:
             return response.content
 
-    
     return render_template("notes/feedback/view.html", form=form, id=id)
+
 
 @notes.route("/feedback")
 @login_required
 def code_feedback_index():
     return render_template("notes/feedback/index.html")
 
+
 @notes.route("/feedback/endpoint")
 @login_required
 def code_feedback_index_endpoint():
     return requests.get(url_for("api.get_autocode_feedback_all", _external=True)).json()
+
 
 @notes.route("/code/feedback/<id>/endpoint")
 @login_required

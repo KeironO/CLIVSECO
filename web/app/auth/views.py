@@ -16,9 +16,7 @@
 from flask import url_for
 import marshmallow_sqlalchemy as masql
 
-from ..database import (
-    UserAccount
-)
+from ..database import UserAccount
 
 from ..extensions import ma
 from marshmallow_enum import EnumField
@@ -32,4 +30,3 @@ class UserAccountSchema(masql.SQLAlchemyAutoSchema):
 
     id = masql.auto_field()
     email = masql.auto_field()
-    
