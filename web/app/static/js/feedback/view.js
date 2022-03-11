@@ -86,6 +86,15 @@ function fill_history(confirmations) {
     }
 }
 
+function view_info_button(code) {
+    $("#view-code-info").click( function() {
+        if (code["note_code"]["type"] == "DIAG") {
+            var icd10 = code["note_code"]["code"];
+            window.open(`https://icdcodelookup.com/icd-10/codes/${icd10}`, '_blank'); 
+        };
+    })
+}
+
 $(document).ready(function () {
     var code = get_code()["content"];
 
@@ -117,4 +126,5 @@ $(document).ready(function () {
 
     fill_code_information(code);
     fill_history(code["confirmations"]);
+    view_info_button(code);
 });
