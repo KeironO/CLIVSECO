@@ -23,7 +23,7 @@
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
       <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{ url_for('notes.home') }}">
           CLIVSECO
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,15 +75,33 @@
 
         {% block body %}
         {% endblock %}
-
+        <div class="alert alert-warning text-center">
+          <b>Notice:</b> CLIVSECO is still in the early stages of development. If you encounter any problems, please <a href="mailto:keiron.oshea@wales.nhs.uk">email me</a>.
+        </div>
       </main>
 
-      <footer class="footer mt-auto py-3 bg-light">
+      <footer class="footer mt-auto py-5 bg-light">
+        
         <div class="container">
-          <div class="alert alert-warning text-center" style="margin-top:1em;">
-            <b>Notice:</b> CLIVSECO is still in the early stages of development. If you encounter any problems, please <a href="mailto:keiron.oshea@wales.nhs.uk">email me</a>.
+          <div class="row">
+            <div class="col-6 col-md">
+              <img src="{{ url_for('static', filename='images/ctuhb.png') }}" width="300px" />
+              <p class="text-muted small">CLIVSECO was developed for internal use within Cwm Taf University Health Board.</p>
+
+            </div>
+            <div class="col-6 col-md">
+              <h5>Resources</h5>
+              <ul class="list-unstyled text-small">
+                <li><a class="text-muted" 
+                        href="https://github.com/KeironO/CLIVSECO/issues"
+                        target="_blank">Report a Problem</a></li>
+                <li><a class="text-muted" href="https://github.com/KeironO/CLIVSECO/"
+                        target="_blank">Source
+                        Code</a></li>
+            </ul>
+            </div>
           </div>
-          <span class="text-muted">CLIVSECO was developed for internal use within Cwm Taf University Health Board.</span>
+          
         </div>
       </footer>
       
