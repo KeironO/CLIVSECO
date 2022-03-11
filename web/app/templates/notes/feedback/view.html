@@ -4,17 +4,19 @@
 
 {% block body %}
 <div class="row">
-    <div class="col-9">
+    <div class="col-8">
         <div class="card">
             <div class="card-header bg-warning"><h2>Auto-Coder Feedback Form</h2></div>
             <div class="card-body">
         
                 <div class="card">
-                    <div id="code-header" class="card-header"></div>
+                    <div class="card-header"><span id="code-header"></span>
+
+                    </div>
                     <div id="context" class="card-body"></div>
                     <div class="card-footer">
-                        <div id="view-code-info" class="btn btn-sm btn-primary">
-                            📘 View Info 
+                        <div id="view-code-info" class="btn btn-sm btn-primary float-right">
+                            📘 View Code Info 
                         </div>
                     </div>
                 </div>
@@ -48,7 +50,7 @@
             </div>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-4">
         <div class="card">
             <div class="card-header">
                 Feedback History
