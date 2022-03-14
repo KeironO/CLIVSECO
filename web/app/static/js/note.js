@@ -117,11 +117,14 @@ function set_auto_coder(auto_codes) {
             var bg = "bg-warning"
         }
 
-        var lgi = "<li class='list-group-item d-flex justify-content-between align-items-center "+ bg + "' id='gi-"+ note_code["id"] + "'>"
-        lgi += note_code["code"] + ": " + note_code["code_information"]["description"]
+        var lgi = "<li class='list-group-item d-flex justify-content-between "+ bg + "' id='gi-"+ note_code["id"] + "'>"
         if (code["comorbidity"] == true) {
-            lgi += '<span class="badge badge-primary badge-pill">COMORB</span>'
+            lgi += '✨'
         }
+        lgi += note_code["code"] + ": " + note_code["code_information"]["description"]
+
+        lgi += '<span class="badge badge-light">'+note_code["confirmations"].length+'</span>'
+
         lgi += "</li>"
 
         $("#auto-coder-list-group").append(
