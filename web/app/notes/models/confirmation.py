@@ -28,6 +28,4 @@ class NoteConfirmation(db.Model):
     additional_codes = db.Column(db.String(256), nullable=True)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey("user_account.id"), nullable=False)
-
-    note_code = db.relationship(NoteCode, overlaps="note_confirmation")
     user = db.relationship("UserAccount")

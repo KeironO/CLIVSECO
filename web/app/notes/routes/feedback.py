@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from flask import render_template, url_for, flash
+from flask import render_template, url_for, flash, redirect
 from flask_login import login_required, current_user
 
 from .. import notes
@@ -28,26 +28,35 @@ import requests
 def code_feedback(id: int):
     form = FeedbackForm()
 
-    if form.validate_on_submit():
+    code = requests.get(url_for("api.get_autocode", id=id, _external=True))
 
-        response = requests.post(
-            url_for("api.add_autocode_feedback", _external=True),
-            json={
-                "note_code_id": id,
-                "comments": form.comments.data,
-                "replace_with": form.replace_with.data,
-                "is_correct": form.is_correct.data,
-                "additional_codes": form.additional_codes.data,
-                "user_id": current_user.id,
-            },
-        )
+    print(code.json()["content"])
 
-        if response.status_code == 200:
-            flash("Thank you for providing feedback 😊")
-        else:
-            return response.content
+    if code.status_code == 200:
 
-    return render_template("notes/feedback/view.html", form=form, id=id)
+        if form.validate_on_submit():
+            
+            response = requests.post(
+                url_for("api.add_autocode_feedback", _external=True),
+                json={
+                    "note_code_id": code.json()["content"]["note_code"]["id"],
+                    "comments": form.comments.data,
+                    "replace_with": form.replace_with.data,
+                    "is_correct": form.is_correct.data,
+                    "additional_codes": form.additional_codes.data,
+                    "user_id": current_user.id,
+                },
+            )
+
+            if response.status_code == 200:
+                flash("Thank you for providing feedback 😊")
+                return redirect(url_for("notes.code", dal_id=code.json()["content"]["note_code"]["note"]["dal_id"]))
+            else:
+                return response.content
+
+        return render_template("notes/feedback/view.html", form=form, id=id)
+    else:
+        return code.status_code
 
 @notes.route("/code/feedback/<id>/endpoint")
 @login_required

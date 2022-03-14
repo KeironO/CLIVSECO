@@ -41,6 +41,12 @@ class BasicNoteSchema(masql.SQLAlchemyAutoSchema):
 
     id = masql.auto_field()
 
+class BasicNoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = NoteConfirmation
+
+    user = ma.Nested(UserAccountSchema, many=False)
+
 
 class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
@@ -53,7 +59,7 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
 
     note = ma.Nested(BasicNoteSchema, many=False)
     
-    confirmations = masql.auto_field()
+    confirmations = ma.Nested(BasicNoteConfirmationSchema, many=True)
 
     code_information = fields.Method("retrieve_information")
 
@@ -72,11 +78,6 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
             ).json()["content"]
 
 
-class BasicNoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
-    class Meta:
-        model = NoteConfirmation
-
-    user = ma.Nested(UserAccountSchema, many=False)
 
 
 class AutoCodeSchema(masql.SQLAlchemyAutoSchema):

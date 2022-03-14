@@ -63,6 +63,7 @@ function fill_context(code) {
 }
 
 function fill_history(confirmations) {
+    
     if (confirmations.length > 0) {
         $("#auto-coder-confirmation-none").remove();
     }
@@ -125,6 +126,6 @@ $(document).ready(function () {
     })
 
     fill_code_information(code);
-    fill_history(code["confirmations"]);
+    fill_history(code["note_code"]["confirmations"]);
     view_info_button(code);
 });
