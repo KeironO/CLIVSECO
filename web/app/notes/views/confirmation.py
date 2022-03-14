@@ -26,7 +26,6 @@ from ...auth.views import UserAccountSchema
 from ...extensions import ma
 from marshmallow_enum import EnumField
 from marshmallow import fields
-import requests
 
 
 class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
@@ -39,8 +38,9 @@ class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
     replace_with = masql.auto_field()
     created_on = masql.auto_field()
     additional_codes = masql.auto_field()
-    note_code_id = masql.auto_field()
     user_id = masql.auto_field()
+
+    note_code_id = masql.auto_field()
 
     note_code = ma.Nested(NoteCodeSchema)
     user = ma.Nested(UserAccountSchema)

@@ -26,14 +26,15 @@ $(document).ready(function () {
     var codes = get_codes()["content"];
     $('#feedback-table').DataTable({
         data: codes,
-        columns: [{
-            data: 'id'
-        },
+        columns: [
         { mData: function (data, type, row ) {
-            return data["note_code"]["id"]
+            return data["note_code"]["note"]["dal_id"]
         }},
         { mData: function (data, type, row ) {
-            return data["note_code"]["code"] + ": " + data["note_code"]["code_information"]["description"]
+            return "FBK:" + data["id"]
+        }},
+        { mData: function (data, type, row) {
+            return data["note_code"]["code"]
         }},
         { mData: function (data, type, row) {
             if (data["is_correct"]) {
