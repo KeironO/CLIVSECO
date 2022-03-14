@@ -162,3 +162,12 @@ h1 {
     background-color: #fff !important;
     color: #000;
   }
+
+.loading {
+
+}
+
+.loading h1 {
+  border-bottom: 0;
+  font-size: 3em;
+}

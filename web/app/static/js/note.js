@@ -195,9 +195,15 @@ function set_clinical_coder(clinical_codes) {
 
 $(document).ready(function () {
     var note = get_note()["content"];
+    
     set_heading(note["dal_id"]);
     set_dates(note);
     set_content(note);
     set_clinical_coder(note["clinical_coder_codes"]);
     set_auto_coder(note["auto_codes"]);
+    $("#loading").fadeOut(250, function() {
+        $("#content").fadeIn(250);
+
+    });
+
 });

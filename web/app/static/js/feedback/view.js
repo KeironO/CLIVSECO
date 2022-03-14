@@ -80,7 +80,10 @@ function fill_history(confirmations) {
         }
 
         var lgi = `<li class='list-group-item d-flex'>`
-        lgi += `<p>Feedback Email: ${email}<br><span class='small'>${confirmation["created_on"]}</small></p>`
+
+        var created_on = new Date(confirmation["created_on"]);
+
+        lgi += `<p>Feedback Email: ${email}<br><span class='small'>Created On: ${created_on.toDateString()}</small></p>`
         lgi += `<span class="badge badge-primary badge-pill">${is_correct}</span>`
 
         lgi += `</li>`

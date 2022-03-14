@@ -20,14 +20,13 @@ from .. import notes
 
 from sqlalchemy import func
 
-from ..models import Note
-from ..forms import FeedbackForm, FindForm
+from ..models import AutoCode
 
 @notes.route("/", methods=["GET"])
 @login_required
 def home():
-    note_count = Note.query.count()
-    uncoded_count = Note.query.filter(Note.checked == False).count()
+    note_count = AutoCode.query.count()
+    uncoded_count = AutoCode.query.count()
     return render_template(
         "notes/index.html", note_count=note_count, uncoded_count=uncoded_count
     )
