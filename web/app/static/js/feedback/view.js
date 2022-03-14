@@ -79,8 +79,10 @@ function fill_history(confirmations) {
             var is_correct = '❌'
         }
 
-        var lgi = `<li class='list-group-item d-flex justify-content-between align-items-center'>`
-        lgi += `Feedback Email: ${email} <span class="badge badge-primary badge-pill">${is_correct}</span>`
+        var lgi = `<li class='list-group-item d-flex'>`
+        lgi += `<p>Feedback Email: ${email}<br><span class='small'>${confirmation["created_on"]}</small></p>`
+        lgi += `<span class="badge badge-primary badge-pill">${is_correct}</span>`
+
         lgi += `</li>`
 
         $("#auto-coder-confirmation-list-group").append(lgi);
