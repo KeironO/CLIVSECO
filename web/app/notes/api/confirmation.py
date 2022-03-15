@@ -40,6 +40,10 @@ def get_autocode_feedback_all():
     )
 
 
+@api.route("/notes/feedback/additional_code/", methods=["POST"])
+def add_additional_code():
+    values = request.get_json()
+
 @api.route("/notes/feedback/autocode/", methods=["POST"])
 def add_autocode_feedback():
     values = request.get_json()

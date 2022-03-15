@@ -25,6 +25,9 @@ from ...auth.views import UserAccountSchema
 
 from ...extensions import ma
 
+from ..enums import EnumCodedSection, EnumCodeType
+from marshmallow_enum import EnumField
+
 
 class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
@@ -51,4 +54,11 @@ class AdditionalCodeSchema(masql.SQLAlchemyAutoSchema):
 
     id = masql.auto_field()
     note_id = masql.auto_field()
+    section = EnumField(EnumCodedSection)
+    type = EnumField(EnumCodeType)
+    start = masql.auto_field()
+    end = masql.auto_field()
+    comorbidity = masql.auto_field()
+    user_id = masql.auto_field()
     
+    user = ma.Nested(UserAccountSchema)
