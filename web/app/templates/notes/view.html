@@ -159,12 +159,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <form method="POST" action="{{ url_for('notes.code', dal_id=note['dal_id']) }}">
+
+        {{ form.csrf_token }}
         {{ render_field(form.section) }}
 
         <div id="additional-codes-text">
           Test
         </div>
-
 
         <div class="row">
           <div class="col-6">
@@ -179,7 +181,7 @@
         {{ render_field(form.comorbidity) }}
         {{ render_field(form.submit) }}
       </div>
-
+    </form>
     </div>
   </div>
 </div>

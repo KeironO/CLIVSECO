@@ -15,7 +15,7 @@
 
 
 from flask import render_template, url_for, flash, redirect
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from .. import notes
 
@@ -40,17 +40,31 @@ def get_random_code():
         return response.content
 
 
-@notes.route("/code/<dal_id>")
+@notes.route("/code/<dal_id>", methods=["GET", "POST"])
+@login_required
 def code(dal_id: str):
     response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
 
     if response.status_code == 200:
-
-        form = AdditionalCodeForm()
         note = response.json()
-
+        form = AdditionalCodeForm()
         if form.validate_on_submit():
-            pass
+            submission_response = requests.post(url_for("api.add_additional_code", _external=True),
+                json={
+                'note_id': note["content"]["id"],
+                'section': form.section.data,
+                'type': form.type.data,
+                'start': int(form.start.data),
+                'end': int(form.end.data),
+                'code': form.additional_codes.data,
+                'comorbidity': form.comorbidity.data,
+                'user_id': current_user.id
+            })
+            
+            if submission_response.status_code == 200:
+                flash("😀 Thank you for your feedback.")
+            else:
+                flash(response.content)
         return render_template("notes/view.html", note=note["content"], form=form)
     else:
         return response.content

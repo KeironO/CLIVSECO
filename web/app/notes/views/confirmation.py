@@ -58,7 +58,9 @@ class AdditionalCodeSchema(masql.SQLAlchemyAutoSchema):
     type = EnumField(EnumCodeType)
     start = masql.auto_field()
     end = masql.auto_field()
+    code = masql.auto_field()
     comorbidity = masql.auto_field()
     user_id = masql.auto_field()
-    
+    created_on = masql.auto_field()
+
     user = ma.Nested(UserAccountSchema)

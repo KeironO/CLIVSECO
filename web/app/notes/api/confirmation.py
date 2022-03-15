@@ -52,6 +52,7 @@ def add_additional_code():
             exclude=("id", "created_on")
         ).load(values)
     except ValidationError as err:
+        print(err)
         return validation_error_response(err)
 
     new_additional_code = AdditionalCode(**additional_code_result)

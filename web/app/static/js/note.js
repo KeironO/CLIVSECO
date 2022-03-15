@@ -193,8 +193,8 @@ function set_clinical_coder(clinical_codes) {
 function fill_missing_code_information(note) {
     var text_div = div_map.get($("#section option:selected").val());
     var text = $(`#${text_div}`)[0].innerHTML;
-    $( "#start" ).prop( "disabled", true ).val(0);
-    $( "#end" ).prop( "disabled", true ).val(0);
+    $( "#start" ).val(0);
+    $( "#end" ).val(0);
     $("#additional-codes-text").html(text);
 }
 

@@ -39,6 +39,7 @@ class AdditionalCode(db.Model):
     note_id = db.Column(db.Integer, ForeignKey("note.id"), nullable=False)
     section = db.Column(db.Enum(EnumCodedSection), nullable=False)
     type = db.Column(db.Enum(EnumCodeType), nullable=False)
+    code = db.Column(db.String(256))
     start = db.Column(db.Integer)
     end = db.Column(db.Integer)
     comorbidity = db.Column(db.Boolean, default=False, nullable=False)
