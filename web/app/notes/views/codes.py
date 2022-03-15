@@ -22,12 +22,12 @@ from ...database import (
     AutoCode,
     Note,
     ClinicalCoderCode,
-    EnumCodedSection,
-    EnumCodeType,
     NoteConfirmation,
 )
 
 from ...auth.views import UserAccountSchema
+
+from ..enums import EnumCodedSection, EnumCodeType
 
 from ...extensions import ma
 from marshmallow_enum import EnumField

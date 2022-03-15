@@ -33,6 +33,7 @@ class NoteConfirmation(db.Model):
     note_code = db.relationship(NoteCode)
     user = db.relationship("UserAccount")
 
+
 class AdditionalCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     note_id = db.Column(db.Integer, ForeignKey("note.id"), nullable=False)

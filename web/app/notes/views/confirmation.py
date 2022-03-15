@@ -17,7 +17,7 @@
 from flask import url_for
 import marshmallow_sqlalchemy as masql
 
-from ...database import NoteConfirmation
+from ...database import NoteConfirmation, AdditionalCode
 
 from . import NoteCodeSchema
 
@@ -44,3 +44,11 @@ class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
     note_code = ma.Nested(NoteCodeSchema)
     user = ma.Nested(UserAccountSchema)
 
+class AdditionalCodeSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = AdditionalCode
+
+
+    id = masql.auto_field()
+    note_id = masql.auto_field()
+    
