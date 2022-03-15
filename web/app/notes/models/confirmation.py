@@ -15,6 +15,7 @@
 
 from sqlalchemy import ForeignKey
 from ...database import db
+from ..enums import EnumCodeType, EnumCodedSection
 
 from .codes import NoteCode
 
@@ -31,3 +32,14 @@ class NoteConfirmation(db.Model):
     
     note_code = db.relationship(NoteCode)
     user = db.relationship("UserAccount")
+
+class AdditionalCode(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    note_id = db.Column(db.Integer, ForeignKey("note.id"), nullable=False)
+    section = db.Column(db.Enum(EnumCodedSection), nullable=False)
+    type = db.Column(db.Enum(EnumCodeType), nullable=False)
+    start = db.Column(db.Integer)
+    end = db.Column(db.Integer)
+    comorbidity = db.Column(db.Boolean, default=False, nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey("user_account.id"), nullable=False)
+    created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)

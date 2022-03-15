@@ -16,22 +16,9 @@
 from flask import url_for
 from sqlalchemy import ForeignKey
 from ...database import db
-from enum import Enum
 from marshmallow import fields
 
-
-class EnumCodedSection(Enum):
-    CLI = "Clinical Finding"
-    PRE = "Presenting Complaint"
-    TRE = "Treatment Narrative"
-    DIA = "Discharge Diagnoses"
-    ALL = "Allergy"
-
-
-class EnumCodeType(Enum):
-    PROC = "Procedure"
-    DIAG = "Diagnosis"
-
+from ..enums import EnumCodedSection, EnumCodeType
 
 class NoteCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
