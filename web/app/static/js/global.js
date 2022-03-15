@@ -5,3 +5,4 @@ String.prototype.insert = function(index, string) {
   
     return string + this;
 };
+

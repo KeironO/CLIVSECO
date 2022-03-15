@@ -42,3 +42,20 @@ class FeedbackForm(FlaskForm):
     )
     comments = TextAreaField("Additional Comments")
     submit = SubmitField("Submit Feedback")
+
+
+class AdditionalCodeForm(FlaskForm):
+    section = SelectField("DAL Section", choices=(
+        ("PRE", "Presenting Complaint"),
+        ("TRE", "Treatment Narrative"),
+        ("ALL", "Allergy"),
+        ("DIA", "Discharge Diagnoses")))
+    start = StringField("Start")
+    end = StringField("End")
+    comorbidity = BooleanField("Comorbidity")
+    additional_codes = StringField(
+        "Additional Code(s)",
+        description="This can be either an OPCS4, ICD-10 code or a standard. Please separate codes using commas.",
+        render_kw={"data-role": "tagsinput"},
+    )
+    submit = SubmitField("Submit Additional Code")

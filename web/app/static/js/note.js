@@ -29,8 +29,6 @@ function get_note() {
 
     var api_url = encodeURI(window.location.origin + '/notes/get/'  + $("#note-heading").html() );
 
-    console.log (api_url) ;
-
     var json = (function () {
         var json = null;
         $.ajax({
@@ -107,8 +105,6 @@ function set_auto_coder(auto_codes) {
         let code = auto_codes[i];
         let note_code = code["note_code"];
         
-        console.log(code);
-
         if (note_code["type"] == "DIAG") {
             var bg = "bg-danger text-white"
         }
@@ -193,6 +189,32 @@ function set_clinical_coder(clinical_codes) {
     }
 }
 
+
+function fill_missing_code_information(note) {
+    var text_div = div_map.get($("#section option:selected").val());
+    var text = $(`#${text_div}`)[0].innerHTML;
+    $( "#start" ).prop( "disabled", true ).val(0);
+    $( "#end" ).prop( "disabled", true ).val(0);
+    $("#additional-codes-text").html(text);
+}
+
+
+document.getElementById("additional-codes-text").addEventListener('mouseup', function () {
+    if (typeof window.getSelection != 'undefined') {
+        var sel = window.getSelection();
+        var range = sel.getRangeAt(0);
+  
+        var startOffset = range.startOffset;
+        var endOffset = startOffset + range.toString().length - 1;
+        
+        $("#start").val(startOffset);
+        $("#end").val(endOffset);
+        unhighlight_text("additional-codes-text")
+        highlight_text("additional-codes-text", startOffset, endOffset);
+
+    }
+  }, false);
+
 $(document).ready(function () {
     var note = get_note()["content"];
     
@@ -201,9 +223,15 @@ $(document).ready(function () {
     set_content(note);
     set_clinical_coder(note["clinical_coder_codes"]);
     set_auto_coder(note["auto_codes"]);
+    fill_missing_code_information(note);
+
     $("#loading").fadeOut(250, function() {
         $("#content").fadeIn(250);
 
     });
 
+    $("#section").change(function() {
+        fill_missing_code_information(note);
+
+    })
 });

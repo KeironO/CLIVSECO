@@ -19,6 +19,8 @@ from flask_login import login_required
 
 from .. import notes
 
+from ..forms import AdditionalCodeForm
+
 from sqlalchemy import func
 
 from ..forms import FindForm
@@ -43,8 +45,10 @@ def code(dal_id: str):
     response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
 
     if response.status_code == 200:
+
+        form = AdditionalCodeForm()
         note = response.json()
-        return render_template("notes/view.html", note=note["content"])
+        return render_template("notes/view.html", note=note["content"], form=form)
     else:
         return response.content
 

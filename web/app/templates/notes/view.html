@@ -96,6 +96,8 @@
         </ul>
       </div>
 
+      
+
       <div class="card">
         <div class="card-header">
           Key
@@ -104,7 +106,10 @@
           <li class='list-group-item d-flex justify-content-between'>✨ Comorbidity</li>
         </ul>
       </div>
-
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary full-width" data-bs-toggle="modal" data-bs-target="#additional-codes-modal">
+  Add Missing Code
+</button>
         <div class="card">
           <div class="card-header">
             Auto Coder Filters
@@ -141,15 +146,52 @@
         </label>
       </div>
     </div>
+    
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="additional-codes-modal" tabindex="-1" aria-labelledby="additional-codes-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="additional-codes-label">Add Missing Codes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {{ render_field(form.section) }}
+
+        <div id="additional-codes-text">
+          Test
+        </div>
+
+
+        <div class="row">
+          <div class="col-6">
+            {{ render_field(form.start) }}
+          </div>
+          <div class="col-6">
+            {{ render_field(form.end) }}
+          </div>
+        </div>
+        {{ render_field(form.additional_codes) }}
+        {{ render_field(form.comorbidity) }}
+        {{ render_field(form.submit) }}
+      </div>
+
+    </div>
+  </div>
 </div>
+
+</div>
+
 
 
 
 {% endblock %}
 
 {% block javascript %}
+<script src="{{ url_for('static', filename='js/taginput.js') }}"></script>
 <script src="{{ url_for('static', filename='js/note.js') }}"></script>
-
 
 {% endblock %}
