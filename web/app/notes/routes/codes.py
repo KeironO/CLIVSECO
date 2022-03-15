@@ -48,6 +48,9 @@ def code(dal_id: str):
 
         form = AdditionalCodeForm()
         note = response.json()
+
+        if form.validate_on_submit():
+            pass
         return render_template("notes/view.html", note=note["content"], form=form)
     else:
         return response.content

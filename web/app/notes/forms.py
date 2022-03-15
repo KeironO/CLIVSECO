@@ -14,6 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from tkinter.tix import Select
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, StringField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired
@@ -52,6 +53,10 @@ class AdditionalCodeForm(FlaskForm):
         ("DIA", "Discharge Diagnoses")))
     start = StringField("Start")
     end = StringField("End")
+    type = SelectField("Code Type", choices=(
+        ('DIAG', 'Diagnosis'),
+        ('PROC', 'Procedure')
+    ))
     comorbidity = BooleanField("Comorbidity")
     additional_codes = StringField(
         "Additional Code(s)",
