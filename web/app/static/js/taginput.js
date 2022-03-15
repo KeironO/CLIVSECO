@@ -51,9 +51,10 @@
       this.name = element.hasAttribute('name') ? this.$element.attr('name') : '';
       this.type = element.hasAttribute('type') ? this.$element.attr('type') : 'text';
       this.inputSize = Math.max(1, this.placeholderText.length);
-  
+      
+
       this.$container = $('<div class="bootstrap-tagsinput"></div>');
-      this.$input = $('<input type="' + this.type + '" name="' + this.name + '" placeholder="' + this.placeholderText + '"/>').appendTo(this.$container);
+      this.$input = $('<input type="' + this.type + '" name="' + this.name.replace('_input', '') + '" placeholder="' + this.placeholderText + '"/>').appendTo(this.$container);
   
       this.$element.before(this.$container);
   

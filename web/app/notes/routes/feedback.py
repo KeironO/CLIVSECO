@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_required, current_user
 
 from .. import notes
@@ -41,9 +41,9 @@ def code_feedback(id: int):
                 json={
                     "note_code_id": code.json()["content"]["note_code"]["id"],
                     "comments": form.comments.data,
-                    "replace_with": form.replace_with.data,
+                    "replace_with": request.form['replace_with_input'],
                     "is_correct": form.is_correct.data,
-                    "additional_codes": form.additional_codes.data,
+                    "additional_codes": request.form['additional_codes_input'],
                     "user_id": current_user.id,
                 },
             )

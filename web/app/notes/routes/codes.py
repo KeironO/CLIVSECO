@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_required, current_user
 
 from .. import notes
@@ -49,6 +49,7 @@ def code(dal_id: str):
         note = response.json()
         form = AdditionalCodeForm()
         if form.validate_on_submit():
+            
             submission_response = requests.post(url_for("api.add_additional_code", _external=True),
                 json={
                 'note_id': note["content"]["id"],
@@ -56,7 +57,7 @@ def code(dal_id: str):
                 'type': form.type.data,
                 'start': int(form.start.data),
                 'end': int(form.end.data),
-                'code': form.additional_codes.data,
+                'code': request.form['additional_codes_input'],
                 'comorbidity': form.comorbidity.data,
                 'user_id': current_user.id
             })

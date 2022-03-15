@@ -3,7 +3,15 @@
     {% if field.type in ["StringField", "PasswordField", "TextAreaField"] %}
         <label for=" {{field.id}}" class="form-label">{{ field.label }}:</label>
 
+        {% if field.render_kw != None %}
+
+        {% if 'data-role' in field.render_kw %}
+          <input type="text" name="{{ field.name }}_input" data-role="tagsinput" id="{{field.id}}_input"/>
+        {% endif %}
+        {% else %}
         {{ field(class='form-control', **kwargs)|safe }}
+        {%endif%}
+
         <small class="form-text text-muted">{{ field.description }}</small>
 
         {% elif field.type in ["BooleanField"] %}
