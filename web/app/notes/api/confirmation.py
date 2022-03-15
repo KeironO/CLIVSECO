@@ -27,9 +27,9 @@ from ...api.responses import (
 )
 
 
-from ...database import NoteConfirmation
+from ...database import NoteConfirmation, AdditionalCode
 
-from ..views import NoteConfirmationSchema
+from ..views import NoteConfirmationSchema, AdditionalCodeSchema
 
 
 @api.route("/notes/feedback/autocode/get", methods=["GET"])
@@ -43,6 +43,28 @@ def get_autocode_feedback_all():
 @api.route("/notes/feedback/additional_code/", methods=["POST"])
 def add_additional_code():
     values = request.get_json()
+
+    if not values:
+        return no_values_response()
+
+    try:
+        additional_code_result = AdditionalCodeSchema(
+            exclude=("id", "created_on")
+        ).load(values)
+    except ValidationError as err:
+        return validation_error_response(err)
+
+    new_additional_code = AdditionalCode(**additional_code_result)
+
+    try:
+        db.session.add(new_additional_code)
+        db.session.commit()
+        db.session.flush()
+        return success_with_content_response(
+            NoteConfirmationSchema().dump(new_additional_code)
+        )
+    except Exception as err:
+        return transaction_error_response(err)
 
 @api.route("/notes/feedback/autocode/", methods=["POST"])
 def add_autocode_feedback():
