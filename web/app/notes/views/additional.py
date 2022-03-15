@@ -14,31 +14,30 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from flask import url_for
 import marshmallow_sqlalchemy as masql
 
-from ...database import NoteConfirmation, AdditionalCode
+from ...database import AdditionalCode
 
-from . import NoteCodeSchema
 
 from ...auth.views import UserAccountSchema
 
 from ...extensions import ma
+from ..enums import EnumCodedSection, EnumCodeType
+from marshmallow_enum import EnumField
 
-class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
+class AdditionalCodeSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
-        model = NoteConfirmation
+        model = AdditionalCode
 
     id = masql.auto_field()
-    is_correct = masql.auto_field()
-    comments = masql.auto_field()
-    replace_with = masql.auto_field()
-    created_on = masql.auto_field()
-    additional_codes = masql.auto_field()
+    note_id = masql.auto_field()
+    section = EnumField(EnumCodedSection)
+    type = EnumField(EnumCodeType)
+    start = masql.auto_field()
+    end = masql.auto_field()
+    code = masql.auto_field()
+    comorbidity = masql.auto_field()
     user_id = masql.auto_field()
     created_on = masql.auto_field()
 
-    note_code_id = masql.auto_field()
-
-    note_code = ma.Nested(NoteCodeSchema)
-    user = ma.Nested(UserAccountSchema)
+    user = ma.Nested(UserAccountSchema, many=False)

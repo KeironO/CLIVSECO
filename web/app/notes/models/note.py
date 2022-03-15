@@ -33,6 +33,12 @@ class Note(db.Model):
     admission_date = db.Column(db.Date, nullable=True)
     discharge_date = db.Column(db.Date, nullable=True)
 
+    missing_codes = db.relationship(
+        "AdditionalCode",
+        uselist=True,
+        primaryjoin="Note.id==AdditionalCode.note_id"
+    )
+
     auto_codes = db.relationship(
         "AutoCode",
         uselist=True,

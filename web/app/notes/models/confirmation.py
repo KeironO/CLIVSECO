@@ -45,3 +45,4 @@ class AdditionalCode(db.Model):
     comorbidity = db.Column(db.Boolean, default=False, nullable=False)
     user_id = db.Column(db.Integer, ForeignKey("user_account.id"), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
+    user = db.relationship("UserAccount")

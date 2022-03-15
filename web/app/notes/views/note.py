@@ -21,6 +21,8 @@ from ...extensions import ma
 
 
 from .codes import AutoCodeSchema, ClinicalCoderSchema
+from .additional import AdditionalCodeSchema
+
 
 
 class NoteSchema(masql.SQLAlchemyAutoSchema):
@@ -29,3 +31,4 @@ class NoteSchema(masql.SQLAlchemyAutoSchema):
 
     auto_codes = ma.Nested(AutoCodeSchema, many=True)
     clinical_coder_codes = ma.Nested(ClinicalCoderSchema, many=True)
+    missing_codes = ma.Nested(AdditionalCodeSchema, many=True)

@@ -1,11 +1,3 @@
-String.prototype.insert = function(index, string) {
-    if (index > 0) {
-      return this.substring(0, index) + string + this.substr(index);
-    }
-  
-    return string + this;
-};
-
 const zeroPad = (num, places) => String(num).padStart(places, '0')
 
 
@@ -93,8 +85,6 @@ function unhighlight_text(div) {
 }
 
 function set_auto_coder(auto_codes) {
-
-    // TODO: Need to remove duplicates in the view and have them displayed as different entities.
 
     if (auto_codes.length > 0) {
         $("#auto-coder-none").remove();
@@ -186,9 +176,57 @@ function set_clinical_coder(clinical_codes) {
 
         $("#clinical-coder-list-group").append(lgi);
 
+        
+
     }
 }
 
+
+function set_missing_code(missing_codes) {
+    if (missing_codes.length > 0) {
+        $("#missing-codes-none").remove();
+    }
+
+    for (i in missing_codes) {
+        let mc = missing_codes[i];
+        let codes = mc["code"].split(",");
+
+        if (mc["type"] == "DIAG") {
+            var bg = "bg-danger text-white"
+        }
+
+
+        else {
+            var bg = "bg-warning"
+        }
+
+        var lgi = `<li id='miss-${mc["id"]}' class='list-group-item ${bg}'>`
+        if (mc["comorbidity"] == true) {
+            lgi += '✨'
+        }
+        
+        for (j in codes) {
+            var code = codes[j];
+            lgi += `<span class="badge bg-secondary" style="margin-right:0.5em">${code}</span>`
+        }
+
+        lgi += `<p class="small">Feedback User: ${mc["user"]["email"]}</p>`
+        lgi += `<p class="small">Created On: ${mc["created_on"]}</p>`
+
+        lgi += "</li>"
+
+        $("#missing-codes-list-group").append(
+            lgi
+        );
+
+        $(`#miss-${mc["id"]}`).hover(function() {
+            highlight_text(div_map.get(mc["section"]), mc["start"], mc["end"]);
+        }, function() {
+            unhighlight_text(div_map.get(mc["section"]));
+        });
+
+    }
+}
 
 function fill_missing_code_information(note) {
     var text_div = div_map.get($("#section option:selected").val());
@@ -224,6 +262,7 @@ $(document).ready(function () {
     set_clinical_coder(note["clinical_coder_codes"]);
     set_auto_coder(note["auto_codes"]);
     fill_missing_code_information(note);
+    set_missing_code(note["missing_codes"]);
 
     $("#loading").fadeOut(250, function() {
         $("#content").fadeIn(250);
