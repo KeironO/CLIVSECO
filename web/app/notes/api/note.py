@@ -28,9 +28,9 @@ from ...api.responses import (
 )
 
 
-from ...database import Note
+from ...database import Note, ClinicLetter
 
-from ..views import NoteSchema
+from ..views import NoteSchema, ClinicLetterSchema
 
 
 @api.route("/notes/random", methods=["GET"])
@@ -47,6 +47,29 @@ def get_note(dal_id: str):
     else:
         return {"success": False, "content": {}}
 
+@api.route("/notes/new_letter", methods=["POST"])
+def add_letter():
+    values = request.get_json()
+
+    if not values:
+        return no_values_response()
+    
+    try:
+        letter_result = ClinicLetterSchema(
+            exclude=("id", )
+        ).load(values)
+    except ValidationError as err:
+        return validation_error_response(err)
+
+    new_letter = ClinicLetter(**letter_result)
+
+    try:
+        db.session.add(new_letter)
+        db.session.commit()
+        db.session.flush()
+        return success_with_content_response(ClinicLetterSchema().dump(new_letter))
+    except Exception as err:
+        return transaction_error_response(err)
 
 @api.route("/notes/new", methods=["POST"])
 def new_note():

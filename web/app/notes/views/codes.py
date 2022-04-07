@@ -65,16 +65,18 @@ class NoteCodeSchema(masql.SQLAlchemyAutoSchema):
 
     def retrieve_information(self, obj):
         code = obj.code
-        if obj.type == "PROC":
+        if obj.type == EnumCodeType.PROC:
             return requests.get(
-                url_for("api.get_opcs_code", code=code, _external=True)
+                url_for("api.get_opcs_code", code=code, _external=True),
+                verify=False
             ).json()["content"]
         else:
             # Remove Stop Code :-D
             if code.endswith("X"):
                 code = code[:-1]
             return requests.get(
-                url_for("api.get_icd_code", code=code, _external=True)
+                url_for("api.get_icd_code", code=code, _external=True),
+                verify=False
             ).json()["content"]
 
 

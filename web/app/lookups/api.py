@@ -45,8 +45,12 @@ from .views import (
 
 @api.route("/code/OPCS4/<code>", methods=["GET"])
 def get_opcs_code(code: str):
-    code = OPCS4CodeLookup.query.filter(OPCS4CodeLookup.code == code).first()
-    return success_with_content_response(OPCS4CodeLookupSchema().dump(code))
+    if len(code) == 3:
+        code = OPCS4SubChapterLookup.query.filter(OPCS4SubChapterLookup.subchapter == code).first()
+        return success_with_content_response(OPCS4SubChapterLookupSchema().dump(code))
+    elif len(code) > 3:
+        code = OPCS4CodeLookup.query.filter(OPCS4CodeLookup.code == code).first()
+        return success_with_content_response(OPCS4CodeLookupSchema().dump(code))
 
 
 @api.route("/code/ICD10/<code>", methods=["GET"])

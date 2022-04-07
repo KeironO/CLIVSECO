@@ -20,7 +20,7 @@ from enum import Enum
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-
+    spec_name = db.Column(db.String(128), nullable=True)
     dal_id = db.Column(db.String(128))
 
     clinical_finding = db.Column(db.String(2048))
@@ -32,6 +32,8 @@ class Note(db.Model):
 
     admission_date = db.Column(db.Date, nullable=True)
     discharge_date = db.Column(db.Date, nullable=True)
+
+    dob = db.Column(db.Date, nullable=True)
 
     missing_codes = db.relationship(
         "AdditionalCode",
@@ -56,3 +58,17 @@ class Note(db.Model):
         secondaryjoin="NoteCode.id==ClinicalCoderCode.note_code_id",
         viewonly=True,
     )
+
+    clinic_letters = db.relationship(
+        "ClinicLetter",
+        uselist=True,
+        primaryjoin="Note.id==ClinicLetter.note_id"
+    )
+
+
+class ClinicLetter(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    note_id = db.Column(db.Integer, ForeignKey("note.id"), nullable=False)
+    letter_key = db.Column(db.String(128))
+    letter_contents = db.Column(db.String(256000))
+    creation_date = db.Column(db.Date, nullable=False)

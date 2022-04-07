@@ -51,9 +51,6 @@ function set_dates(note) {
     $("#admission-date").html(note["admission_date"]);
 }
 
-
-
-
 function set_content(note) {
     $("#presenting-complaint-text").text(note["presenting_complaint"]);
     $("#clinical-finding-text").text(note["clinical_finding"]);
@@ -94,6 +91,8 @@ function set_auto_coder(auto_codes) {
     for (i in auto_codes) {
         let code = auto_codes[i];
         let note_code = code["note_code"];
+
+
         
         if (note_code["type"] == "DIAG") {
             var bg = "bg-danger text-white"
@@ -107,8 +106,17 @@ function set_auto_coder(auto_codes) {
         if (code["comorbidity"] == true) {
             lgi += '✨'
         }
-        lgi += note_code["code"] + ": " + note_code["code_information"]["description"]
 
+        if (note_code["type"] == "DIAG") {
+            lgi += note_code["code"] + ": " + note_code["code_information"]["description"]
+        }
+
+        else {
+            if (note_code["code"].length = 3) {
+                lgi += note_code["code"] + ": " + note_code["code_information"]["heading"]
+
+            }
+        }
         lgi += '<span class="badge badge-light">'+note_code["confirmations"].length+'</span>'
 
         lgi += "</li>"
@@ -152,7 +160,7 @@ function set_clinical_coder(clinical_codes) {
         
         let code = clinical_codes[i];
         let ccid = code["id"];
-        let note_code = code["note_code"]
+        let note_code = code["note_code"];
 
         if (note_code["type"] == "DIAG") {
             var bg = "bg-danger text-white"
@@ -253,6 +261,37 @@ document.getElementById("additional-codes-text").addEventListener('mouseup', fun
     }
   }, false);
 
+
+function set_letters(clinic_letters) {
+
+    $("#dal-nav").click(function () {
+        $("#nav-tab-selection").parent().find('a').removeClass("active");
+        $(this).addClass("active");
+        $("#cls").fadeOut(500);
+        $("#edal").fadeIn(500);
+
+    });
+
+    for (i in clinic_letters) {
+        var letter_info = clinic_letters[i];
+        
+        $("#nav-tab-selection").append(`<li class="nav-item">
+            <a class="nav-link" id="${letter_info["letter_key"]}-nav">✉️ CL ${letter_info["letter_key"]} </a>
+        </li>`)
+
+        $(`#${letter_info["letter_key"]}-nav`).click( function() {
+            $("#nav-tab-selection").parent().find('a').removeClass("active");
+            $(this).addClass("active");
+            $("#clinical-letter-key").text(`${letter_info["letter_key"]}`);
+            $("#letter-text").html(`${letter_info["letter_contents"].replace(/\n/g,'<br/>')}`);
+            
+            $("#edal").fadeOut(500);
+            $("#cls").fadeIn(500);
+
+        });
+    }
+}
+
 $(document).ready(function () {
     var note = get_note()["content"];
     
@@ -263,6 +302,8 @@ $(document).ready(function () {
     set_auto_coder(note["auto_codes"]);
     fill_missing_code_information(note);
     set_missing_code(note["missing_codes"]);
+
+    set_letters(note["clinic_letters"]);
 
     $("#loading").fadeOut(250, function() {
         $("#content").fadeIn(250);

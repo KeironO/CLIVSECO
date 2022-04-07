@@ -21,6 +21,11 @@ class EnumCodedSection(Enum):
     TRE = "Treatment Narrative"
     DIA = "Discharge Diagnoses"
     ALL = "Allergy"
+    CL1 = "Clinic Letter One"
+    CL2 = "Clinic Letter Two"
+    CL3 = "Clinic Letter Three"
+    CL4 = "Clinic Letter Four"
+    CL5 = "Clinic Letter Five"
 
 
 class EnumCodeType(Enum):

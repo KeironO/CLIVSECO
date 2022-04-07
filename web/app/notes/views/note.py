@@ -16,13 +16,18 @@
 from flask import url_for
 import marshmallow_sqlalchemy as masql
 
-from ...database import Note
+from ...database import Note, ClinicLetter
 from ...extensions import ma
 
 
 from .codes import AutoCodeSchema, ClinicalCoderSchema
 from .additional import AdditionalCodeSchema
 
+class ClinicLetterSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = ClinicLetter
+
+    note_id = masql.auto_field()
 
 
 class NoteSchema(masql.SQLAlchemyAutoSchema):
@@ -32,3 +37,5 @@ class NoteSchema(masql.SQLAlchemyAutoSchema):
     auto_codes = ma.Nested(AutoCodeSchema, many=True)
     clinical_coder_codes = ma.Nested(ClinicalCoderSchema, many=True)
     missing_codes = ma.Nested(AdditionalCodeSchema, many=True)
+    clinic_letters = ma.Nested(ClinicLetterSchema, many=True)
+
