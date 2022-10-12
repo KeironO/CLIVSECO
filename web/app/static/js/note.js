@@ -17,6 +17,15 @@ filter_map.set('PRE', 'presenting-complaint-checkbox');
 
 const clinically_coded_codes = new Map();
 
+
+function dateDiffYearsOnly( dateNew,dateOld) {
+    function date2ymd(d){ w=new Date(d);return [w.getFullYear(),w.getMonth(),w.getDate()]}
+    function ymd2N(y){return (((y[0]<<4)+y[1])<<5)+y[2]} // or 60 and 60 // or 13 and 32 // or 25 and 40 //// with ...
+    function date2N(d){ return ymd2N(date2ymd(d))}
+ 
+    return  (date2N(dateNew)-date2N(dateOld))>>9
+ }
+
 function get_note() {
 
     var api_url = encodeURI(window.location.origin + '/notes/get/'  + $("#note-heading").html() );
@@ -41,22 +50,44 @@ function get_note() {
     return json;
 }
 
-function set_heading(dal_id) {
-    document.title = dal_id + " : CLIVSECO";
+function set_heading(caseno, linkid) {
+    document.title = caseno + ":" + linkid + " : CLIVSECO";
 
 }
 
 function set_dates(note) {
     $("#discharge-date").html(note["discharge_date"]);
     $("#admission-date").html(note["admission_date"]);
+    $("#date-of-birth").html(note["dob"]);
+    $("#spec-name").html(note["spec_name"]);
+
 }
 
+function if_nothing_then_none(s) {
+    if (s == null) {
+        return "None."
+    } 
+    return s
+ }
+
 function set_content(note) {
-    $("#presenting-complaint-text").text(note["presenting_complaint"]);
-    $("#clinical-finding-text").text(note["clinical_finding"]);
-    $("#treatment-narrative-text").text(note["treatment_narrative"]);
-    $("#allergy-text").text(note["allergy"]);
-    $("#discharge-diagnoses-text").text(note["discharge_diagnoses"]);
+    $("#age").text(note["age"]);
+    $("#m-number").text(note["m_number"]);
+    $("#admission-spec").text(note["admission_spec"]);
+    $("#discharge-spec").text(note["discharge_spec"]);
+
+    var ad = new Date(note["admission_date"]);
+    var dd = new Date(note["discharge_date"]);
+
+    $("#los").text(Math.abs(ad-dd) / 86400000);
+    $("#episode-count").text(note["episode_count"]);
+    $("#presenting-complaint-text").text(if_nothing_then_none(note["presenting_complaint"]));
+    $("#clinical-finding-text").text(if_nothing_then_none(note["clinical_finding"]));
+    $("#treatment-narrative-text").text(if_nothing_then_none(note["treatment_narrative"]));
+    $("#allergy-text").text(if_nothing_then_none(note["allergy"]));
+    $("#discharge-diagnosis-1-text").text(if_nothing_then_none(note["discharge_diagnosis_1"]));
+    $("#discharge-diagnosis-2-text").text(if_nothing_then_none(note["discharge_diagnosis_2"]));
+    $("#edal-unique-id").text(if_nothing_then_none(note["dal_id"]));
 }
 
 
@@ -88,67 +119,138 @@ function set_auto_coder(auto_codes) {
     }
 
 
+    var pmhs = [];
+    var diag = [];
+    var fmhs = [];
+    var com = [];
+    var other = [];
+
     for (i in auto_codes) {
-        let code = auto_codes[i];
-        let note_code = code["note_code"];
+        let code = auto_codes[i]
 
+        if (code["comorbidity"]) {
+            com.push(code);
+        }
 
-        
-        if (note_code["type"] == "DIAG") {
-            var bg = "bg-danger text-white"
+        else if (code["dia"]) {
+            diag.push(code);
+        }
+
+        else if (code["pmh"]) {
+            pmhs.push(code);
+        }
+
+        else if (code["fmh"]) {
+            fmhs.push(code);
         }
 
         else {
-            var bg = "bg-warning"
+            other.push(code);
         }
-
-        var lgi = "<li class='list-group-item d-flex justify-content-between "+ bg + "' id='gi-"+ note_code["id"] + "'>"
-        if (code["comorbidity"] == true) {
-            lgi += '✨'
-        }
-
-        if (note_code["type"] == "DIAG") {
-            lgi += note_code["code"] + ": " + note_code["code_information"]["description"]
-        }
-
-        else {
-            if (note_code["code"].length = 3) {
-                lgi += note_code["code"] + ": " + note_code["code_information"]["heading"]
-
-            }
-        }
-        lgi += '<span class="badge badge-light">'+note_code["confirmations"].length+'</span>'
-
-        lgi += "</li>"
-
-        $("#auto-coder-list-group").append(
-            lgi
-        );
-
-
-        $("#gi-"+ note_code["id"]).hover(function() {
-            highlight_text(div_map.get(code["section"]), code["start"], code["end"]);
-            highlight_code(clinically_coded_codes.get(note_code["code"]));
-        }, function() {
-            unhighlight_text(div_map.get(code["section"]))
-            unhighlight_code(clinically_coded_codes.get(note_code["code"]))
-        });
-
-        $("#gi-"+ note_code["id"]).click(function() {
-            window.open(code['_links']['feedback'], '_blank'); 
-        });
-
-        $("#"+filter_map.get(code["section"])).click(function() {
-            var checked = this.checked
-            if (checked) {
-                $("#gi-"+ note_code["id"]).fadeIn(500);
-            }
-            
-            else {
-                $("#gi-"+ note_code["id"]).fadeOut(500);
-            }
-        });
     }
+
+    var final_array = [];
+    final_array.push(diag);
+    final_array.push(com);
+    final_array.push(other);
+    final_array.push(pmhs);
+    final_array.push(fmhs);
+
+    for (j in final_array) {
+        var yearofthesmile = final_array[j];
+    
+        for (i in yearofthesmile) {
+            let code = yearofthesmile[i];
+    
+            let note_code = code["note_code"];
+            
+            if (note_code["type"] == "DIAG") {
+                var bg = "bg-danger text-white"
+            }
+    
+            else {
+                var bg = "bg-warning"
+            }
+    
+            var lgi = "<li class='list-group-item list-group-item-action flex-column align-items-start "+ bg + "' id='gi-"+ note_code["id"] + "'>"
+            lgi += '<div class="d-flex w-100 justify-content-between">'
+
+    
+            lgi += '<h2 class="mb-1">' + note_code["code"] + ": " + note_code["code_information"]["description"] 
+            if (code["comorbidity"] == true) {
+                lgi += ' ✨ '
+            }
+    
+            if (code["dia"] == true) {
+                lgi += ' 👨🏼‍⚕️ '
+            }
+    
+            if (code["acr"] == true) {
+                lgi += ' 🎈 '
+    
+            }
+    
+            if (code["pmh"] == true) { 
+                lgi += ' 🛌🏼 '
+            }
+    
+            if (code["fmh"]) {
+                lgi += ' 👵 '
+            }
+    
+            if (code["daa"]) {
+                lgi += ' 🗡️ '
+            }
+
+            lgi += '</h2>'
+            
+            lgi += '<small>'+note_code["confirmations"].length+'</small>'
+
+            lgi += '</div><p class="mb-1">'
+            
+            lgi += '<small><div class="btn btn-light btn-sm">' + code["source_id"] + '</div></small></div>'
+
+            
+
+
+
+
+            
+            lgi += "</li>"
+    
+            $("#auto-coder-list-group").append(
+                lgi
+            );
+    
+            /*
+            $("#gi-"+ note_code["id"]).hover(function() {
+                highlight_text(div_map.get(code["section"]), code["start"], code["end"]);
+                highlight_code(clinically_coded_codes.get(note_code["code"]));
+            }, function() {
+                unhighlight_text(div_map.get(code["section"]))
+                unhighlight_code(clinically_coded_codes.get(note_code["code"]))
+            });
+            */
+    
+            $("#gi-"+ note_code["id"]).click(function() {
+                window.open(code['_links']['feedback'], '_blank'); 
+            });
+    
+            $("#"+filter_map.get(code["section"])).click(function() {
+                var checked = this.checked
+                if (checked) {
+                    $("#gi-"+ note_code["id"]).fadeIn(500);
+                }
+                
+                else {
+                    $("#gi-"+ note_code["id"]).fadeOut(500);
+                }
+            });
+        }
+
+    }
+
+    
 }
 
 function set_clinical_coder(clinical_codes) {
@@ -272,19 +374,24 @@ function set_letters(clinic_letters) {
 
     });
 
+    const clcontents = new Map();
+
+
     for (i in clinic_letters) {
         var letter_info = clinic_letters[i];
         
         $("#nav-tab-selection").append(`<li class="nav-item">
-            <a class="nav-link" id="${letter_info["letter_key"]}-nav">✉️ CL ${letter_info["letter_key"]} </a>
+            <a class="nav-link" id="${letter_info["letter_key"]}-nav">✉️ CL: ${letter_info["letter_key"]} </a>
         </li>`)
+        
+        clcontents.set(letter_info["letter_key"], letter_info["letter_contents"]);
 
         $(`#${letter_info["letter_key"]}-nav`).click( function() {
             $("#nav-tab-selection").parent().find('a').removeClass("active");
             $(this).addClass("active");
+            var clk = this.id.split('-')[0]
             $("#clinical-letter-key").text(`${letter_info["letter_key"]}`);
-            $("#letter-text").html(`${letter_info["letter_contents"].replace(/\n/g,'<br/>')}`);
-            
+            $("#letter-text").html(`${clcontents.get(clk).replace(/\n/g,'<br/>')}`);
             $("#edal").fadeOut(500);
             $("#cls").fadeIn(500);
 
@@ -292,14 +399,27 @@ function set_letters(clinic_letters) {
     }
 }
 
+
 $(document).ready(function () {
     var note = get_note()["content"];
     
-    set_heading(note["dal_id"]);
+    set_heading(note["m_number"], note["linkid"]);
     set_dates(note);
     set_content(note);
-    set_clinical_coder(note["clinical_coder_codes"]);
-    set_auto_coder(note["auto_codes"]);
+
+    if (note["clinical_coder_codes"].length >= 1) {
+        set_clinical_coder(note["clinical_coder_codes"]);
+    }
+
+    else {
+
+        $("#clinical-code-col").remove()
+        $("#note-information-col").removeClass("col-6").addClass("col-8");
+        $("#auto-code-row").removeClass("col-3").addClass("col-4");
+        set_auto_coder(note["auto_codes"]);
+
+    }
+
     fill_missing_code_information(note);
     set_missing_code(note["missing_codes"]);
 

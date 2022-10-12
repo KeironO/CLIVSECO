@@ -20,20 +20,31 @@ from enum import Enum
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    spec_name = db.Column(db.String(128), nullable=True)
+
     dal_id = db.Column(db.String(128))
 
-    clinical_finding = db.Column(db.String(2048))
-    presenting_complaint = db.Column(db.String(2048))
+    clinical_finding = db.Column(db.String(4096))
+    presenting_complaint = db.Column(db.String(4096))
     treatment_narrative = db.Column(db.String(8096))
-    discharge_diagnoses = db.Column(db.String(1024))
+    discharge_diagnosis_1 = db.Column(db.String(4096))
+    discharge_diagnosis_2 = db.Column(db.String(4096))
     allergy = db.Column(db.String(2048))
     checked = db.Column(db.Boolean(), default=False, nullable=False)
 
     admission_date = db.Column(db.Date, nullable=True)
     discharge_date = db.Column(db.Date, nullable=True)
 
-    dob = db.Column(db.Date, nullable=True)
+    age = db.Column(db.Integer, nullable=True)
+
+    admission_spec = db.Column(db.String(1024), nullable=True)
+    discharge_spec = db.Column(db.String(1024), nullable=True)
+
+    m_number = db.Column(db.String(32), nullable=True)
+    linkid = db.Column(db.String(64), nullable=True)
+
+    episode_count = db.Column(db.Integer)
+
+    biological_sex = db.Column(db.String(1), nullable=True)
 
     missing_codes = db.relationship(
         "AdditionalCode",

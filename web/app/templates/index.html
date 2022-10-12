@@ -1,0 +1,21 @@
+{% extends "template.html" %}
+
+{% block title %}Welcome to CLIVSECO{% endblock %}
+
+{% block body %}
+
+<div class="jumbotron home text-white bg-primary jumbotron-fluid ">
+    <div class="container">
+      <h1 class="display-4">Welcome to CLIVSECOβ</h1>
+      <p class="lead">This is a development server used for testing within Cwm Taf University Health Board.</p>
+      <p class="lead">Please contact Lisa Cartwright (Head of Clinical Coding) if you would like access.</p>
+
+      
+      <a href="{{ url_for('auth.login') }}"><div class="btn btn-success btn-lg">
+        Go to Log In
+        </div></a>
+    </div>
+  </div>
+
+
+{% endblock %}

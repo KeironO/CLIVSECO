@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_required, current_user
 
 from .. import notes
@@ -31,19 +31,31 @@ import requests
 @notes.route("/code/")
 @login_required
 def get_random_code():
-    response = requests.get(url_for("api.get_random_dal_id", _external=True))
+    response = requests.get(url_for("api.random_note", _external=True), verify=False)
 
     if response.status_code == 200:
         note = response.json()
-        return redirect(url_for("notes.code", dal_id=note["content"]["dal_id"]))
+        return redirect(
+            url_for(
+                "notes.code",
+                caseno=note["content"]["caseno"],
+                linkid=note["content"]["linkid"]
+                )
+            )
     else:
         return response.content
 
 
-@notes.route("/code/<dal_id>", methods=["GET", "POST"])
+@notes.route("/code/<caseno>:<linkid>", methods=["GET", "POST"])
 @login_required
-def code(dal_id: str):
-    response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
+def code(caseno: str, linkid: str):
+    response = requests.get(
+        url_for(
+            "api.get_note",
+            caseno=caseno,
+            linkid=linkid,
+            _external=True
+        ), verify=False)
 
     if response.status_code == 200:
         note = response.json()
@@ -60,21 +72,27 @@ def code(dal_id: str):
                 'code': request.form['additional_codes_input'],
                 'comorbidity': form.comorbidity.data,
                 'user_id': current_user.id
-            })
+            }, verify=False)
             
             if submission_response.status_code == 200:
                 flash("😀 Thank you for your feedback.")
             else:
                 flash(response.content)
-        return render_template("notes/view.html", note=note["content"], form=form)
+        return render_template("notes/view.html", note=note["content"], form=form, caseno=caseno, linkid=linkid)
     else:
         return response.content
 
 
-@notes.route("/get/<dal_id>")
+@notes.route("/get/<caseno>:<linkid>")
 @login_required
-def code_endpoint(dal_id: str):
-    response = requests.get(url_for("api.get_note", dal_id=dal_id, _external=True))
+def code_endpoint(caseno: str, linkid: str):
+    response = requests.get(
+        url_for(
+            "api.get_note",
+            caseno=caseno,
+            linkid=linkid,
+            _external=True
+        ), verify=False)
     return response.json()
 
 
@@ -82,15 +100,23 @@ def code_endpoint(dal_id: str):
 @login_required
 def find_note():
     form = FindForm()
+    found = []
 
     if form.validate_on_submit():
-        response = requests.get(
-            url_for("api.get_note", dal_id=form.dal.data, _external=True)
+        
+        _json = {"caseno": form.caseno.data}
+
+        if form.linkid.data != None and len(form.linkid.data) > 1:
+            _json["linkid"] = form.linkid.data
+
+        response = requests.post(
+            url_for("api.find_note", _external=True),
+            json=_json
         )
 
-        if response.status_code == 200 and response.json()["success"]:
-            return redirect(url_for("notes.code", dal_id=form.dal.data))
-        else:
-            flash("%s not found, are you sure it's a valid DAL ID?" % (form.dal.data))
 
-    return render_template("notes/find.html", form=form)
+        if response.status_code == 200:
+            if response.json()["success"]:
+                found = response.json()["content"]
+
+    return render_template("notes/find.html", form=form, found=found)

@@ -28,7 +28,7 @@ class ClinicLetterSchema(masql.SQLAlchemyAutoSchema):
         model = ClinicLetter
 
     note_id = masql.auto_field()
-
+    
 
 class NoteSchema(masql.SQLAlchemyAutoSchema):
     class Meta:

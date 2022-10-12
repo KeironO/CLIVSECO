@@ -24,39 +24,7 @@ class ICD10Lookup(db.Model):
     billable = db.Column(db.Boolean)
 
 
-class OPCS4ChapterLookup(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    chapter = db.Column(db.String(8), unique=True)
-    heading = db.Column(db.String(256))
-
-
-class OPCS4SubChapterLookup(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    subchapter = db.Column(db.String(8), unique=True)
-    heading = db.Column(db.String(256))
-    chapter_id = db.Column(
-        db.Integer, ForeignKey(OPCS4ChapterLookup.id), nullable=False
-    )
-
-    chapter = db.relationship(
-        "OPCS4ChapterLookup",
-        uselist=False,
-        primaryjoin="OPCS4ChapterLookup.id==OPCS4SubChapterLookup.chapter_id",
-        viewonly=True,
-    )
-
-
-class OPCS4CodeLookup(db.Model):
+class OPCS4Lookup(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     code = db.Column(db.String(8))
     description = db.Column(db.String(256))
-    subchapter_id = db.Column(
-        db.Integer, ForeignKey(OPCS4SubChapterLookup.id), nullable=False
-    )
-
-    subchapter = db.relationship(
-        "OPCS4SubChapterLookup",
-        uselist=False,
-        primaryjoin="OPCS4SubChapterLookup.id==OPCS4CodeLookup.subchapter_id",
-        viewonly=True,
-    )

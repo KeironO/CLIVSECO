@@ -21,7 +21,8 @@ from wtforms.validators import DataRequired
 
 
 class FindForm(FlaskForm):
-    dal = StringField("DAL ID", validators=[DataRequired()])
+    caseno = StringField("Case Number", validators=[DataRequired()])
+    linkid = StringField("WPAS Link ID")
     submit = SubmitField("Search")
 
 

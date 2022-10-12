@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-SECRET_KEY = "example_secret_key"
-WTF_CSRF_SECRET_KEY = "example_secret_key"
+SECRET_KEY = "BKGW9AT3x3E8mTtZ"
+WTF_CSRF_SECRET_KEY = "BKGW9AT3x3E8mTtZ"
 DEBUG = True
 SQLALCHEMY_DATABASE_URI = "sqlite:///clivseco.db"
 SQLALCHEMY_TRACK_MODIFICATIONS = False

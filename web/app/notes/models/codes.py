@@ -26,24 +26,45 @@ class NoteCode(db.Model):
     note_id = db.Column(db.Integer, ForeignKey("note.id"), nullable=False)
     type = db.Column(db.Enum(EnumCodeType), nullable=False)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
-
     confirmations = db.relationship("NoteConfirmation", primaryjoin="NoteCode.id == NoteConfirmation.note_code_id")
-
     note = db.relationship("Note", primaryjoin="Note.id == NoteCode.note_id")
 
 
 class AutoCode(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    start = db.Column(db.Integer)
-    end = db.Column(db.Integer)
-    section = db.Column(db.Enum(EnumCodedSection))
     note_code_id = db.Column(db.Integer, ForeignKey(NoteCode.id), nullable=False)
-    comorbidity = db.Column(db.Boolean, default=False, nullable=False)
     note_code = db.relationship(
         "NoteCode",
         uselist=False,
         primaryjoin="AutoCode.note_code_id == NoteCode.id",
     )
+    
+    # start - Starting position of text where the code was taken
+    # end - End position of text where the code was taken
+    # section - The section in which the code was taken
+    start = db.Column(db.Integer)
+    end = db.Column(db.Integer)
+    section = db.Column(db.Enum(EnumCodedSection))
+    # position - Where the code is placed
+    # source_id - Taken from SOURCEID from [_Sandbox_General].[dbo].[TbAutoCodedDALs]
+    # source - Taken from SOURCE from [_Sandbox_General].[dbo].[TbAutoCodedDALs]
+    position = db.Column(db.Integer)
+    source_id = db.Column(db.String(1024))
+    source = db.Column(db.String(2048), nullable=False)
+    # comorbidity - Where the code has been taken forward via a comorb
+    # pmh - Whether the diagnosis has been noted as a 'past medical history'
+    # sec - Whether the code is a secondary modifier or not
+    # acr - Developed from a deycphered acronym
+    # dia - Whether the code is a diagnosis
+    # fmh - Whether the code is a family history of
+    # daa - Whether the code is a dagger and asterix modified code
+    comorbidity = db.Column(db.Boolean, default=False, nullable=False)
+    pmh = db.Column(db.Boolean, default=False, nullable=False)
+    sec = db.Column(db.Boolean, default=False, nullable=False)
+    acr = db.Column(db.Boolean, default=False, nullable=False)
+    dia = db.Column(db.Boolean, default=False, nullable=False)
+    fmh = db.Column(db.Boolean, default=False, nullable=False)
+    daa = db.Column(db.Boolean, default=False, nullable=False)
 
 
 class ClinicalCoderCode(db.Model):

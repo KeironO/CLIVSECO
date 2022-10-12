@@ -11,9 +11,15 @@
         
                 <div class="card">
                     <div class="card-header"><span id="code-header"></span>
-
                     </div>
-                    <div id="context" class="card-body"></div>
+                    <div class="card-body">
+                        <h2>Source Text</h2>
+                        <span id="context"></span>
+                    </div>
+                    <div class="card-body">
+                        <h2>Extracted Text</h2>
+                        <span id="extracted"></span>
+                    </div>
                     <div class="card-footer">
                         <div id="view-code-info" class="btn btn-sm btn-primary float-right">
                             📘 View Code Info 
@@ -28,9 +34,6 @@
             
         
             {{ render_field(form.is_correct) }}
-
-
-
 
             <div id="wrong-div" style="display: block;">
             {{ render_field(form.remove_or_replace) }}

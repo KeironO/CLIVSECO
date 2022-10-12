@@ -89,6 +89,14 @@ class AutoCodeSchema(masql.SQLAlchemyAutoSchema):
     id = masql.auto_field()
     start = masql.auto_field()
     end = masql.auto_field()
+
+    pmh = masql.auto_field()
+    acr = masql.auto_field()
+    fmh = masql.auto_field()
+    dia = masql.auto_field()
+
+    daa = masql.auto_field()
+
     section = EnumField(EnumCodedSection)
 
     confirmations = ma.Nested(BasicNoteConfirmationSchema, many=True)

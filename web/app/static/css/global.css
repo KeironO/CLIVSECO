@@ -1,3 +1,7 @@
+body {
+  background-color: #f0f4f5;
+}
+
 .navbar {
     height:65px;
     padding:0px;
@@ -8,7 +12,6 @@
     height:28px;
     
 }
-
 
 .container {
     max-width: 1600px;
@@ -29,8 +32,12 @@ h1 {
 }
 
 .card h2 {
-    text-align: center;
     font-size:1em;
+    margin-top: 1em;
+}
+
+.card .mb-1 {
+  margin-top: 0em !important;
 }
 
 .full-width {
@@ -56,6 +63,11 @@ h1 {
 .bootstrap-tagsinput  .badge {
     background-color: #0d6efd;
     margin-left: 1em !important;
+}
+
+.jumbotron  {
+  padding-top:3em;
+  padding-bottom:3em;
 }
 
 .bootstrap-tagsinput {

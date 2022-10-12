@@ -1,13 +1,13 @@
 {% extends "template.html" %}
 
-{% block title %}Loading DAL{%endblock%}
+{% block title %}Loading Document{%endblock%}
 
 {% block body %}
 
 
 <div id="loading" class="align-middle text-center">
 
-  <h1>Loading DAL</h1>
+  <h1>Loading Document</h1>
   <div class="d-flex justify-content-center">
     <div class="spinner-grow text-primary" role="status" style="margin-top:2em;">
       <span class="sr-only">Loading...</span>
@@ -16,30 +16,51 @@
 </div>
 
 <div id="content" class="row" style="display: none;">
+  <div  id="clinical-code-col">
     <div class="col-3">
       
       <div class="card">
         <div class="card-header">
-          Clinical Coder
+          🧍 Clinical Coder
         </div>
         <ul class="list-group list-group-flush" id="clinical-coder-list-group">
           <li class="list-group-item" id="clinical-coder-none">None</li>
         </ul>
       </div>
     </div>
-    <div class="col-6">
-      <h1 id="note-heading">{{ note["dal_id"] }}</h1>
-      <div class="row" style="margin-bottom: 1em;">
-        <div class="col-6">
-          📅 Admission Date: <span id="admission-date"></span>
+  </div>
+    <div class="col-6" id="note-information-col">
+
+      
+      <h1 id="note-heading" class="text-center">{{ caseno }}:{{ linkid }}</h1>
+
+
+      <div class="card">
+        <div class="card-header bg-danger text-white">
+          Demographic and Case Information
         </div>
-        <div class="col-6" style="text-align: right;">
-          📅 Discharge Date: <span id="discharge-date"></span>
+        <div class="card-body card-text">
+          <div class="row" style="margin-bottom: 1em;">
+            <div class="col-6">
+              <p>👶 <b>Age on Admission:</b> <span id="age"></span></p>
+              <p>📅 <b>Admitted/Discharged On:</b> <span id="admission-date"></span> / <span id="discharge-date"></span></p>
+              <p>➡️ <b>Admission Spec:</b> <span id="admission-spec"></span></p>
+              <p>🔢 <b>Episode Count:</b> <span id="episode-count"></span></p>
+            </div>
+            <div class="col-6" style="text-align: right;">
+              <p>👩‍⚕️ <b>M Number:</b> <span id="m-number"></span></p>
+              <p>📅 <b>Length Of Stay:</b> <span id="los"></span> day(s) </p>
+              <p>⬅️ <b>Discharge Spec:</b> <span id="discharge-spec"></span></p>
+              <p>🧑 <b>Biological Sex:</b> <span id="discharge-spec">U</span></p>
+            </div>
+          </div>
         </div>
       </div>
-      
 
-      <ul class="nav nav-tabs" style="margin-bottom:1em;" id="nav-tab-selection">
+
+
+
+      <ul class="nav nav-tabs" style="margin-bottom:1em; margin-top:1em;" id="nav-tab-selection">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" id="dal-nav">🖥️ eDAL</a>
         </li>
@@ -49,7 +70,7 @@
       <div id="cls" style="display:none;">
         <div class="card">
           <div class="card-header bg-primary text-white">
-            Clinical Letter (CLK: <span id="clinical-letter-key"></span>)
+            ✉️ Clinic Letter: <span id="clinical-letter-key"></span>
           </div>
           <div class="card-body card-text" id="letter-text"></div>
         </div>
@@ -57,56 +78,36 @@
 
       <div id="edal">
 
-      <div class="card">
-        <div class="card-header bg-dark text-white">
-          Presenting Complaint
-        </div>
-        <div class="card-body card-text" id="presenting-complaint-text">
-          
+
+        <div class='card'>
+          <div class='card-header bg-warning'>
+            🖥️ eDAL: <span id="edal-unique-id"></span>
+          </div>
+          <div class='card-body'>
+              <h2>Presenting Complaint</h2>
+              <div id="presenting-complaint-text"></div>
+              <h2>Clinical Finding</h2>
+              <div id="clinical-finding-text"></div>
+              <h2>Treatment Narrative</h2>
+              <div id="treatment-narrative-text"></div>
+              <h2>Allergy</h2>
+              <div id="allergy-text"></div>
+              <h2>Discharge Diagnosis One</h2>
+              <div id="discharge-diagnosis-1-text"></div>
+              <h2>Discharge Diagnosis Two</h2>
+              <div id="discharge-diagnosis-2-text"></div>
+          </div>
         </div>
       </div>
-        <div class="card">
-            <div class="card-header">
-              Clinical Finding
-            </div>
-            <div class="card-body card-text" id="clinical-finding-text">
-
-            </div>
-          </div>
-
-
-          <div class="card">
-            <div class="card-header bg-success text-white">
-                Treatment Narrative
-            </div>
-            <div class="card-body card-text" id="treatment-narrative-text">
-
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header bg-danger text-white">
-                Allergy
-            </div>
-            <div class="card-body card-text" id="allergy-text">
-            </div>
-          </div>
-
-
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    Discharge Diagnoses
-                </div>
-                <div class="card-body card-text" id="discharge-diagnoses-text">
-
-                </div>
-            </div>
-          </div>
     </div>
-    <div class="col-3">
+    <div class="col-3" id="auto-code-row">
+      <div class="btn btn-lg btn-success full-width disabled" >
+        Submit Codes to WPAS
+      </div>
+
       <div class="card">
         <div class="card-header">
-          Auto Coder
+          🤖 Auto Coder
         </div>
         <ul class="list-group list-group-flush" id="auto-coder-list-group">
           <li class="list-group-item" id="auto-coder-none">None</li>
@@ -123,47 +124,14 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class='list-group-item d-flex justify-content-between'>✨ Comorbidity</li>
+          <li class='list-group-item d-flex justify-content-between'>🛌🏼 Past Medical History</li>
+          <li class='list-group-item d-flex justify-content-between'>👵 Family History Of</li>
+          <li class='list-group-item d-flex justify-content-between'>🎈 From Acronym</li>
+          <li class='list-group-item d-flex justify-content-between'>👨🏼‍⚕️ From Diagnosis</li>
         </ul>
       </div>
 
-        <div class="card">
-          <div class="card-header">
-            Auto Coder Filters
-          </div>
-          <div class="card-body">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="presenting-complaint-checkbox" checked>
-        <label class="form-check-label" for="presenting-complaint-checkbox">
-          Presenting Complaint
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="clinical-finding-checkbox" checked>
-        <label class="form-check-label" for="clinical-finding-checkbox">
-          Clinical Finding
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="treatment-narrative-checkbox" checked>
-        <label class="form-check-label" for="treatment-narrative-checkbox">
-          Treatment Narrative
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="allergy-checkbox" checked>
-        <label class="form-check-label" for="allergy-checkbox">
-          Allergy
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="discharge-diagnosis-checkbox" checked>
-        <label class="form-check-label" for="discharge-diagnosis-checkbox">
-          Discharge Diagnosis
-        </label>
-      </div>
-    </div>
-    
-</div>
+ 
 
 <div class="card">
   <div class="card-header">Missing Codes</div>
@@ -181,7 +149,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="{{ url_for('notes.code', dal_id=note['dal_id']) }}">
+        <form method="POST" action="{{ url_for('notes.code', caseno=caseno, linkid=linkid) }}">
 
         {{ form.csrf_token }}
         {{ render_field(form.section) }}
@@ -209,9 +177,6 @@
 </div>
 
 </div>
-
-
-
 
 {% endblock %}
 

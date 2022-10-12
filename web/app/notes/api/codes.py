@@ -33,12 +33,12 @@ from ...database import AutoCode, NoteCode, ClinicalCoderCode
 from ..views import AutoCodeSchema, ClinicalCoderSchema
 
 
+
+
 @api.route("/notes/get/autocode/<id>", methods=["GET"])
 def get_autocode(id):
     autocode = AutoCode.query.filter_by(id=id).first()
-
     return success_with_content_response(AutoCodeSchema().dump(autocode))
-
 
 @api.route("/notes/add/autocode", methods=["POST"])
 def add_autocode():
@@ -73,6 +73,7 @@ def add_autocode():
         return success_with_content_response(AutoCodeSchema().dump(new_auto_code))
     except Exception as err:
         return transaction_error_response(err)
+
 
 
 @api.route("/notes/add/clinicalcode", methods=["POST"])

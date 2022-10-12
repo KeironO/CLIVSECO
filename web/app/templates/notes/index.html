@@ -10,19 +10,60 @@
 
 <div class="row">
     <div class="col-4">
-        <h4>{{ note_count }}</h4>
-        Notes
+        <h4 id="dal-count"></h4>
+        Discharge Advice Letters
     </div>
     <div class="col-4">
-        <h4>{{ uncoded_count }}</h4>
-        Uncoded
+        <h4 id="auto-code-count"></h4>
+        Auto Codes
     </div>
     <div class="col-4">
-        <h4>{{ note_count - uncoded_count }}</h4>
-        Verified
+        <h4 id="avg-number"></h4>
+        Average # Code(s) Per Letter
     </div>
 </div>
 
 
+<div style="margin-top:2rem"></div>
 
+<div class="row">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white" >
+              Admitting Speciality
+            </div>
+            <div class="card-body">
+                <canvas id="admission-spec-chart" width="400" height="400"></canvas>
+
+            </div>
+          </div>
+    </div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+              Discharge Speciality
+            </div>
+            <div class="card-body">
+            <canvas id="discharge-spec-chart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+              Auto Coded Section
+            </div>
+            <div class="card-body">
+
+            <canvas id="auto-code-section-chart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

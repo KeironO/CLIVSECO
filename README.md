@@ -1,8 +1,11 @@
-# CLIVSECO
+# CLIVSECO: CLInical coder Verification of SEmi automated auto COder.
 
-CLInical coder Verification of SEmi automated auto COder.
+A simple web application that enables clinical coders to give feedback for automatically coded hospital spells.
+
 
 ## Installation and First Time Run
+
+The autocoder is currently developed in conda.
 
 ```
 conda create --name clivseco --file pkgs.txt 
@@ -10,7 +13,13 @@ conda activate clivseco
 python web/run.py
 ```
 
+If you need to set it up using pip, take a look a the pkgs.txt file and you'll see what packages are required for this to run.
+
+The database file can be found in `app/clivseco.db`.
+
 ## API 'Documentation'
+
+
 
 ```python
 import requests

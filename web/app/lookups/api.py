@@ -27,30 +27,19 @@ from ..api.responses import (
 
 from ..database import (
     ICD10Lookup,
-    OPCS4ChapterLookup,
-    OPCS4SubChapterLookup,
-    OPCS4CodeLookup,
+    OPCS4Lookup,
 )
 
 from .views import (
     ICD10CodeSchema,
-    NewOPCS4ChapterLookupSchema,
-    OPCS4ChapterLookupSchema,
-    NewOPCS4SubChapterLookupSchema,
-    OPCS4SubChapterLookupSchema,
-    NewOPCS4CodeLookupSchema,
-    OPCS4CodeLookupSchema,
+    OPCS4CodeSchema
 )
 
 
 @api.route("/code/OPCS4/<code>", methods=["GET"])
 def get_opcs_code(code: str):
-    if len(code) == 3:
-        code = OPCS4SubChapterLookup.query.filter(OPCS4SubChapterLookup.subchapter == code).first()
-        return success_with_content_response(OPCS4SubChapterLookupSchema().dump(code))
-    elif len(code) > 3:
-        code = OPCS4CodeLookup.query.filter(OPCS4CodeLookup.code == code).first()
-        return success_with_content_response(OPCS4CodeLookupSchema().dump(code))
+    code = OPCS4Lookup.query.filter(OPCS4Lookup.code == code).first()
+    return success_with_content_response(OPCS4CodeSchema().dump(code))
 
 
 @api.route("/code/ICD10/<code>", methods=["GET"])
@@ -59,72 +48,24 @@ def get_icd_code(code: str):
     return success_with_content_response(ICD10CodeSchema().dump(code))
 
 
-@api.route("/opcs4/add/subchapter", methods=["POST"])
-def opcs_subchapter():
-    values = request.get_json()
 
-    if not values:
-        return no_values_response()
-
-    try:
-        new_subchapter_result = NewOPCS4SubChapterLookupSchema().load(values)
-    except ValidationError as err:
-        return validation_error_response(err)
-
-    new_subchapter = OPCS4SubChapterLookup(**new_subchapter_result)
-
-    try:
-        db.session.add(new_subchapter)
-        db.session.commit()
-        db.session.flush()
-        return success_with_content_response(
-            OPCS4SubChapterLookupSchema().dump(new_subchapter)
-        )
-    except Exception as err:
-        return transaction_error_response(err)
-
-
-@api.route("/opcs4/add/chapter", methods=["POST"])
-def add_opcs_chapter():
-    values = request.get_json()
-
-    if not values:
-        return no_values_response()
-
-    try:
-        new_chapter_result = NewOPCS4ChapterLookupSchema().load(values)
-    except ValidationError as err:
-        return validation_error_response(err)
-
-    new_chapter = OPCS4ChapterLookup(**new_chapter_result)
-
-    try:
-        db.session.add(new_chapter)
-        db.session.commit()
-        db.session.flush()
-        return OPCS4ChapterLookupSchema().dump(new_chapter)
-    except Exception as err:
-        return transaction_error_response(err)
-
-
-@api.route("/opcs4/add/code", methods=["POST"])
+@api.route("/code/opcs4/add/", methods=["POST"])
 def add_opcs_code():
     values = request.get_json()
 
     if not values:
         return no_values_response()
-
     try:
-        new_code_result = NewOPCS4CodeLookupSchema().load(values)
+        new_code_result = OPCS4CodeSchema(exclude=("id", )).load(values)
     except ValidationError as err:
         return validation_error_response(err)
 
-    new_code = OPCS4CodeLookup(**new_code_result)
+    new_code = OPCS4Lookup(**new_code_result)
 
     try:
         db.session.add(new_code)
         db.session.commit()
         db.session.flush()
-        return OPCS4CodeLookupSchema().dump(new_code)
+        return OPCS4CodeSchema().dump(new_code)
     except Exception as err:
         return transaction_error_response(err)

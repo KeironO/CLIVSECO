@@ -13,29 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from enum import Enum
 
-class EnumCodedSection(Enum):
-    CLI = "Clinical Finding"
-    PRE = "Presenting Complaint"
-    TRE = "Treatment Narrative"
-    DI1 = "Discharge Diagnosis 1"
-    DI2 = "Discharge Diagnosis 2"
-    ALL = "Allergy"
-    CLL = "Clinic Letter"
-    TOMS = "TOMS"
-    RADIS = "RADIS"
-      
-    def __repr__(self):
-          return self.value
+from flask import Blueprint
 
-    def __str__(self):
-          return str(self.value)    
+misc = Blueprint("misc", __name__)
 
-
-class EnumCodeType(Enum):
-    PROC = "Procedure"
-    DIAG = "Diagnosis"
-
-    def __repr__(self):
-      return self.value
+from . import routes

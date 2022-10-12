@@ -25,10 +25,8 @@ from ..models import AutoCode
 @notes.route("/", methods=["GET"])
 @login_required
 def home():
-    note_count = AutoCode.query.count()
-    uncoded_count = AutoCode.query.count()
     return render_template(
-        "notes/index.html", note_count=note_count, uncoded_count=uncoded_count
+        "notes/index.html"
     )
 
 from .codes import *

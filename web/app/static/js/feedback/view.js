@@ -49,6 +49,7 @@ function show_hide_replace_element(value) {
 
 
 function fill_context(code) {
+    console.log(code)
     const type = code["section"];
     const text = type_map.get(type);
 
@@ -57,8 +58,8 @@ function fill_context(code) {
     const start = code["start"];
     const end = code["end"];
 
-    context = context.insert(end+1, "</span>")
-    context = context.insert(start, "<span class='highlight'>")
+    $("#extracted").html("<span class='highlight'>" + code["source"] + "</span>");
+
     $("#context").html(context);
 }
 
@@ -105,7 +106,6 @@ $(document).ready(function () {
     var code = get_code()["content"];
 
     fill_context(code);
-
 
     $("#remove_or_replace").change(function() {
         show_hide_replace_element($(this).val());

@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, request, redirect, request
 from flask_login import login_required, current_user
 
 from .. import notes
@@ -28,10 +28,8 @@ import requests
 def code_feedback(id: int):
     form = FeedbackForm()
 
-    code = requests.get(url_for("api.get_autocode", id=id, _external=True))
-
-    print(code.json()["content"])
-
+    code = requests.get(url_for("api.get_autocode", id=id, _external=True), verify=False)
+    
     if code.status_code == 200:
 
         if form.validate_on_submit():
@@ -45,12 +43,12 @@ def code_feedback(id: int):
                     "is_correct": form.is_correct.data,
                     "additional_codes": request.form['additional_codes_input'],
                     "user_id": current_user.id,
-                },
+                }, verify=False
             )
 
             if response.status_code == 200:
                 flash("Thank you for providing feedback 😊")
-                return redirect(url_for("notes.code", dal_id=code.json()["content"]["note_code"]["note"]["dal_id"]))
+                return redirect(request.referrer)
             else:
                 return response.content
 
@@ -61,7 +59,7 @@ def code_feedback(id: int):
 @notes.route("/code/feedback/<id>/endpoint")
 @login_required
 def code_feedback_endpoint(id: int):
-    return requests.get(url_for("api.get_autocode", id=id, _external=True)).json()
+    return requests.get(url_for("api.get_autocode", id=id, _external=True), verify=False).json()
 
 @notes.route("/feedback")
 @login_required
@@ -72,5 +70,5 @@ def code_feedback_index():
 @notes.route("/feedback/endpoint")
 @login_required
 def code_feedback_index_endpoint():
-    return requests.get(url_for("api.get_autocode_feedback_all", _external=True)).json()
+    return requests.get(url_for("api.get_autocode_feedback_all", _external=True), verify=False).json()
 

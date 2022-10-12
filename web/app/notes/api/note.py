@@ -34,14 +34,52 @@ from ..views import NoteSchema, ClinicLetterSchema
 
 
 @api.route("/notes/random", methods=["GET"])
-def get_random_dal_id():
+def random_note():
     note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
-    return success_with_content_response({"dal_id": note.dal_id})
+    
+    if note != None:
+        return success_with_content_response({"caseno": note.m_number, "linkid": note.linkid})
+    return {"success": False, "content": "No Notes Found found?"}
 
+@api.route("/notes/mark/<caseno>:<linkid>")
+def mark_as_complete(caseno, linkid):
+    note = Note.query.filter(Note.m_number == caseno, Note.linkid == linkid).order_by(func.random()).first()
 
-@api.route("/notes/get/<dal_id>", methods=["GET"])
-def get_note(dal_id: str):
-    note = Note.query.filter(Note.dal_id == dal_id).first()
+    if note != None:
+        note.checked = True
+        db.session.add(note)
+        db.session.commit()
+        db.session.flush()
+        return success_with_content_response(NoteSchema(many=True).dump(note))
+    else:
+        return {"success": False, "content": {"error": "Note not found"}}
+
+@api.route("/notes/find/", methods=["POST"])
+def find_note():
+    values = request.get_json()
+
+    if not values:
+        return no_values_response()
+
+    if 'caseno' not in values:
+        return {"success": False, "content": {"error": "We require caseno"}}
+
+    caseno = values["caseno"]
+
+    if "linkid" in values:
+        linkid = values["linkid"]
+        note = Note.query.filter(Note.linkid==linkid, Note.m_number==caseno).all()
+    else:
+        note = Note.query.filter(Note.m_number==caseno).all()
+
+    if note != None:
+        return success_with_content_response(NoteSchema(many=True).dump(note))
+    else:
+        return {"success": False, "content": {}}
+
+@api.route("/notes/get/<caseno>:<linkid>", methods=["GET"])
+def get_note(caseno: str, linkid: str):
+    note = Note.query.filter(Note.m_number==caseno,Note.linkid==linkid).first()
     if note != None:
         return success_with_content_response(NoteSchema().dump(note))
     else:
