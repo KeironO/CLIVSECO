@@ -31,9 +31,14 @@ migrate = Migrate()
 ma = Marshmallow()
 
 def load_users():
-    with open("users.pkl", "rb") as infile:
-        users = pickle.load(infile)
-    return users
+    users = {}
+    if os.path.isfile("users.pkl"):
+        with open("users.pkl", "rb") as infile:
+            return pickle.load(infile)
+    else:
+        with open("users.pkl", "wb") as outfile:
+            pickle.dump({}, outfile)
+        load_users()
 
 users = load_users()
 
@@ -56,6 +61,7 @@ def register_extensions(app: Flask):
     @ldap_manager.save_user
     def save_user(dn, username, data, memberships):
         users = load_users()
+        print(users)
         user = LDAPUser(dn, username, data)
         users[username] = user
         with open("users.pkl", "wb") as outfile:
