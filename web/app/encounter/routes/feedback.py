@@ -16,14 +16,14 @@
 from flask import render_template, url_for, flash, request, redirect, request
 from flask_login import login_required, current_user
 
-from .. import notes
+from .. import encounter
 
 from ..forms import FeedbackForm, DeleteFeedbackForm
 
 import requests
 
 
-@notes.route("/code/feedback/<id>", methods=["GET", "POST"])
+@encounter.route("/code/feedback/<id>", methods=["GET", "POST"])
 @login_required
 def code_feedback(id: int):
     form = FeedbackForm()
@@ -56,7 +56,7 @@ def code_feedback(id: int):
     else:
         return code.status_code
 
-@notes.route("/code/feedback/<id>/endpoint")
+@encounter.route("/code/feedback/<id>/endpoint")
 @login_required
 def code_feedback_endpoint(id: int):
     return requests.get(url_for("api.get_autocode", id=id, _external=True), verify=False).json()
@@ -64,13 +64,13 @@ def code_feedback_endpoint(id: int):
 
 
 
-@notes.route("/feedback")
+@encounter.route("/feedback")
 @login_required
 def code_feedback_index():
     return render_template("notes/feedback/index.html")
 
 
-@notes.route("/code/feedback/<id>/delete", methods=["GET", "POST"])
+@encounter.route("/code/feedback/<id>/delete", methods=["GET", "POST"])
 @login_required
 def code_feedback_delete(id):
     form = DeleteFeedbackForm()
@@ -83,7 +83,7 @@ def code_feedback_delete(id):
             flash(response.content)
     return render_template("notes/feedback/delete.html", form=form, id=id)
 
-@notes.route("/feedback/endpoint")
+@encounter.route("/feedback/endpoint")
 @login_required
 def code_feedback_index_endpoint():
     return requests.get(url_for("api.get_autocode_feedback_all", _external=True), verify=False).json()

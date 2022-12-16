@@ -13,14 +13,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-SECRET_KEY = "BKGW9AT3x3E8mTtZ"
-WTF_CSRF_SECRET_KEY = "BKGW9AT3x3E8mTtZ"
-DEBUG = True
-SQLALCHEMY_DATABASE_URI = "sqlite:///clivseco.db"
+from sqlalchemy.engine import URL
+import urllib
+
+# pyodbc stuff for MS SQL
+driver='{SQL Server}'
+server='localhost'
+database='CLIVSECO'
+trusted_connection='yes'
+
+# pyodbc connection string
+connection_string = f'DRIVER={driver};SERVER={server};'
+connection_string += f'DATABASE={database};'
+connection_string += f'TRUSTED_CONNECTION={trusted_connection}'
+
+SQLALCHEMY_DATABASE_URI = urllib.parse.unquote(str(URL.create(
+    "mssql+pyodbc", query={"odbc_connect": connection_string}
+)))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+SECRET_KEY = "EXAMPLE-SECRET-KEY"
+WTF_CSRF_SECRET_KEY = "EXAMPLE-SECRET-KEY"
+DEBUG = True
+
 LDAP_HOST = 'GIG01SRVDOM0003.cymru.nhs.uk'
 LDAP_BIND_DIRECT_PREFIX = 'CYMRU\\'
 LDAP_BIND_DIRECT_CREDENTIALS = True
 LDAP_BIND_DIRECT_GET_USER_INFO = False
-# Declares what ldap attribute corresponds to the username passed to any login method when performing a bind. 
-SECRET_KEY = 'secret'
+
+SECRET_KEY = 'EXAMPLE-SECRET-KEY'

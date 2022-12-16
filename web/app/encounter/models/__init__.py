@@ -14,6 +14,5 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from .codes import *
-from .note import *
-from .confirmation import *
+from .encounter import *
+from .results import *

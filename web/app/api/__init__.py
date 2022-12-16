@@ -18,5 +18,5 @@ from ..database import db
 
 api = Blueprint("api", __name__)
 
-from ..notes.api import *
+from ..encounter.api import *
 from ..lookups.api import *

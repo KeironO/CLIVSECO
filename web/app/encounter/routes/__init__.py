@@ -16,13 +16,11 @@
 from flask import render_template
 from flask_login import login_required
 
-from .. import notes
+from .. import encounter
 
 from sqlalchemy import func
 
-from ..models import AutoCode
-
-@notes.route("/", methods=["GET"])
+@encounter.route("/", methods=["GET"])
 @login_required
 def home():
     return render_template(

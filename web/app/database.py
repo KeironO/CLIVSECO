@@ -20,8 +20,15 @@ from sqlalchemy.orm import configure_mappers
 
 db = SQLAlchemy()
 
+from .base import Base
+
+Base = declarative_base(cls=Base)
+Base.query = db.session.query_property()
+
 from .auth.models import *
-from .lookups.models import *
-from .notes.models import *
+from .encounter.models import *
+from .misc.models import *
+from .audit.models import *
+from .feedback.models import *
 
 configure_mappers()

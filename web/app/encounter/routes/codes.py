@@ -17,7 +17,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort, g
 from flask_login import login_required, current_user
 
-from .. import notes
+from .. import encounter
 
 from ..forms import AdditionalCodeForm
 
@@ -28,7 +28,7 @@ from ..forms import FindForm, AuditorForm
 import requests
 
 
-@notes.route("/code/random/<spec>")
+@encounter.route("/code/random/<spec>")
 def get_random_code(spec):
 
     response = requests.get(url_for("api.random_note", spec=spec, _external=True), verify=False)
@@ -46,7 +46,7 @@ def get_random_code(spec):
         return response.content
 
 
-@notes.route("/code/<caseno>:<linkid>", methods=["GET", "POST"])
+@encounter.route("/code/<caseno>:<linkid>", methods=["GET", "POST"])
 @login_required
 def code(caseno: str, linkid: str):
     response = requests.get(
@@ -82,7 +82,7 @@ def code(caseno: str, linkid: str):
     else:
         return response.content
 
-@notes.route("/code/<caseno>:<linkid>/audit", methods=["GET", "POST"])
+@encounter.route("/code/<caseno>:<linkid>/audit", methods=["GET", "POST"])
 @login_required
 def audit(caseno, linkid): 
     response = requests.get(
@@ -129,7 +129,7 @@ def audit(caseno, linkid):
         return response.content
 
 
-@notes.route("/get/<caseno>:<linkid>")
+@encounter.route("/get/<caseno>:<linkid>")
 @login_required
 def code_endpoint(caseno: str, linkid: str):
     response = requests.get(
@@ -142,7 +142,7 @@ def code_endpoint(caseno: str, linkid: str):
     return response.json()
 
 
-@notes.route("/find/", methods=["GET", "POST"])
+@encounter.route("/find/", methods=["GET", "POST"])
 @login_required
 def find_note():
     form = FindForm()

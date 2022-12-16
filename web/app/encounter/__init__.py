@@ -15,6 +15,6 @@
 
 from flask import Blueprint
 
-notes = Blueprint("notes", __name__)
+encounter = Blueprint("encounter", __name__)
 
 from . import routes

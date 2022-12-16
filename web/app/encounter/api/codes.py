@@ -28,11 +28,12 @@ from ...api.responses import (
 )
 
 
-from ...database import AutoCode, NoteCode, ClinicalCoderCode
+# from ...database import AutoCode, NoteCode, ClinicalCoderCode
 
 from ..views import AutoCodeSchema, ClinicalCoderSchema
 
 
+'''
 
 
 @api.route("/notes/get/autocode/<id>", methods=["GET"])
@@ -111,3 +112,4 @@ def add_clinicalcode():
     except Exception as err:
         return transaction_error_response(err)
 
+'''

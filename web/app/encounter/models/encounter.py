@@ -15,7 +15,22 @@
 
 from flask import url_for
 from sqlalchemy import ForeignKey
-from ...database import db
-from marshmallow import fields
+from ...database import db, Base
+import enum
 
-from ..enums import EnumCodedSection, EnumCodeType
+class Encounter(Base):
+    paslinkid = db.Column(db.String(10))
+    casenumber = db.Column(db.String(8))
+
+class ComplexReason(enum.Enum):
+    A = "The available source documentation does not accurately reflect the episode."
+    B = "We have not got access to a digital form of documentation required to produce accurate autocoding."
+    O = "Other"
+
+class TooComplex(Base):
+    encounterid = db.Column(db.String(36), ForeignKey("ENCOUNTER.id"), nullable=False)
+    nadex = db.Column(db.String(16), nullable=False)
+    comments = db.Column(db.String(2048))
+    reason = db.Column(db.Enum(ComplexReason))
+    reason_other = db.Column(db.String(4096), nullable=True)
+
