@@ -18,20 +18,14 @@ from ..database import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class UserAccount(db.Model, UserMixin):
+class LDAPUser(UserMixin):
+    def __init__(self, dn, username, data):
+        self.dn = dn
+        self.username = username
+        self.data = data
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    def __repr__(self):
+        return self.username
 
-    email = db.Column(db.String(320), nullable=False, unique=True)
-    password_hash = db.Column(db.String(256), nullable=False)
-
-    @property
-    def password(self) -> str:
-        return "hunter2"
-
-    @password.setter
-    def password(self, password: str):
-        self.password_hash = generate_password_hash(password)
-
-    def verify_password(self, password) -> bool:
-        return check_password_hash(self.password_hash, password)
+    def get_id(self):
+        return self.username

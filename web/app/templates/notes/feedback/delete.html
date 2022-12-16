@@ -1,0 +1,25 @@
+{% extends "template.html" %}
+
+{% block title %}Delete Feedback{% endblock %}
+
+{% block header %}
+<div style="max-width:600px;margin:0 auto 0;">
+
+<h1>Delete Feedback</h1>
+</div>
+{% endblock %}
+
+
+{% block body %}
+<div style="max-width:600px;margin:0 auto 0;">
+
+    <div class="alert alert-warning">
+        Type YES into the confirmation box to confirm that you want to delete this feedback. THIS IS IRREVERSABLE!
+    </div>
+    <form method="POST" action="{{ url_for('notes.code_feedback_delete', id=id) }}">
+    {{ form.csrf_token }}
+    {{ render_field(form.confirmation) }}
+    {{ render_field(form.submit) }}
+    </form>
+</div>
+{% endblock %}

@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from flask import render_template, url_for, flash, redirect, request, abort
+from flask import render_template, url_for, flash, redirect, request, abort, g
 from flask_login import login_required, current_user
 
 from .. import notes
@@ -23,15 +23,15 @@ from ..forms import AdditionalCodeForm
 
 from sqlalchemy import func
 
-from ..forms import FindForm
+from ..forms import FindForm, AuditorForm
 
 import requests
 
 
-@notes.route("/code/")
-@login_required
-def get_random_code():
-    response = requests.get(url_for("api.random_note", _external=True), verify=False)
+@notes.route("/code/random/<spec>")
+def get_random_code(spec):
+
+    response = requests.get(url_for("api.random_note", spec=spec, _external=True), verify=False)
 
     if response.status_code == 200:
         note = response.json()
@@ -71,7 +71,7 @@ def code(caseno: str, linkid: str):
                 'end': int(form.end.data),
                 'code': request.form['additional_codes_input'],
                 'comorbidity': form.comorbidity.data,
-                'user_id': current_user.id
+                'user_id': str(current_user.username)
             }, verify=False)
             
             if submission_response.status_code == 200:
@@ -79,6 +79,52 @@ def code(caseno: str, linkid: str):
             else:
                 flash(response.content)
         return render_template("notes/view.html", note=note["content"], form=form, caseno=caseno, linkid=linkid)
+    else:
+        return response.content
+
+@notes.route("/code/<caseno>:<linkid>/audit", methods=["GET", "POST"])
+@login_required
+def audit(caseno, linkid): 
+    response = requests.get(
+        url_for(
+            "api.get_note",
+            caseno=caseno,
+            linkid=linkid,
+            _external=True
+        ), verify=False)
+
+    if response.status_code == 200:
+        note = response.json()
+
+        form = AuditorForm()
+
+        if form.validate_on_submit():
+
+            _json = {
+                "note_id": note["content"]["id"],
+                "procedures": form.procedures.data,
+                "diagnoses": form.diagnosis.data,
+                "caseno": caseno,
+                "linkid": linkid,
+                "coders_note": form.coders_note.data,
+                "author": "AUTOCODER*%s" % (str(current_user.username))
+            }
+
+            audit_response = requests.post(url_for("api.submit_feedback", _external=True),
+                json=_json, verify=False)
+            
+            if audit_response.status_code == 200:
+                flash("The audit codes have been submitted. If you've made a mistake email Keiron.")
+                return redirect(url_for('notes.code',caseno=caseno,linkid=linkid))
+
+
+        return render_template(
+            "notes/audit.html",
+            note=note["content"],
+            caseno=caseno,
+            linkid=linkid,
+            form=form
+        )
     else:
         return response.content
 
@@ -111,6 +157,7 @@ def find_note():
 
         response = requests.post(
             url_for("api.find_note", _external=True),
+            verify=False,
             json=_json
         )
 

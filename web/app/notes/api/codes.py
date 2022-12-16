@@ -75,7 +75,6 @@ def add_autocode():
         return transaction_error_response(err)
 
 
-
 @api.route("/notes/add/clinicalcode", methods=["POST"])
 def add_clinicalcode():
     values = request.get_json()
@@ -111,3 +110,4 @@ def add_clinicalcode():
         )
     except Exception as err:
         return transaction_error_response(err)
+

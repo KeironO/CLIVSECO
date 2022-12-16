@@ -2,6 +2,11 @@
 
 {% block title %}Loading Document{%endblock%}
 
+{% block header %}
+<h1 id="note-heading">{{ caseno }}:{{ linkid }}</h1>
+
+{% endblock %}
+
 {% block body %}
 
 
@@ -31,10 +36,6 @@
   </div>
     <div class="col-6" id="note-information-col">
 
-      
-      <h1 id="note-heading" class="text-center">{{ caseno }}:{{ linkid }}</h1>
-
-
       <div class="card">
         <div class="card-header bg-danger text-white">
           Demographic and Case Information
@@ -54,10 +55,29 @@
               <p>🧑 <b>Biological Sex:</b> <span id="discharge-spec">U</span></p>
             </div>
           </div>
+          
+          <a href="https://cttwcp.cymru.nhs.uk/PatientHomePage/PatientHomePage/PatientDetails?PatientId={{ caseno }}&PatientDomainId=HospitalNumber" target="_blank">
+            <div class="btn btn-primary">
+              <img src="{{ url_for('static', filename='images/portal_homepage_logo.png') }}" style="max-height:18px;"> View on the Welsh Clinical Portal 
+            </div>
+          </a>
+          
+          <p>
+            <small>
+              Please note that for the WCP redirect to work, you must first log into WCP: <a href="https://cttwcp.cymru.nhs.uk/login.aspx" target="_blank">cttwcp.cymru.nhs.uk/login</a>
+            </small>
+          </p>
         </div>
       </div>
 
 
+      <div id="audit-section" class="card" style="display:none;">
+        <div class="card-header bg-success text-white">
+          Audited Results
+        </div>
+        <ul id="audit-list" class="list-group list-group-flush">
+        </ul>
+      </div>
 
 
       <ul class="nav nav-tabs" style="margin-bottom:1em; margin-top:1em;" id="nav-tab-selection">
@@ -101,9 +121,11 @@
       </div>
     </div>
     <div class="col-3" id="auto-code-row">
-      <div class="btn btn-lg btn-success full-width disabled" >
-        Submit Codes to WPAS
-      </div>
+      <a href="{{ url_for('notes.audit', caseno=caseno, linkid=linkid) }}">
+        <div class="btn bg-warning btn-lg full-width">Audit</div>
+      </a>
+
+
 
       <div class="card">
         <div class="card-header">

@@ -25,8 +25,6 @@ from ...database import (
     NoteConfirmation,
 )
 
-from ...auth.views import UserAccountSchema
-
 from ..enums import EnumCodedSection, EnumCodeType
 
 from ...extensions import ma
@@ -41,11 +39,17 @@ class BasicNoteSchema(masql.SQLAlchemyAutoSchema):
 
     id = masql.auto_field()
 
+    _links = ma.Hyperlinks(
+        {
+            
+            "self": ma.URLFor("notes.code", caseno="<m_number>", linkid="<linkid>", _external=True)
+        }
+    )
+
 class BasicNoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
         model = NoteConfirmation
 
-    user = ma.Nested(UserAccountSchema, many=False)
 
 
 class NoteCodeSchema(masql.SQLAlchemyAutoSchema):

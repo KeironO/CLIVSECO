@@ -13,20 +13,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
+from flask_ldap3_login import LDAP3LoginManager
 from flask import Flask
-
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
+import pickle
+import os
 
-from .database import db, UserAccount
+from .database import db, LDAPUser
 
+login_manager = LoginManager()
+ldap_manager = LDAP3LoginManager()
 
 login_manager = LoginManager()
 migrate = Migrate()
 ma = Marshmallow()
 
+def load_users():
+    with open("users.pkl", "rb") as infile:
+        users = pickle.load(infile)
+    return users
+
+users = load_users()
 
 def register_extensions(app: Flask):
     db.init_app(app)
@@ -35,7 +44,20 @@ def register_extensions(app: Flask):
 
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
+    ldap_manager.init_app(app)
 
     @login_manager.user_loader
-    def load_user(user_id: int) -> UserAccount:
-        return UserAccount.query.get(user_id)
+    def load_user(username):
+        print(username)
+        if username in users:
+            return users[username]
+        return None
+
+    @ldap_manager.save_user
+    def save_user(dn, username, data, memberships):
+        users = load_users()
+        user = LDAPUser(dn, username, data)
+        users[username] = user
+        with open("users.pkl", "wb") as outfile:
+            pickle.dump(users, outfile)
+        return user

@@ -16,15 +16,24 @@
 
 from tkinter.tix import Select
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, StringField, SubmitField, TextAreaField, SelectField
-from wtforms.validators import DataRequired
+from wtforms import BooleanField, StringField, SubmitField, TextAreaField, SelectField, SelectMultipleField
+from wtforms.validators import DataRequired, ValidationError
 
+
+def equals_yes(form, field):
+    if field.data.upper() != 'YES':
+        raise ValidationError('Please type Yes if you want to confirm')
+
+class AuditorForm(FlaskForm):
+    coders_note = TextAreaField("Coders Note")
+    diagnosis = StringField("Diagnoses")
+    procedures = StringField("Procedures")
+    submit = SubmitField("Submit")
 
 class FindForm(FlaskForm):
     caseno = StringField("Case Number", validators=[DataRequired()])
     linkid = StringField("WPAS Link ID")
     submit = SubmitField("Search")
-
 
 class FeedbackForm(FlaskForm):
     is_correct = BooleanField("Annotation Correct")
@@ -45,13 +54,16 @@ class FeedbackForm(FlaskForm):
     comments = TextAreaField("Additional Comments")
     submit = SubmitField("Submit Feedback")
 
+class DeleteFeedbackForm(FlaskForm):
+    confirmation = StringField("Type Yes To Confirm Deletion", validators=[equals_yes])
+    submit = SubmitField("Delete Feedback")
 
 class AdditionalCodeForm(FlaskForm):
     section = SelectField("DAL Section", choices=(
         ("PRE", "Presenting Complaint"),
         ("TRE", "Treatment Narrative"),
         ("ALL", "Allergy"),
-        ("DIA", "Discharge Diagnoses")))
+        ("DIA1", "Discharge Diagnoses")))
     start = StringField("Start")
     end = StringField("End")
     type = SelectField("Code Type", choices=(

@@ -19,7 +19,6 @@ import marshmallow_sqlalchemy as masql
 from ...database import AdditionalCode
 
 
-from ...auth.views import UserAccountSchema
 
 from ...extensions import ma
 from ..enums import EnumCodedSection, EnumCodeType
@@ -39,5 +38,3 @@ class AdditionalCodeSchema(masql.SQLAlchemyAutoSchema):
     comorbidity = masql.auto_field()
     user_id = masql.auto_field()
     created_on = masql.auto_field()
-
-    user = ma.Nested(UserAccountSchema, many=False)

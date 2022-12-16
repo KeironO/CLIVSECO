@@ -32,14 +32,59 @@ from ...database import Note, ClinicLetter
 
 from ..views import NoteSchema, ClinicLetterSchema
 
+from ...globs import _spec_maps
 
-@api.route("/notes/random", methods=["GET"])
-def random_note():
-    note = Note.query.filter(Note.checked == False).order_by(func.random()).first()
+@api.route("/notes/progress/<spec>", methods=["GET"])
+def get_spec_progress(spec):
+    spec_cov = _spec_maps[spec]
+    notes = Note.query.filter(Note.checked == False, Note.admission_spec.in_(spec_cov)).all()
+
+    fully_audited = []
+    partially_audited = []
+    not_audited = []
+
+    for note in notes:
+        has_been_audited = [len(x.note_code.confirmations) > 0 for x in note.auto_codes]
+
+        if False not in has_been_audited:
+            fully_audited.append("%s:%s" % (note.m_number, note.linkid))
+        elif True not in has_been_audited:
+            not_audited.append("%s:%s" % (note.m_number, note.linkid))
+        else:
+            partially_audited.append("%s:%s" % (note.m_number, note.linkid))
+
+
+    return success_with_content_response({
+        "counts": {
+            "fully_audited": len(fully_audited),
+            "partially_audited": len(partially_audited),
+            "not_audited": len(not_audited)
+        },
+        "results": {
+            "fully_audited": fully_audited,
+            "partially_audited": partially_audited,
+            "not_audited": not_audited
+        }
+    })
+
+
+@api.route("/notes/random/<spec>", methods=["GET"])
+def random_note(spec):
+    spec_cov = _spec_maps[spec]
+    notes = Note.query.filter(Note.checked == False, Note.admission_spec.in_(spec_cov)).order_by(func.random()).all()
+
+    note = None
+    if notes != [] and notes != None:
+        for note in notes:
+            already_audited = min([len(x.note_code.confirmations) for x in note.auto_codes])
+            if already_audited == 0:
+                return success_with_content_response({"caseno": note.m_number, "linkid": note.linkid})
     
-    if note != None:
-        return success_with_content_response({"caseno": note.m_number, "linkid": note.linkid})
-    return {"success": False, "content": "No Notes Found found?"}
+
+        return {"success": False, "content": "No unaudited notes found?"}
+
+    else:
+        return {"success": False, "content": "No unaudited notes found?"}
 
 @api.route("/notes/mark/<caseno>:<linkid>")
 def mark_as_complete(caseno, linkid):

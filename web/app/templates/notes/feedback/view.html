@@ -2,13 +2,19 @@
 
 {% block title %}Auto-coder Feedback{% endblock %}
 
+{% block header %}
+<h1>Auto-coder Feedback: <span id="fid"></span></h1>
+
+{% endblock %}
+
 {% block body %}
+
+
 <div class="row">
     <div class="col-8">
         <div class="card">
-            <div class="card-header bg-warning"><h2>Auto-Coder Feedback Form</h2></div>
+            <div class="card-header bg-warning">Auto-Coder Feedback Form</div>
             <div class="card-body">
-        
                 <div class="card">
                     <div class="card-header"><span id="code-header"></span>
                     </div>
@@ -54,6 +60,9 @@
         </div>
     </div>
     <div class="col-4">
+        <div id="go-back" class="btn btn-lg btn-success full-width">
+            Go Back To Note
+        </div>
         <div class="card">
             <div class="card-header">
                 Feedback History

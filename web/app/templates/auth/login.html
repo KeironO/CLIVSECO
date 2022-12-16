@@ -2,21 +2,39 @@
 
 {% block title %}Log In{% endblock %}
 
-{% block body %}
 
+{% block header %}
+<div style="max-width:600px;margin:0 auto 0;">
 <h1>Log In</h1>
-
 <p>Fields marked with an asterisk (*) are required fields.</p>
 
-<div class="alert alert-warning" role="alert">You are attempting to access the CLIVSECO system. By entering a password you are confirming your acceptance that you are bound by the Computer Misuse Act. 1990 and any local policies/procedures as defined by your Employer. Usage and access to the CLIVSECO solution is audited and action may be taken against any individual attempting inappropriate activity.</div>
+</div>
+
+
+{% endblock %}
+
+{% block body %}
+
+<div style="max-width:600px;margin: 0 auto 0;">
+
+
+
 
 <form method="POST" action="{{ url_for('auth.login') }}">
     {{ form.csrf_token }}
     <div class="row">
-    {{ render_field(form.email) }}
+        <div class="alert alert-warning" role="alert">
+            <p>You are attempting to access the CLIVSECO system. </p>
+            <p>By entering a password you are confirming your acceptance that you are bound by the Computer Misuse Act. 1990 and any
+            local policies/procedures as defined by your Employer. Usage and access to the CLIVSECO solution is audited and action may
+            be taken against any individual attempting inappropriate activity.</p></div>
+    
+    {{ render_field(form.username ) }}
     {{ render_field(form.password) }}
+
+    
     {{ render_field(form.submit) }}
     </div>
 </form>
-
+</div>
 {% endblock %}

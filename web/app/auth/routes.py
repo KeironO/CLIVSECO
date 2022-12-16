@@ -13,31 +13,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
+from flask_ldap3_login.forms import LDAPLoginForm
 
 from sqlalchemy import func
 
 from flask import render_template, flash, redirect, url_for
 
 from .forms import LoginForm
-from .models import UserAccount
 
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
-    form = LoginForm()
+
+    if current_user.is_authenticated:
+        return redirect(url_for("notes.home"))
+
+    form = LDAPLoginForm()
+
+    form.username.label = 'Nadex Username'
 
     if form.validate_on_submit():
-        user = UserAccount.query.filter(
-            func.lower(UserAccount.email) == func.lower(form.email.data)
-        ).first()
+        login_user(form.user)
+        return redirect(url_for("notes.home"))
 
-        if user is not None and user.verify_password(form.password.data):
-            login_user(user)
-            return redirect(url_for("notes.home"))
-        else:
-            flash("Incorrect email or password.")
     return render_template("auth/login.html", form=form)
 
 

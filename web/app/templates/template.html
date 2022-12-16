@@ -9,7 +9,7 @@
     <title>{% block title %} {% endblock %} : CLIVSECO</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    
+
     {% block head %}
     {% endblock %}
 
@@ -37,31 +37,73 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{{ url_for('notes.home') }}">📝 Notes</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ url_for('notes.get_random_code') }}">✔️ Random Document</a>
-            </li>    
+
+            <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+              <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                  <a class="nav-link active dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    ⚡️ Random Document by Specialty
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDarkDropdownMenuLink">
+                    {% for spec in spec_maps %}
+                    <li><a class="dropdown-item" href="{{ url_for('notes.get_random_code', spec=spec) }}">{{ spec }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+              </ul>
+            </div>
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{{ url_for('notes.find_note') }}">🔍 Find Document</a>
-            </li>    
+            </li>
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{{ url_for('notes.code_feedback_index') }}">👓 View Feedback</a>
-            </li>   
+            </li>
           </ul>
           <div class="d-flex">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
               <li class="nav-item">
+                <a class="nav-link">
+                  <div class="btn btn-danger" id="toggledyslexic">Dyslexia Support</div>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link active" href="{{ url_for('auth.logout') }}">
-                  🔒 Log Out
+                  <div class="btn btn-light">
+                    <span id="nadex">{{ current_user.username }}</span>
+                </div>
                 </a>
               </li>
             </ul>
           </div>
         </div>
       </div>
+      {% else %}
+      <div class="d-flex">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link">
+              <div class="btn btn-danger" id="toggledyslexic">Dyslexia Support</div>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('auth.login') }}">
+              <div class="btn btn-light">
+                Log In
+            </div>
+            </a>
+          </li>
+        </ul>
+      </div>
       {% endif %}
     </nav>
   </header>
-
+  
+    <div id="jph" class="jumbotron jumbotron-header">
+      <div class="container">
+      {% block header %}
+      {% endblock %}
+    </div>
+  </div>
 
       <main role="main" class="container">
         {% with messages = get_flashed_messages() %}
@@ -87,7 +129,6 @@
             <div class="col-6 col-md">
               <img src="{{ url_for('static', filename='images/ctuhb.png') }}" width="300px" />
               <p class="text-muted small">CLIVSECO was developed for internal use within Cwm Taf University Health Board.</p>
-
             </div>
             <div class="col-6 col-md">
               <h5>Resources</h5>
@@ -114,6 +155,9 @@
       crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js" integrity="sha512-sW/w8s4RWTdFFSduOTGtk4isV1+190E/GghVffMA9XczdJ2MDzSzLEubKAs5h0wzgSJOQTRYyaz73L3d6RtJSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://www.virtuosoft.eu/code/bootstrap-duallistbox/bootstrap-duallistbox/v3.0.2/jquery.bootstrap-duallistbox.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
       <script src="{{ url_for('static', filename='js/global.js') }}"></script>
 
       {% block javascript %}

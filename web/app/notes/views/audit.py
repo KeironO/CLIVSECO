@@ -13,11 +13,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from flask import url_for
+
 import marshmallow_sqlalchemy as masql
 
-from ..extensions import ma
-from marshmallow_enum import EnumField
-from marshmallow import fields
-import requests
+from ...database import AuditResults
 
+class AuditResultsSchema(masql.SQLAlchemyAutoSchema):
+    class Meta:
+        model = AuditResults
+
+    id = masql.auto_field()
+
+    note_id = masql.auto_field()
+
+    caseno = masql.auto_field()
+    linkid = masql.auto_field()
+
+    diagnoses = masql.auto_field()
+    procedures= masql.auto_field()
+
+    coders_note=masql.auto_field()
+    author=masql.auto_field()
+    created_on = masql.auto_field()

@@ -46,6 +46,11 @@ class Note(db.Model):
 
     biological_sex = db.Column(db.String(1), nullable=True)
 
+    audit = db.relationship(
+        "AuditResults",
+        uselist=True,
+        primaryjoin="Note.id==AuditResults.note_id"
+    )
     missing_codes = db.relationship(
         "AdditionalCode",
         uselist=True,

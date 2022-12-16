@@ -15,7 +15,7 @@
 
 from __future__ import absolute_import
 
-from .database import db, UserAccount
+from .database import db
 from .extensions import register_extensions
 from flask import Flask, g
 
@@ -26,6 +26,7 @@ from .auth import auth as auth_blueprint
 from .api import api as api_blueprint
 from .notes import notes as notes_blueprint
 
+from .globs import _spec_maps
 
 def register_blueprints(app: Flask):
     app.register_blueprint(cmd_setup_blueprint)
@@ -38,6 +39,10 @@ def register_blueprints(app: Flask):
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_pyfile("config.py")
+
+    @app.context_processor
+    def inject_data():
+        return dict(spec_maps=_spec_maps)
 
     register_extensions(app)
     register_blueprints(app)

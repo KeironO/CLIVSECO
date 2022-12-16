@@ -17,36 +17,8 @@ import icd10
 
 from . import cmd_setup
 
-from ..database import db, UserAccount, ICD10Lookup
+from ..database import db, ICD10Lookup
 from tqdm import tqdm
-
-from secrets import choice
-from string import printable
-from getpass import getpass
-
-
-@cmd_setup.cli.command("create-testuser")
-def create_testuser():
-    email = "me@domain.com"
-    password = "".join([choice(printable.strip()) for _ in range(8)])
-    ua = UserAccount(email=email, password=password)
-
-    db.session.add(ua)
-    db.session.commit()
-
-    print(
-        "Log in using the following details:\nEmail:%s\password:%s" % (email, password)
-    )
-
-
-@cmd_setup.cli.command("create-user")
-def create_user():
-    email = input("Enter email:")
-    password = getpass("Enter Password: ")
-    ua = UserAccount(email=email, password=password)
-
-    db.session.add(ua)
-    db.session.commit()
 
 
 @cmd_setup.cli.command("create-icd10-lookup")

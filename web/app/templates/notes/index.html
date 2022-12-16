@@ -2,29 +2,29 @@
 
 {% block title %}Notes Home{% endblock %}
 
-{% block body %}
 
-<h1>
-    Notes Homepage
-</h1>
+{% block header %}
+<h1>CLIVSECO Dashboard</h1>
 
-<div class="row">
+<div class="row" style="padding-top:3rem;">
     <div class="col-4">
-        <h4 id="dal-count"></h4>
-        Discharge Advice Letters
+        <h1 id="dal-count"></h1>
+        <h3>Discharging Episodes Coded</h3>
     </div>
     <div class="col-4">
-        <h4 id="auto-code-count"></h4>
-        Auto Codes
+        <h1 id="auto-code-count"></h1>
+        <h3>Automatically Generated Codes</h3>
     </div>
     <div class="col-4">
-        <h4 id="avg-number"></h4>
-        Average # Code(s) Per Letter
+        <h1 id="avg-number"></h1>
+        <h3>Avg. # Code(s) Per Episode</h3>
     </div>
 </div>
 
+{% endblock %}
 
-<div style="margin-top:2rem"></div>
+{% block body %}
+
 
 <div class="row">
     <div class="col-4">

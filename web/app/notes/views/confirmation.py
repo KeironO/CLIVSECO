@@ -17,13 +17,13 @@
 from flask import url_for
 import marshmallow_sqlalchemy as masql
 
-from ...database import NoteConfirmation, AdditionalCode
+from ...database import NoteConfirmation
 
 from . import NoteCodeSchema
 
-from ...auth.views import UserAccountSchema
-
 from ...extensions import ma
+
+
 
 class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
@@ -41,4 +41,6 @@ class NoteConfirmationSchema(masql.SQLAlchemyAutoSchema):
     note_code_id = masql.auto_field()
 
     note_code = ma.Nested(NoteCodeSchema)
-    user = ma.Nested(UserAccountSchema)
+    _links = ma.Hyperlinks(
+        {"remove": ma.URLFor("notes.code_feedback_delete", id="<id>", _external=True)}
+    )

@@ -70,6 +70,8 @@ function if_nothing_then_none(s) {
     return s
  }
 
+
+
 function set_content(note) {
     $("#age").text(note["age"]);
     $("#m-number").text(note["m_number"]);
@@ -118,17 +120,26 @@ function set_auto_coder(auto_codes) {
         $("#auto-coder-none").remove();
     }
 
-
     var pmhs = [];
     var diag = [];
     var fmhs = [];
     var com = [];
     var other = [];
+    var procs = [];
+
+    var unvalidated = 0
 
     for (i in auto_codes) {
         let code = auto_codes[i]
+        if (code["note_code"]["confirmations"].length == 0) {
+            unvalidated += 1
+        };
 
-        if (code["comorbidity"]) {
+        if (code["note_code"]["type"] == "PROC") {
+            procs.push(code)
+        }
+
+        else if (code["comorbidity"]) {
             com.push(code);
         }
 
@@ -144,10 +155,22 @@ function set_auto_coder(auto_codes) {
             fmhs.push(code);
         }
 
+        
+
         else {
             other.push(code);
         }
+
+        console.log(code)
     }
+
+    if (unvalidated) {
+    }
+
+    else {
+        $("#jph").css('background-color', '#198754');
+    }
+    
 
     var final_array = [];
     final_array.push(diag);
@@ -155,6 +178,7 @@ function set_auto_coder(auto_codes) {
     final_array.push(other);
     final_array.push(pmhs);
     final_array.push(fmhs);
+    final_array.push(procs);
 
     for (j in final_array) {
         var yearofthesmile = final_array[j];
@@ -171,12 +195,13 @@ function set_auto_coder(auto_codes) {
             else {
                 var bg = "bg-warning"
             }
-    
-            var lgi = "<li class='list-group-item list-group-item-action flex-column align-items-start "+ bg + "' id='gi-"+ note_code["id"] + "'>"
+            
+
+            lgi = "<li class='list-group-item list-group-item-action flex-column align-items-start "+ bg + "' id='gi-"+ note_code["id"] + "'>"
             lgi += '<div class="d-flex w-100 justify-content-between">'
 
     
-            lgi += '<h2 class="mb-1">' + note_code["code"] + ": " + note_code["code_information"]["description"] 
+            lgi += '<h5 class="mb-1">' + note_code["code"] + ": " + note_code["code_information"]["description"] 
             if (code["comorbidity"] == true) {
                 lgi += ' ✨ '
             }
@@ -202,38 +227,32 @@ function set_auto_coder(auto_codes) {
                 lgi += ' 🗡️ '
             }
 
-            lgi += '</h2>'
+            lgi += '</h5>'
             
-            lgi += '<small>'+note_code["confirmations"].length+'</small>'
 
+            var confirmations = note_code["confirmations"];
+            var cleared_confirmations = []
+            for (i in confirmations) {
+                let confirmation = confirmations[i];
+                if (confirmation["marked_as_deleted"] != true) {
+                    cleared_confirmations.push(confirmation)
+                }
+            }
+            lgi += '<small>'+cleared_confirmations.length+'</small>'
             lgi += '</div><p class="mb-1">'
-            
-            lgi += '<small><div class="btn btn-light btn-sm">' + code["source_id"] + '</div></small></div>'
-
-            
-
-
-
-
-            
+            lgi += '<small><div class="btn btn-light btn-sm">' + code["source_id"] + '</div></small></div>'          
             lgi += "</li>"
+
+
     
             $("#auto-coder-list-group").append(
                 lgi
             );
     
-            /*
-            $("#gi-"+ note_code["id"]).hover(function() {
-                highlight_text(div_map.get(code["section"]), code["start"], code["end"]);
-                highlight_code(clinically_coded_codes.get(note_code["code"]));
-            }, function() {
-                unhighlight_text(div_map.get(code["section"]))
-                unhighlight_code(clinically_coded_codes.get(note_code["code"]))
-            });
-            */
+ 
     
             $("#gi-"+ note_code["id"]).click(function() {
-                window.open(code['_links']['feedback'], '_blank'); 
+                window.location = code['_links']['feedback']; 
             });
     
             $("#"+filter_map.get(code["section"])).click(function() {
@@ -320,7 +339,7 @@ function set_missing_code(missing_codes) {
             lgi += `<span class="badge bg-secondary" style="margin-right:0.5em">${code}</span>`
         }
 
-        lgi += `<p class="small">Feedback User: ${mc["user"]["email"]}</p>`
+        lgi += `<p class="small">Feedback User: ${mc["user_id"]}</p>`
         lgi += `<p class="small">Created On: ${mc["created_on"]}</p>`
 
         lgi += "</li>"
@@ -399,10 +418,40 @@ function set_letters(clinic_letters) {
     }
 }
 
+function audit_results(audit) {
+    console.log(audit.length)
+    if (audit.length >= 1) {
+        $("#audit-section").attr('style', 'display:block');
+    }
+
+    for (a in audit) {
+        var audit_result = audit[a];
+        
+        console.log(audit_result);
+
+        var lgi = `<li class="list-group-item d-flex justify-content-between align-items-start">`;
+
+        lgi += `<div class="ms-2 me-auto">`
+        lgi += `<div class="fw-bold">${audit_result['author']}</div>`
+        lgi += `<p>Diagnoses: ${audit_result['diagnoses']} .. Procedures: ${audit_results['procedures']}</p>`
+        if (audit_result['coders_note'].length > 1) {
+            lgi += `<p>Coders Note: ${audit_result['coders_note']}</p>`
+
+        }
+        lgi += `</div>`
+        lgi += `<span class="badge bg-primary rounded-pill">${audit_result['created_on']}</span>`
+
+        lgi += `</li>`
+
+
+        $("#audit-list").append(lgi);
+    }
+}
+
 
 $(document).ready(function () {
     var note = get_note()["content"];
-    
+ 
     set_heading(note["m_number"], note["linkid"]);
     set_dates(note);
     set_content(note);
@@ -422,8 +471,8 @@ $(document).ready(function () {
 
     fill_missing_code_information(note);
     set_missing_code(note["missing_codes"]);
-
     set_letters(note["clinic_letters"]);
+    audit_results(note["audit"]);
 
     $("#loading").fadeOut(250, function() {
         $("#content").fadeIn(250);
@@ -432,6 +481,11 @@ $(document).ready(function () {
 
     $("#section").change(function() {
         fill_missing_code_information(note);
+    });
 
-    })
+    if (note["audit"].length >= 1) { 
+        $("#jph").css('background-color', '#198754');
+    }
+    else {
+    }
 });

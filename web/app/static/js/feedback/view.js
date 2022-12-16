@@ -36,6 +36,7 @@ function get_code() {
 function fill_code_information(code) {
     var code = code["note_code"];
     $("#code-header").html(code["code"] + ": " + code["code_information"]["description"]);
+    $("#fid").html(code["code"]);
 }
 
 function show_hide_replace_element(value) {
@@ -65,6 +66,18 @@ function fill_context(code) {
 
 function fill_history(confirmations) {
     
+    var cleared_confirmations = [];
+
+    for (i in confirmations) {
+        let confirmation = confirmations[i];
+        if (confirmation["marked_as_deleted"] != true) {
+            cleared_confirmations.push(confirmation)
+        }
+    }
+
+
+    var confirmations = cleared_confirmations
+
     if (confirmations.length > 0) {
         $("#auto-coder-confirmation-none").remove();
     }
@@ -72,7 +85,7 @@ function fill_history(confirmations) {
     for (i in confirmations) {
         let confirmation = confirmations[i];
 
-        let email = confirmation["user"]["email"]
+        let email = confirmation["user_id"]
         if (confirmation["is_correct"]) {
             var is_correct = '✔️'
         }
@@ -83,9 +96,23 @@ function fill_history(confirmations) {
         var lgi = `<li class='list-group-item d-flex'>`
 
         var created_on = new Date(confirmation["created_on"]);
+        var comments = confirmation["comments"]
+        console.log(confirmation)
 
-        lgi += `<p>Feedback Email: ${email}<br><span class='small'>Created On: ${created_on.toDateString()}</small></p>`
-        lgi += `<span class="badge badge-primary badge-pill">${is_correct}</span>`
+        lgi += '<div class="media">'
+        lgi += '<div class="media-body">'
+        lgi += '<div class="mr-3">' + is_correct + '</div>'
+        lgi += '<div class="media-body">'
+        lgi += `<h5 class="mt-0 mb-1">${email}:</h5>`
+        lgi += `<p>Comments: ${comments}</p>`
+        lgi += `<p>Additional Codes: ${confirmation['additional_codes']}</p>`
+        lgi += `<p>Replace With: ${confirmation['replace_with']}</p>`
+        lgi += `<small><p>Created On: ${created_on.toDateString()}</p></small>`
+
+        lgi += '</div>'
+        lgi += '</div>'
+        lgi += '</div>'
+
 
         lgi += `</li>`
 
@@ -133,4 +160,8 @@ $(document).ready(function () {
     fill_code_information(code);
     fill_history(code["note_code"]["confirmations"]);
     view_info_button(code);
+
+    $("#go-back").click(function() {
+        window.location.href = code["note_code"]["note"]["_links"]["self"];
+    });
 });

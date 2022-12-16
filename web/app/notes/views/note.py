@@ -22,6 +22,7 @@ from ...extensions import ma
 
 from .codes import AutoCodeSchema, ClinicalCoderSchema
 from .additional import AdditionalCodeSchema
+from .audit import AuditResultsSchema
 
 class ClinicLetterSchema(masql.SQLAlchemyAutoSchema):
     class Meta:
@@ -39,3 +40,11 @@ class NoteSchema(masql.SQLAlchemyAutoSchema):
     missing_codes = ma.Nested(AdditionalCodeSchema, many=True)
     clinic_letters = ma.Nested(ClinicLetterSchema, many=True)
 
+    audit = ma.Nested(AuditResultsSchema, many=True)
+
+    _links = ma.Hyperlinks(
+        {
+            
+            "self": ma.URLFor("notes.code", caseno="<m_number>", linkid="<linkid>", _external=True)
+        }
+    )

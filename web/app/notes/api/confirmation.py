@@ -16,6 +16,7 @@
 from flask import request
 from marshmallow import ValidationError
 from sqlalchemy import func
+from flask_login import current_user, login_required
 
 
 from ...api import api, db
@@ -27,17 +28,58 @@ from ...api.responses import (
 )
 
 
-from ...database import NoteConfirmation, AdditionalCode
+from ...database import NoteConfirmation, AdditionalCode, AuditResults
 
-from ..views import NoteConfirmationSchema, AdditionalCodeSchema
+from ..views import NoteConfirmationSchema, AdditionalCodeSchema, AuditResultsSchema
 
 
 @api.route("/notes/feedback/autocode/get", methods=["GET"])
 def get_autocode_feedback_all():
-    confirmation = NoteConfirmation.query.all()
+    confirmation = NoteConfirmation.query.filter((NoteConfirmation.marked_as_deleted==False) | (NoteConfirmation.marked_as_deleted==None)).all()
     return success_with_content_response(
         NoteConfirmationSchema(many=True).dump(confirmation)
     )
+
+@api.route("/notes/feedback/autocode/delete/<id>", methods=["POST"])
+def delete_autocode_feedback(id):
+    values = request.get_json()
+    if not values:
+        return no_values_response()
+
+    confirmation = NoteConfirmation.query.filter(NoteConfirmation.id == id).first()
+
+    if confirmation == None:
+        return no_values_response()
+
+    confirmation.marked_as_deleted = True
+    confirmation.deleted_by = values["user_id"]
+    db.session.flush()
+    db.session.commit()
+    return success_with_content_response(
+            NoteConfirmationSchema().dump(confirmation)
+    )
+
+@api.route("/notes/feedback/autocode/accept/<id>", methods=["POST"])
+def yes_to_autocode(id):
+    values = request.get_json()
+    if not values:
+        return no_values_response()
+
+    confirmation = NoteConfirmation()
+    confirmation.note_code_id = id
+    confirmation.is_correct = True
+    confirmation.user_id = values["user_id"]
+    confirmation.comments = "HAS BEEN ACCEPTED VIA BUTTON"
+
+    try:
+        db.session.add(confirmation)
+        db.session.commit()
+        db.session.flush()
+        return success_with_content_response(
+            NoteConfirmationSchema().dump(confirmation)
+        )
+    except Exception as err:
+        return transaction_error_response(err)
 
 
 @api.route("/notes/feedback/additional_code/", methods=["POST"])
@@ -63,6 +105,33 @@ def add_additional_code():
         db.session.flush()
         return success_with_content_response(
             NoteConfirmationSchema().dump(new_additional_code)
+        )
+    except Exception as err:
+        return transaction_error_response(err)
+
+
+@api.route("/notes/audit/", methods=["POST"])
+def submit_feedback():
+    values = request.get_json()
+
+    if not values:
+        return no_values_response()
+
+    try:
+        audit_results = AuditResultsSchema(
+            exclude=("id", "created_on",)
+        ).load(values)
+    except ValidationError as err:
+        return validation_error_response(err)
+    
+    new_audit = AuditResults(**audit_results)
+
+    try:
+        db.session.add(new_audit)
+        db.session.commit()
+        db.session.flush()
+        return success_with_content_response(
+            AuditResultsSchema().dump(new_audit)
         )
     except Exception as err:
         return transaction_error_response(err)

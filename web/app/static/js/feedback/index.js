@@ -28,10 +28,10 @@ $(document).ready(function () {
         data: codes,
         columns: [
         { mData: function (data, type, row ) {
-            return data["note_code"]["note"]["dal_id"]
+            return '<a href="'+data["note_code"]["note"]["_links"]["self"]+'"><div class="btn btn-success btn-sm">' +data["note_code"]["note"]["m_number"] +':' + data["note_code"]["note"]["linkid"] +'</div></a>'
         }},
         { mData: function (data, type, row ) {
-            return "FBK:" + data["id"]
+            return "FBK:" + data["note_code"]["note_id"]
         }},
         { mData: function (data, type, row) {
             return data["note_code"]["code"]
@@ -53,8 +53,15 @@ $(document).ready(function () {
             }
         }},
         { mData: function (data, type, row) {
-           return data["user"]["email"] 
-        }} ]
+           return data["user_id"]
+        }},
+        { mData: function (data, type, row) {
+           return data["created_on"]
+        }},
+        { mData: function (data, type, row) {
+            return '<a href="'+ data["_links"]["remove"]+ '"><div class="btn btn-danger btn-sm">Delete</div></a>'
+         }}
+     ]
     });
 
     console.log(codes)

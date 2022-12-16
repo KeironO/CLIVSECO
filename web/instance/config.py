@@ -18,3 +18,9 @@ WTF_CSRF_SECRET_KEY = "BKGW9AT3x3E8mTtZ"
 DEBUG = True
 SQLALCHEMY_DATABASE_URI = "sqlite:///clivseco.db"
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+LDAP_HOST = 'GIG01SRVDOM0003.cymru.nhs.uk'
+LDAP_BIND_DIRECT_PREFIX = 'CYMRU\\'
+LDAP_BIND_DIRECT_CREDENTIALS = True
+LDAP_BIND_DIRECT_GET_USER_INFO = False
+# Declares what ldap attribute corresponds to the username passed to any login method when performing a bind. 
+SECRET_KEY = 'secret'

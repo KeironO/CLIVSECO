@@ -1,7 +1,12 @@
 {% extends "template.html" %}
 {% block title %}Find Document {% endblock %}
-{% block body %}
+
+
+{% block header %}
 <h1>Find Document</h1>
+{% endblock %}
+
+{% block body %}
 <form method="POST" action="{{ url_for('notes.find_note') }}">
     {{ form.csrf_token }}
     <div class='row'>

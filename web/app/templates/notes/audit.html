@@ -1,0 +1,161 @@
+{% extends "template.html" %}
+
+{% block title %}Integrifree{% endblock %}
+
+
+{% block header %}
+<div class="row">
+    <div class="col-9">
+        <h1 id="note-heading">{{caseno}}:{{linkid}}</h1>
+        <h2>CLIVSECO IntegriFree</h2>
+    </div>
+    <div class="col-3">
+        <button type="button" class="btn btn-warning btn-lg full-width" id="toggleSubmitModal">
+            Submit to Warehouse
+        </button>
+    </div>
+
+    
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block body %}
+
+
+<!-- Modal -->
+<div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-light">
+          <h5 class="modal-title" id="submitModalLabel">⚠️ Submit to Warehouse</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body bg-danger text-light">
+          <div class="alert alert-danger text-center">
+            <b>Notice:</b> Please ensure that you double check the following before submitting to our data warehouse
+          </div>
+          <form method="POST" action="{{ url_for('notes.audit', caseno=caseno, linkid=linkid) }}">
+          {{ form.csrf_token() }}
+          <div class="mb-3">
+            <label for="auditorInput" class="form-label">Auditor Information</label>
+            <input type="text" class="form-control" id="auditorInput" disabled>
+          </div>
+
+          {{ render_field(form.diagnosis) }}
+          {{ render_field(form.procedures) }}
+          {{ render_field(form.coders_note) }}
+
+        </div>
+        <div class="modal-footer bg-warning text-light">
+          {{ render_field(form.submit) }}
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <div class="row">
+        <div class="col-6">
+            <h4>👨‍⚕️ Diagnoses</h4>
+        </div>
+        <div class="col-6">
+            <div class="row g-3">
+                <div class="col-sm-10">
+                    <input class="form-control" id="icd10ControlInput" placeholder="ICD-10 Code">
+                </div>
+                <div class="col-sm">
+                    <button id="icd10submit" class="btn btn-success full-width mb-2">Submit</button>
+                </div>
+              </div>
+        </div>
+    </div>
+
+
+    <div class="form-inline">
+        <div class="form-group mb-2">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header bg-danger text-light">
+                    AutoCoded Diagnoses
+                </div>
+                <ul id="autocodedIcd10" class="list-group list-group-flush">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header bg-primary text-light">
+                    Audited Diagnoses
+                </div>
+                <ul id="auditiedIcd10" class="list-group list-group-flush">
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-6">
+            <h4>🩺 Procedures</h4>
+        </div>
+        <div class="col-6">
+            <div class="row g-3">
+                <div class="col-sm-10">
+                    <input class="form-control" id="opcs4ControlInput" placeholder="OPCS-4.9 Code">
+                </div>
+                <div class="col-sm">
+                    <button id="opcs4submit" class="btn btn-success full-width mb-2">Submit</button>
+                </div>
+              </div>
+        </div>
+    </div>
+
+
+    <div class="form-inline">
+        <div class="form-group mb-2">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header bg-danger text-light">
+                    AutoCoded Procedures
+                </div>
+                <ul id="autocodedOpcs4" class="list-group list-group-flush">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header bg-primary text-light">
+                    Audited Procedures
+                </div>
+                <ul id="auditiedOpcs4" class="list-group list-group-flush">
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+               
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/integrifree.js') }}"></script> 
+{% endblock %}

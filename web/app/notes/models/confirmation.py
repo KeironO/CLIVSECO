@@ -18,6 +18,19 @@ from ...database import db
 from ..enums import EnumCodeType, EnumCodedSection
 
 from .codes import NoteCode
+from .note import Note
+
+class AuditResults(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    note_id = db.Column(db.Integer, ForeignKey('note.id'), nullable=False)
+    caseno = db.Column(db.String(64))
+    linkid = db.Column(db.String(64))
+    diagnoses = db.Column(db.String(2048))
+    procedures = db.Column(db.String(2048))
+    coders_note = db.Column(db.String(4096))
+    author = db.Column(db.String(64))
+    created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
+    note = db.relationship(Note)
 
 
 class NoteConfirmation(db.Model):
@@ -28,10 +41,11 @@ class NoteConfirmation(db.Model):
     replace_with = db.Column(db.String(256), nullable=True)
     additional_codes = db.Column(db.String(256), nullable=True)
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey("user_account.id"), nullable=False)
-    
+    user_id = db.Column(db.String(64))
+    marked_as_deleted = db.Column(db.Boolean, default=False)
+    deleted_by = db.Column(db.String(64), nullable=True)
+    deleted_on = db.Column(db.DateTime, server_default=db.func.now(), default=db.func.now(), nullable=False)
     note_code = db.relationship(NoteCode)
-    user = db.relationship("UserAccount")
 
 
 class AdditionalCode(db.Model):
@@ -43,6 +57,5 @@ class AdditionalCode(db.Model):
     start = db.Column(db.Integer)
     end = db.Column(db.Integer)
     comorbidity = db.Column(db.Boolean, default=False, nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey("user_account.id"), nullable=False)
+    user_id = db.Column(db.String(64))
     created_on = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
-    user = db.relationship("UserAccount")
