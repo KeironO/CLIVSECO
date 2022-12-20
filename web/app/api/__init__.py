@@ -14,9 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from flask import Blueprint
-from ..database import db
 
 api = Blueprint("api", __name__)
 
 from ..encounter.api import *
-from ..lookups.api import *

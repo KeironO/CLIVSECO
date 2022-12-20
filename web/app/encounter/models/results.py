@@ -3,6 +3,7 @@ from sqlalchemy import ForeignKey
 
 class AutoCoderResults(Base):
     encounterid = db.Column(db.String(36), ForeignKey("ENCOUNTER.id"), nullable=False)
+    codesourceid = db.Column(db.String(36), ForeignKey("CODESOURCE.id"), nullable=False)
     codeableconceptid = db.Column(db.String(36), ForeignKey("CODEABLECONCEPT.id"), nullable=False)
     versioningid = db.Column(db.String(36), ForeignKey("VERSIONING.id"), nullable=False)
     position = db.Column(db.Integer, nullable=False)
@@ -12,9 +13,11 @@ class AutoCoderResults(Base):
     isfamiliyhistory = db.Column(db.Boolean, default=False)
     isdaggerandasterik = db.Column(db.Boolean, default=False)
     isfromdiagnosis = db.Column(db.Boolean, default=False)
+
+class CodeSource(Base):
     sourcedocument = db.Column(db.String(128), nullable=False)
     sourcedocumentid = db.Column(db.String(128), nullable=False)
     sourcesection = db.Column(db.String(128), nullable=False)
     sentence = db.Column(db.Integer())
-    start = db.Column(db.Integer())
-    end = db.Column(db.Integer())
+    start = db.Column(db.Integer)
+    end = db.Column(db.Integer)

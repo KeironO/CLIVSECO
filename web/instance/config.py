@@ -18,7 +18,7 @@ import urllib
 
 # pyodbc stuff for MS SQL
 driver='{SQL Server}'
-server='localhost'
+server='7a506srvbisql01'
 database='CLIVSECO'
 trusted_connection='yes'
 

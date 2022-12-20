@@ -16,9 +16,19 @@
 from ..database import db, Base
 import enum
 
+class SeverityEnum(enum.Enum):
+    NORMAL = "Normal"
+    SEVERE = "Severe"
+
+class News(Base):
+    title = db.Column(db.String(1024), nullable=False)
+    news = db.Column(db.String(4096), nullable=False)
+    severity = db.Column(db.Enum(SeverityEnum))
+
 class AccessLog(Base):
     nadex = db.Column(db.String(16), nullable=False)
     method = db.Column(db.String(10), nullable=False)
+    ip = db.Column(db.String(128))
     requesturl = db.Column(db.String(1024), nullable=False)
     responsestatus = db.Column(db.String(1024), nullable=False)
     requestreferrer = db.Column(db.String(1024), nullable=False)

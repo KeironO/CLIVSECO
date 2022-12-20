@@ -28,7 +28,7 @@ from .forms import LoginForm
 def login():
 
     if current_user.is_authenticated:
-        return redirect(url_for("notes.home"))
+        return redirect(url_for("encounter.home"))
 
     form = LDAPLoginForm()
 
@@ -36,7 +36,7 @@ def login():
 
     if form.validate_on_submit():
         login_user(form.user)
-        return redirect(url_for("notes.home"))
+        return redirect(url_for("encounter.home"))
 
     return render_template("auth/login.html", form=form)
 

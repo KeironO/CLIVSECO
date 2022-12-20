@@ -18,7 +18,7 @@ class ResultsFeedbackReplacementCode(Base):
 
 class ResultsFeedbackNewCode(Base):
     codeableconceptid = db.Column(db.String(36), ForeignKey("CODEABLECONCEPT.id"), nullable=False)
-    # position = db.Column(db.Column(db.Integer))
     resultsfeedbackid = db.Column(db.String(36), ForeignKey("RESULTSFEEDBACK.id"), nullable=False)
+    codesourceid = db.Column(db.String(36), ForeignKey("CODESOURCE.id"), nullable=False)
     comments = db.Column(db.String(4096))
     nadex = db.Column(db.String(16), nullable=False)

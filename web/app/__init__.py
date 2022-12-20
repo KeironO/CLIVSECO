@@ -15,9 +15,9 @@
 
 from __future__ import absolute_import
 
-from .database import db
+from .database import db, AccessLog
 from .extensions import register_extensions
-from flask import Flask, g
+from flask import Flask, g, request
 
 from .commands import cmd_setup as cmd_setup_blueprint
 
@@ -28,12 +28,14 @@ from .encounter import encounter as encounter_blueprint
 
 from .globs import _spec_maps
 
+from flask_login import current_user
+
 def register_blueprints(app: Flask):
     app.register_blueprint(cmd_setup_blueprint)
     app.register_blueprint(misc_blueprint, url_prefix='/')
     # app.register_blueprint(api_blueprint, url_prefix="/api")
     app.register_blueprint(auth_blueprint, url_prefix="/auth")
-    app.register_blueprint(encounter_blueprint, url_prefix="/notes")
+    app.register_blueprint(encounter_blueprint, url_prefix="/encounter")
 
 
 def create_app():
@@ -46,6 +48,25 @@ def create_app():
 
     register_extensions(app)
     register_blueprints(app)
+
+    @app.after_request
+    def after_request(response):
+        log = AccessLog()
+        log.ip = str(request.remote_addr)
+        try:
+            log.nadex = str(current_user.username.upper())
+        except AttributeError:
+            log.nadex = str("UNAUTH")
+        log.method = str(request.method)
+        log.requesturl = str(request.path)
+        log.responsestatus = str(response.status)
+        log.requestreferrer = str(request.referrer)
+
+        db.session.add(log)
+        db.session.commit()
+        db.session.flush()
+
+        return response
 
     return app
 
