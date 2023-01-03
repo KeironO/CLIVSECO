@@ -1,3 +1,20 @@
+
+{% macro info_box(title, content) %}
+<div class="card">
+  <div class="card-header">
+    {{ title }}
+  </div>
+  <div class="card-body">
+    {% if content != None %}
+      {{ content.replace('\n', '<br/>') | safe }}
+    {% else %}
+      None Provided
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+
 {% macro render_field(field) %}
 <div class="col-12" style="margin-bottom:1em;">
     {% if field.type in ["StringField", "PasswordField", "TextAreaField"] %}

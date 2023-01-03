@@ -2,23 +2,22 @@
 {% block title %}News @ CLIVSECO{% endblock %}
 
 
-{% block header %}
-<h1>{{ news.title }}</h1>
-<div class="row">
-    <div class="col-10">
-        <p>Released On: {{ news.created_on }}</p>
-        <p>Created By: The Administrator</p>
-    </div>
-    <div class="col-2">
-        <div class="btn btn-sm pull-right">
-            {{news.severity}}
-        </div>
-    </div>
-</div>
-{% endblock %}
+
 
 {% block body %}
 
-{{ news.news }}
+<div class="card" style="max-width:900px;margin:0 auto 0; padding:1rem;font-family:Times, serif; margin-bottom: 3em !important;">
+    <div class="row">
+        <div class="col-7">35p</div>
+        <div class="col-5" style="text-align: end;">{{news.created_on}}</div>
+        <hr style="border:1px solid red !important;">
+    </div>
+    <p style="text-align: center;font-size: 3em; font-weight: bold; padding:0em; margin:0;">The CLIVSECO Daily</p>
+    <hr style="border:1px solid black !important;">
+    <p style="font-weight: bold;font-size: 2em;">{{news.title}}</p>
+    <p>{{ news.news.replace('\n', '<br/>') |safe }}</p>
+
+</div>
+
 
 {% endblock %}

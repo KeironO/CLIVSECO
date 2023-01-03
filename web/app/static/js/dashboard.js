@@ -2,9 +2,8 @@
 
 
 function get_data() {
-
-    var api_url = encodeURI(window.location.origin + '/api/notes/chartjs' );
-
+    var api_url = encodeURI(window.location + 'chartjs' );
+    console.log(api_url)
     var json = (function () {
         var json = null;
         $.ajax({
@@ -39,17 +38,17 @@ function render_graph(data, divid, type) {
 $(document).ready(function () {
     var dashboard_data = get_data()["content"];
 
-    $("#dal-count").html(dashboard_data['counts']['letters']);
+    $("#dal-count").html(dashboard_data['counts']['encounters']);
     $("#auto-code-count").html(dashboard_data['counts']['autocodes']);
 
-    var pdoc = dashboard_data['counts']['autocodes']/ dashboard_data['counts']['letters'];
+    var pdoc = dashboard_data['counts']['autocodes']/ dashboard_data['counts']['encounters'];
     var pdoc = parseFloat(pdoc.toFixed(2))
 
     $("#avg-number").html(pdoc);
 
-    render_graph(dashboard_data['notes']['admitting_spec'], 'admission-spec-chart', 'pie')
-    render_graph(dashboard_data['notes']['discharge_spec'], 'discharge-spec-chart', 'pie')
-    render_graph(dashboard_data['autocodes']['source_text'], 'auto-code-section-chart', 'bar')
+    render_graph(dashboard_data['encounters']['admitting_spec'], 'admission-spec-chart', 'pie')
+    render_graph(dashboard_data['encounters']['discharge_spec'], 'discharge-spec-chart', 'pie')
+    render_graph(dashboard_data['encounters']['source_text'], 'auto-code-section-chart', 'bar')
 
 });
         

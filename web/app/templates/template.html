@@ -1,4 +1,4 @@
-{% from "./macros.html" import render_field %}
+{% from "./macros.html" import render_field, info_box %}
 
 <html lang="en">
     <meta charset="utf-8">
@@ -35,7 +35,7 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ url_for('encounter.home') }}">📝 Encounter</a>
+              <a class="nav-link active" aria-current="page" href="{{ url_for('encounter.home') }}">💨 Dashboard</a>
             </li>
 
             <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
@@ -148,7 +148,6 @@
         </div>
       </footer>
       
-
       <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="

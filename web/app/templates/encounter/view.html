@@ -1,0 +1,256 @@
+{% extends "template.html" %}
+
+{% block title %}{{ note.ID }}{%endblock%}
+
+{% block header %}
+<h1 id="note-heading">{{ note.ID }}</h1>
+{% endblock %}
+
+{% block body %}
+<div id="content" class="row">
+ <div class="col-9" id="note-information-col">
+      <div class="card">
+        <div class="card-header bg-danger text-white">
+          Demographic and Case Information
+        </div>
+        <div class="card-body card-text">
+          <div class="row" style="margin-bottom: 1em;">
+            <div class="col-6">
+              <p>👶 <b>Age on Admission:</b> {{ note.AGEONADMISSION }}</p>
+              <p>📅 <b>Admitted/Discharged On:</b> {{ note.ADMISSIONDATE}} / {{ note.DISCHARGEDATE }} </p>
+              <p>➡️ <b>Admission Spec:</b> {{ note.SPECIALTY_NAME }}</p>
+              <p>🔢 <b>Episode Count:</b> {{ note.EPISODENUMBER }}</p>
+            </div>
+            <div class="col-6" style="text-align: right;">
+              <p>👩‍⚕️ <b>Case Number:</b> {{ note.CASENUMBER }} </p>
+              <p>🖥️ <b>PAS Identifier:</b> {{ note.PASLINKID }} </p>
+
+              <p>📅 <b>Length Of Stay:</b> {{ note.LOS }} day(s) </p>
+              <p>🧑 <b>Biological Sex:</b> {{ note.SEX }}</p>
+            </div>
+          </div>
+          
+
+          <a href="https://cttwcp.cymru.nhs.uk/PatientHomePage/PatientHomePage/PatientDetails?PatientId={{ note.CASENUMBER }}&PatientDomainId=HospitalNumber" target="_blank">
+            <div class="btn btn-primary">
+              <img src="{{ url_for('static', filename='images/portal_homepage_logo.png') }}" style="max-height:18px;"> View on the Welsh Clinical Portal 
+            </div>
+          </a>
+          
+          <p>
+            <small>
+              Please note that for the WCP redirect to work, you must first log into WCP: <a href="https://cttwcp.cymru.nhs.uk/login.aspx" target="_blank">cttwcp.cymru.nhs.uk/login</a>
+            </small>
+          </p>
+        </div>
+      </div>
+
+
+      <div id="audit-section" class="card" style="display:none;">
+        <div class="card-header bg-success text-white">
+          Audited Results
+        </div>
+        <ul id="audit-list" class="list-group list-group-flush">
+        </ul>
+      </div>
+
+      <div class="alert alert-info">
+        Please click below to see the contents of the source material.
+      </div>
+
+      <ul class="nav nav-tabs" style="margin-bottom:1em; margin-top:1em;" id="nav-tab-selection">
+        {% for dal in edalbase_info %}
+          <li class="nav-item"><a id="navlink_dal{{ dal.EDALID }}" class="nav-link" href="#">DAL</a></li>
+        {% endfor %}
+        {% for letter in clinic_letters %}
+          <li class="nav-item"><a class="nav-link" id="navlink_clk{{ letter.CLINICAL_LETTER_KEY }}" href="#">Letter: {{ letter.CLINICAL_LETTER_KEY }} </a></li>
+        {% endfor %}
+      </ul>
+      
+
+      <div id="cls" style="display:none;">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            ✉️ Clinic Letter: <span id="clinical-letter-key"></span>
+          </div>
+          <div class="card-body card-text" id="letter-text"></div>
+        </div>
+      </div>
+
+      {% for dal in edalbase_info %}
+        <div class="card encounter-content" id="dal{{ dal.EDALID }}" style="display:none;">
+          <div class="card-body">
+            <h1>Electronic Discharge Advice Letter</h1>
+            <div class="row" style="margin-bottom: 2em;">
+              <div class="col-6">
+                <p><b>Document UUID:</b> <span class="dal-id">{{ dal.EDALID}}</span> </p>
+                <p><b>Document DateTime:</b> {{ dal.EDALDOCUMENTDATETIME}} </p>
+              </div>
+              <div class="col-6" style="text-align:end;">
+                <p><b>Medicines Updated By:</b> {{ dal.EDALMEDICINSUPDATEDBY }}</p>
+                <p><b>Medicines Verified:</b> {{ dal.EDALVERITIFEDFORDISCHARGE }}</p>
+              </div>
+            </div>
+
+            {{ info_box('Presenting Complaints', dal.EDALPRESENTINGCOMPLAINTS) }}
+            {{ info_box('Investigations and Results', dal.EDALINVESTIGATIONSANDRESULTS) }}
+            {{ info_box('Clinical Findings', dal.EDALCLINICALFINDINGS) }}
+
+            {% if dal.EDALID in dal_diagnoses %}
+            <div class="card">
+              <div class="card-header">
+                Diagnosis
+              </div>
+              <ul class="list-group list-group-flush">
+                {% for diagnosis in dal_diagnoses[dal.EDALID] %}
+                  <li class="list-group-item">
+                    {{ diagnosis.EDALDIAGNOSISNARRATIVE }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+        {% for letter in clinic_letters %}
+          <div class="card encounter-content" id="clk{{ letter.CLINICAL_LETTER_KEY }}" style="display:none;" >
+            <div class="card-body">
+              <h1>Clinic Letter</h1>
+              <div class="row">
+                <div class="col-6">
+                  <p><b>Version Number:</b> {{ letter.Version_Number }}</p>
+                  <p><b>Version DateTime:</b> {{ letter.VERSION_DATE }}</p>
+                </div>
+                <div class="col-6">
+                  <p><b>Clinical Letter Key:</b> {{ letter.CLINICAL_LETTER_KEY }}</p>
+                  <p><b>Clinical Seq Number:</b> {{ letter.SEQNO }}</p>
+                  <p><b>Clinical Sync Date:</b> {{ letter.SYNC_DATE }}</p>                  
+                </div>
+              </div>
+              {{ info_box('Letter Body', letter.CLINICAL_LETTER) }}
+            </div>
+          </div>
+        {% endfor %}
+
+
+      {% for toms in toms_info %}
+        <div class="card encounter-content" id="toms{{ toms.TOMSCASENUMBER }}">
+          <div class="card-body">
+            <h1>Theatre Note</h1>
+            <div class="row" style="margin-bottom: 2em;">
+              <div class="col-6">
+                <p><b>TOMS Case Number :</b> <span class="toms-id">{{ toms.TOMSCASENUMBER}}</span> </p>
+                <p><b>TOMS Arrival Date:</b> {{ toms.TOMSARRIVALDATE}} </p>
+              </div>
+              <div class="col-6" style="text-align:end;">
+                <p><b>TOMS Entered On:</b> {{ toms.TOMSDATENTERED }}</p>
+                <p><b>TOMS Entered By:</b> {{ toms.TOMSENTEREDBY }}</p>
+
+              </div>
+            </div>
+            
+            {{ info_box('Indications', toms.TOMSINDICATIONS) }}
+            {{ info_box('Findings', toms.TOMSFINDINGS) }}
+            {{ info_box('Follow Up', toms.TOMSFOLLOWUP) }}
+            {{ info_box('Procedure', toms.TOMSPROCEDURE) }}
+            {{ info_box('Comments', toms.TOMSCOMMENTS) }}
+
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+
+    <div class="col-3" id="auto-code-row">
+      <a href="{{ url_for('encounter.audit', id=note.id) }}">
+        <div class="btn bg-warning btn-lg full-width">Integrifee</div>
+      </a>
+
+      <a href="{{ url_for('encounter.audit', id=note.id) }}">
+        <div class="btn bg-danger btn-lg full-width text-white">Too Complex</div>
+      </a>
+
+
+
+      <div class="card">
+        <div class="card-header">
+          🤖 Auto Coder
+        </div>
+        <ul class="list-group list-group-flush" id="auto-coder-list-group">
+          <li class="list-group-item" id="auto-coder-none">None</li>
+        </ul>
+        <div class="card-footer">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-secondary full-width" data-bs-toggle="modal" data-bs-target="#additional-codes-modal">Add Missing Code</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          Key
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class='list-group-item d-flex justify-content-between'>✨ Comorbidity</li>
+          <li class='list-group-item d-flex justify-content-between'>🛌🏼 Past Medical History</li>
+          <li class='list-group-item d-flex justify-content-between'>👵 Family History Of</li>
+          <li class='list-group-item d-flex justify-content-between'>🎈 From Acronym</li>
+          <li class='list-group-item d-flex justify-content-between'>👨🏼‍⚕️ From Diagnosis</li>
+        </ul>
+      </div>
+
+ 
+
+<div class="card">
+  <div class="card-header">Missing Codes</div>
+  <ul class="list-group list-group-flush" id="missing-codes-list-group">
+    <li class="list-group-item" id="missing-codes-none">None</li>
+  </ul>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="additional-codes-modal" tabindex="-1" aria-labelledby="additional-codes-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="additional-codes-label">Add Missing Codes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+
+        {{ form.csrf_token }}
+        {{ render_field(form.section) }}
+
+        <div id="additional-codes-text">
+          Test
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            {{ render_field(form.start) }}
+          </div>
+          <div class="col-6">
+            {{ render_field(form.end) }}
+          </div>
+        </div>
+        {{ render_field(form.type) }}
+        {{ render_field(form.additional_codes) }}
+        {{ render_field(form.comorbidity) }}
+        {{ render_field(form.submit) }}
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/taginput.js') }}"></script>
+<script src="{{ url_for('static', filename='js/encounter/view.js') }}"></script> 
+
+{% endblock %}

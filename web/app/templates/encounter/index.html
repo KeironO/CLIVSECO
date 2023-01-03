@@ -1,6 +1,6 @@
 {% extends "template.html" %}
 
-{% block title %}Notes Home{% endblock %}
+{% block title %}CLIVSECO Dashboard{% endblock %}
 
 
 {% block header %}
@@ -9,7 +9,7 @@
 <div class="row" style="padding-top:3rem;">
     <div class="col-4">
         <h1 id="dal-count"></h1>
-        <h3>Discharging Episodes Coded</h3>
+        <h3>Discharging Encounters Coded</h3>
     </div>
     <div class="col-4">
         <h1 id="auto-code-count"></h1>
@@ -17,7 +17,7 @@
     </div>
     <div class="col-4">
         <h1 id="avg-number"></h1>
-        <h3>Avg. # Code(s) Per Episode</h3>
+        <h3>Avg. # Code(s) Per Encounter</h3>
     </div>
 </div>
 
@@ -27,7 +27,7 @@
 
 
 <div class="row">
-    <div class="col-4">
+    <div class="col-3">
         <div class="card">
             <div class="card-header bg-primary text-white" >
               Admitting Speciality
@@ -38,7 +38,7 @@
             </div>
           </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
         <div class="card">
             <div class="card-header bg-primary text-white">
               Discharge Speciality
@@ -48,15 +48,31 @@
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
         <div class="card">
             <div class="card-header bg-primary text-white">
-              Auto Coded Section
+              Auto Coded Source Document
             </div>
             <div class="card-body">
 
             <canvas id="auto-code-section-chart" width="400" height="400"></canvas>
             </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+              News
+            </div>
+            <ul class="list-group">
+                {% for item in news %}
+                    <a href="{{ url_for('misc.news_item', news_id=item.id) }}" class="list-group-item list-group-item-action">
+                        <span style="font-weight: bold;">{{ item.title }}</span>
+                        <p style="font-style:italic;margin:0;">{{ item.news|truncate(32) }}</p>
+                        <small>Posted On: {{item.created_on }}</small>
+                    </a>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 </div>

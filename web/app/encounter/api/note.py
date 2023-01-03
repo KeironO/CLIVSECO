@@ -99,28 +99,6 @@ def mark_as_complete(caseno, linkid):
     else:
         return {"success": False, "content": {"error": "Note not found"}}
 
-@api.route("/notes/find/", methods=["POST"])
-def find_note():
-    values = request.get_json()
-
-    if not values:
-        return no_values_response()
-
-    if 'caseno' not in values:
-        return {"success": False, "content": {"error": "We require caseno"}}
-
-    caseno = values["caseno"]
-
-    if "linkid" in values:
-        linkid = values["linkid"]
-        note = Note.query.filter(Note.linkid==linkid, Note.m_number==caseno).all()
-    else:
-        note = Note.query.filter(Note.m_number==caseno).all()
-
-    if note != None:
-        return success_with_content_response(NoteSchema(many=True).dump(note))
-    else:
-        return {"success": False, "content": {}}
 
 @api.route("/notes/get/<caseno>:<linkid>", methods=["GET"])
 def get_note(caseno: str, linkid: str):

@@ -1,0 +1,85 @@
+{% extends "template.html" %}
+{% block title %}Find Encounter{% endblock %}
+
+
+{% block header %}
+<h1>Find Encounter</h1>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-header">
+                    Filter
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('encounter.find_note') }}">
+                        {{ form.csrf_token }}
+                        {{ render_field(form.caseno) }}
+                        {{ render_field(form.linkid) }}
+                        {{ render_field(form.submit) }}
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            {% if found|length > 0 %}
+
+            <div class="card">
+                <div class="card-header card-primary text-white bg-primary">
+                    Results ({{ found|length }} found)
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">Case Number</th>
+                            <th scope="col">PAS Link ID</th>
+                            <th scope="col">EP#</th>
+                            <th scope="col">Admitting Speciality</th>
+                            <th scope="col">Admission Date</th>
+                            <th scope="col">Discharge Date</th>
+                            <th scope="col">Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            {% for note in found %}
+                                <tr>
+                                    <td>{{ note.CASENO }}</td>
+                                    <td>{{ note.LINKID }}</td>
+                                    <td>{{ note.EPISODENO }}</td>
+                                    <td>{{ note.SPECIALTY_NAME }}</td>
+                                    <td>{{ note.STARTDATE }}</td>
+                                    <td>{{ note.DISDATE }}</td>
+                                    <td>
+                                        <a href="{{ url_for('encounter.code', id=note.ID ) }}">
+                                        <div class='btn btn-sm btn-success full-width'>
+                                            Go
+                                        </div>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+        
+          
+        
+            {% else %}
+                <div class="alert alert-warning">
+                    No results found
+                </div>
+        
+            {% endif %}
+        </div>
+
+    
+
+    
+{% endblock %}

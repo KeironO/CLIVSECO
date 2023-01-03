@@ -52,7 +52,7 @@ def code_feedback(id: int):
             else:
                 return response.content
 
-        return render_template("notes/feedback/view.html", form=form, id=id)
+        return render_template("encounter/feedback/view.html", form=form, id=id)
     else:
         return code.status_code
 
@@ -67,7 +67,7 @@ def code_feedback_endpoint(id: int):
 @encounter.route("/feedback")
 @login_required
 def code_feedback_index():
-    return render_template("notes/feedback/index.html")
+    return render_template("encounter/feedback/index.html")
 
 
 @encounter.route("/code/feedback/<id>/delete", methods=["GET", "POST"])
@@ -81,7 +81,7 @@ def code_feedback_delete(id):
             return redirect(url_for("notes.code_feedback_index"))
         else:
             flash(response.content)
-    return render_template("notes/feedback/delete.html", form=form, id=id)
+    return render_template("encounter/feedback/delete.html", form=form, id=id)
 
 @encounter.route("/feedback/endpoint")
 @login_required

@@ -50,7 +50,6 @@ function show_hide_replace_element(value) {
 
 
 function fill_context(code) {
-    console.log(code)
     const type = code["section"];
     const text = type_map.get(type);
 

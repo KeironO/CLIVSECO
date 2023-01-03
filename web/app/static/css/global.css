@@ -35,7 +35,7 @@ h3 .list-group list-group-flush {
 
 .container {
     max-width: 1800px;
-    width: 90% !important;
+    width: 96% !important;
 }
 
 .btn img {
@@ -51,8 +51,24 @@ h1 {
     border-width: 0 0 1 0;
 }
 
+.btn {
+  border-radius: 0 !important;
+}
+
 .card {
-    margin-bottom: 2em;
+    margin-bottom: 1.5em;
+    border-radius: 0;
+    border: 2px solid #000;
+}
+
+.card-header {
+  border-radius: 0 !important;
+  border:2px sold #000 !important;
+}
+
+.card-body {
+  border-radius: 0;
+  border:2px sold #000;
 }
 
 .card h2 {
@@ -242,6 +258,10 @@ footer {
   color: #fff;
 }
 
+.jumbotron::selection {
+  background: red;
+}
+
 .jumbotron-header h1 {
   font-weight: bold;
   font-size: 3rem;
@@ -259,5 +279,12 @@ footer {
   background-color: #ffc107;
 }
 
+.btn {
+  border:2px solid #000;
+}
 
+.form-control {
+  border-radius: 0em;
+  border: 2px solid #000;
+}
 
